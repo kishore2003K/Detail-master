@@ -1,0 +1,148 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 20px 0;
+  transition: all 0.3s ease;
+}
+
+.header.scrolled {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+  padding: 12px 0;
+}
+
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--dark);
+}
+
+.logo-icon {
+  color: var(--burnt-orange);
+  font-size: 1.3rem;
+}
+
+.logo-highlight {
+  color: var(--burnt-orange);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+
+.nav-link {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--dark-secondary);
+  transition: color 0.3s;
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--burnt-orange);
+  transition: width 0.3s;
+}
+
+.nav-link:hover {
+  color: var(--burnt-orange);
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.phone-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--dark-secondary);
+  transition: color 0.3s;
+}
+
+.phone-link:hover {
+  color: var(--burnt-orange);
+}
+
+.header-cta {
+  padding: 12px 24px;
+  font-size: 0.85rem;
+}
+
+.mobile-toggle {
+  display: none;
+  background: none;
+  color: var(--dark);
+  padding: 4px;
+}
+
+@media (max-width: 968px) {
+  .nav {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--white);
+    flex-direction: column;
+    justify-content: center;
+    gap: 32px;
+    z-index: 999;
+  }
+
+  .nav.open {
+    display: flex;
+  }
+
+  .nav-link {
+    font-size: 1.5rem;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+  }
+
+  .mobile-toggle {
+    display: block;
+    z-index: 1001;
+  }
+
+  .phone-link span {
+    display: none;
+  }
+
+  .header-cta {
+    display: none;
+  }
+}

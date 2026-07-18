@@ -1,0 +1,105 @@
+.how-it-works {
+  padding: 120px 0;
+  background: var(--white);
+}
+
+.hiw-header {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.hiw-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+  position: relative;
+}
+
+.hiw-step {
+  text-align: center;
+  position: relative;
+}
+
+.hiw-step-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--vanilla);
+  border: 2px solid var(--burnt-orange);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  position: relative;
+  font-size: 1.4rem;
+  color: var(--burnt-orange);
+  transition: all 0.3s ease;
+}
+
+.hiw-step:hover .hiw-step-icon {
+  background: var(--burnt-orange);
+  color: var(--white);
+  transform: scale(1.1);
+}
+
+.hiw-step-num {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 28px;
+  height: 28px;
+  background: var(--burnt-orange);
+  color: var(--white);
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hiw-step:hover .hiw-step-num {
+  background: var(--dark);
+}
+
+.hiw-step-title {
+  font-size: 1.1rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.hiw-step-desc {
+  font-size: 0.9rem;
+  color: var(--gray);
+  line-height: 1.6;
+  max-width: 260px;
+  margin: 0 auto;
+}
+
+.hiw-connector {
+  position: absolute;
+  top: 40px;
+  right: -16px;
+  width: 32px;
+  height: 2px;
+  background: var(--gray-lighter);
+}
+
+@media (max-width: 968px) {
+  .hiw-steps {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+  }
+
+  .hiw-connector {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .hiw-steps {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+}
