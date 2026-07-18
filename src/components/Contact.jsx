@@ -43,22 +43,24 @@ const Contact = () => {
               <div className="contact-detail">
                 <FiMapPin className="detail-icon" />
                 <div>
-                  <h4>Our Location</h4>
-                  <p>123 Detail Street<br />Auto City, FL 33101</p>
+                  <h4>Location</h4>
+                  <p>Opp. KTM Bike Showroom,<br />Chankai, Marthandam</p>
                 </div>
               </div>
               <div className="contact-detail">
                 <FiPhone className="detail-icon" />
                 <div>
                   <h4>Phone</h4>
-                  <p>+1 (555) 123-4567</p>
+                  <p>9111977721</p>
+                  <p>9894834700</p>
                 </div>
               </div>
+
               <div className="contact-detail">
                 <FiMail className="detail-icon" />
                 <div>
                   <h4>Email</h4>
-                  <p>hello@detailmaster.com</p>
+                  <p>hello@detailingmasters.com</p>
                 </div>
               </div>
             </div>

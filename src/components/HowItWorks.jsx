@@ -34,7 +34,7 @@ const HowItWorks = () => {
       <div className="container">
         <div className="hiw-header">
           <span className="section-label">How It Works</span>
-          <h2 className="section-title">THE DETAILMASTER PROCESS</h2>
+          <h2 className="section-title">THE DETAILING MASTERS PROCESS</h2>
         </div>
 
         <div className="hiw-steps">

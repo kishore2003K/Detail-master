@@ -34,13 +34,15 @@
   color: var(--dark);
 }
 
-.logo-icon {
-  color: var(--burnt-orange);
-  font-size: 1.3rem;
+.logo img {
+  height: 50px;
+  width: auto;
 }
 
-.logo-highlight {
-  color: var(--burnt-orange);
+.phone-links-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .nav {
@@ -138,7 +140,7 @@
     z-index: 1001;
   }
 
-  .phone-link span {
+  .phone-links-header {
     display: none;
   }
 

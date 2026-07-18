@@ -33,7 +33,7 @@ function App() {
 
       <Modal isOpen={showPrivacy} onClose={() => setShowPrivacy(false)} title="Privacy Policy">
         <p><strong>Last Updated: January 1, 2024</strong></p>
-        <p>DETAILMASTER LLC ("Company," "we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our services.</p>
+        <p>DETAILING MASTERS LLC ("Company," "we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our services.</p>
 
         <h3>1. Information We Collect</h3>
         <p>We may collect the following categories of personal information: Contact Information (name, email, phone, address), Vehicle Information (make, model, year, condition), Transaction Data, Communications, and Usage Data.</p>
@@ -48,18 +48,18 @@ function App() {
         <p>We use cookies and similar technologies to enhance your browsing experience and analyze website traffic.</p>
 
         <h3>5. Your Rights</h3>
-        <p>You may have rights to access, correct, or delete your personal data. To exercise these rights, contact us at hello@detailmaster.com.</p>
+        <p>You may have rights to access, correct, or delete your personal data. To exercise these rights, contact us at hello@DETAILING MASTERS.com.</p>
 
         <h3>6. Contact Us</h3>
-        <p>DETAILMASTER LLC — 123 Detail Street, Auto City, FL 33101. Phone: +1 (555) 123-4567. Email: hello@detailmaster.com</p>
+        <p>DETAILING MASTERS LLC — 123 Detail Street, Auto City, FL 33101. Phone: +1 (555) 123-4567. Email: hello@DETAILING MASTERS.com</p>
       </Modal>
 
       <Modal isOpen={showTerms} onClose={() => setShowTerms(false)} title="Terms of Service">
         <p><strong>Last Updated: January 1, 2024</strong></p>
-        <p>These Terms of Service govern your use of services provided by DETAILMASTER LLC ("Company," "we," "our," or "us"), including our website and auto detailing services.</p>
+        <p>These Terms of Service govern your use of services provided by DETAILING MASTERS LLC ("Company," "we," "our," or "us"), including our website and auto detailing services.</p>
 
         <h3>1. Services</h3>
-        <p>DETAILMASTER LLC provides professional automotive detailing, paint correction, ceramic coating, and related services. All services are subject to availability.</p>
+        <p>DETAILING MASTERS LLC provides professional automotive detailing, paint correction, ceramic coating, and related services. All services are subject to availability.</p>
 
         <h3>2. Appointments & Booking</h3>
         <p>Appointments may be scheduled by phone, email, or through our website. Bookings are confirmed upon receipt of confirmation from our team.</p>
@@ -74,7 +74,7 @@ function App() {
         <p>If you are not satisfied, please notify us within 24 hours of pickup. We will address your concerns at no additional charge.</p>
 
         <h3>6. Contact Us</h3>
-        <p>DETAILMASTER LLC — 123 Detail Street, Auto City, FL 33101. Phone: +1 (555) 123-4567. Email: hello@detailmaster.com</p>
+        <p>DETAILING MASTERS LLC — 123 Detail Street, Auto City, FL 33101. Phone: +1 (555) 123-4567. Email: hello@DETAILING MASTERS.com</p>
       </Modal>
     </>
   );

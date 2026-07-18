@@ -38,7 +38,7 @@ const Hero = () => {
             <span className="title-accent">EXPECTATION</span>
           </h1>
           <p className="hero-description">
-            Where Precision Meets Passion. DETAILMASTER delivers premium auto detailing
+            Where Precision Meets Passion. DETAILING MASTERS delivers premium auto detailing
             and car wash services for drivers who demand nothing less than perfection.
           </p>
           <div className="hero-buttons">

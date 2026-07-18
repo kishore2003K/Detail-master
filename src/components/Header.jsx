@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FiMenu, FiX, FiPhone } from 'react-icons/fi';
+import logo from '../assets/logo.png';
 import './Header.css';
 
 const Header = () => {
@@ -24,8 +25,7 @@ const Header = () => {
     <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
       <div className="header-container">
         <a href="#" className="logo">
-          <span className="logo-icon">✦</span>
-          <span className="logo-text">DETAIL<span className="logo-highlight">MASTER</span></span>
+          <img src={logo} alt="Detailing Masters Logo" />
         </a>
 
         <nav className={`nav ${isMobileOpen ? 'open' : ''}`}>
@@ -42,10 +42,16 @@ const Header = () => {
         </nav>
 
         <div className="header-actions">
-          <a href="tel:+15551234567" className="phone-link">
-            <FiPhone size={16} />
-            <span>+1 (555) 123-4567</span>
-          </a>
+          <div className="phone-links-header">
+            <a href="tel:+919111977721" className="phone-link">
+              <FiPhone size={16} />
+              <span>9111977721</span>
+            </a>
+            <a href="tel:+919894834700" className="phone-link">
+              <FiPhone size={16} />
+              <span>9894834700</span>
+            </a>
+          </div>
           <a href="#contact" className="btn-primary header-cta">Book Now</a>
           <button
             className="mobile-toggle"

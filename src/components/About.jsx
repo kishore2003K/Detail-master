@@ -42,7 +42,7 @@ const About = () => {
           <span className="section-label">Our Story</span>
           <h2 className="section-title">CRAFTED WITH CARE,<br />BUILT ON TRUST</h2>
           <p className="about-text">
-            DETAILMASTER was founded on a simple belief: every vehicle deserves to be treated
+            DETAILING MASTERS was founded on a simple belief: every vehicle deserves to be treated
             like a work of art. Located in the heart of the city, we bring together expertise,
             premium products, and genuine passion for automotive aesthetics.
           </p>

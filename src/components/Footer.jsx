@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { FiPhone, FiMail, FiArrowUpRight } from 'react-icons/fi';
+import logo from '../assets/logo.png';
 import './Footer.css';
 
 const Footer = ({ onOpenPrivacy, onOpenTerms }) => {
@@ -9,8 +10,7 @@ const Footer = ({ onOpenPrivacy, onOpenTerms }) => {
         <div className="footer-top">
           <div className="footer-brand">
             <a href="#" className="logo footer-logo">
-              <span className="logo-icon">✦</span>
-              <span className="logo-text">DETAIL<span className="logo-highlight">MASTER</span></span>
+              <img src={logo} alt="Detailing Masters Logo" />
             </a>
             <p className="footer-desc">
               Premium auto detailing and car wash services. Your vehicle, our passion.
@@ -42,23 +42,28 @@ const Footer = ({ onOpenPrivacy, onOpenTerms }) => {
             <h4>Contact</h4>
             <ul>
               <li>
-                <a href="tel:+15551234567" className="footer-contact-link">
-                  <FiPhone size={14} /> +1 (555) 123-4567
+                <a href="tel:+919111977721" className="footer-contact-link">
+                  <FiPhone size={14} /> 9111977721
                 </a>
               </li>
               <li>
-                <a href="mailto:hello@detailmaster.com" className="footer-contact-link">
-                  <FiMail size={14} /> hello@detailmaster.com
+                <a href="tel:+919894834700" className="footer-contact-link">
+                  <FiPhone size={14} /> 9894834700
                 </a>
               </li>
-              <li>123 Detail Street</li>
-              <li>Auto City, FL 33101</li>
+              <li>
+                <a href="mailto:hello@detailingmasters.com" className="footer-contact-link">
+                  <FiMail size={14} /> hello@detailingmasters.com
+                </a>
+              </li>
+              <li>Opp. KTM Bike Showroom,</li>
+              <li>Chankai, Marthandam</li>
             </ul>
           </div>
         </div>
 
         <div className="footer-bottom">
-          <p>&copy; {new Date().getFullYear()} DETAILMASTER LLC. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} DETAILING MASTERS. All rights reserved.</p>
           <div className="footer-legal">
             <button onClick={onOpenPrivacy}>Privacy Policy</button>
             <button onClick={onOpenTerms}>Terms of Service</button>
