@@ -26,6 +26,7 @@ const Header = () => {
       <div className="header-container">
         <a href="#" className="logo">
           <img src={logo} alt="Detailing Masters Logo" />
+          <span className="logo-text">DETAILING <span className="logo-highlight">MASTERS</span></span>
         </a>
 
         <nav className={`nav ${isMobileOpen ? 'open' : ''}`}>

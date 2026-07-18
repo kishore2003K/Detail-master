@@ -15,6 +15,14 @@
 .footer-logo {
   margin-bottom: 16px;
   display: inline-flex;
+  color: var(--white);
+  align-items: center;
+}
+
+.footer-logo img {
+  background-color: var(--white);
+  padding: 4px;
+  border-radius: 4px;
 }
 
 .footer-desc {

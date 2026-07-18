@@ -11,6 +11,7 @@ const Footer = ({ onOpenPrivacy, onOpenTerms }) => {
           <div className="footer-brand">
             <a href="#" className="logo footer-logo">
               <img src={logo} alt="Detailing Masters Logo" />
+              <span className="logo-text">DETAILING <span className="logo-highlight">MASTERS</span></span>
             </a>
             <p className="footer-desc">
               Premium auto detailing and car wash services. Your vehicle, our passion.
@@ -20,11 +21,11 @@ const Footer = ({ onOpenPrivacy, onOpenTerms }) => {
           <div className="footer-links-group">
             <h4>Services</h4>
             <ul>
-              <li><a href="#services">Express Wash</a></li>
-              <li><a href="#services">Interior Detail</a></li>
-              <li><a href="#services">Exterior Detail</a></li>
-              <li><a href="#services">Full Detail</a></li>
+              <li><a href="#services">Foam Wash</a></li>
+              <li><a href="#services">Interior Cleaning</a></li>
               <li><a href="#services">Ceramic Coating</a></li>
+              <li><a href="#services">Headlight Restoration</a></li>
+              <li><a href="#services">Paint Protection Film</a></li>
             </ul>
           </div>
 

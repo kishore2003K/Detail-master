@@ -39,6 +39,10 @@
   width: auto;
 }
 
+.logo-highlight {
+  color: var(--burnt-orange);
+}
+
 .phone-links-header {
   display: flex;
   flex-direction: column;
