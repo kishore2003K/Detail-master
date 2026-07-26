@@ -1,13 +1,13 @@
 import './Hours.css';
 
 const schedule = [
-  { day: 'Monday', hours: '8am – 6pm' },
-  { day: 'Tuesday', hours: '8am – 6pm' },
-  { day: 'Wednesday', hours: '8am – 6pm' },
-  { day: 'Thursday', hours: '8am – 6pm' },
-  { day: 'Friday', hours: '8am – 6pm' },
-  { day: 'Saturday', hours: '9am – 5pm' },
-  { day: 'Sunday', hours: '10am – 4pm' },
+  { day: 'Monday', hours: '9am – 8pm' },
+  { day: 'Tuesday', hours: '9am – 8pm' },
+  { day: 'Wednesday', hours: '9am – 8pm' },
+  { day: 'Thursday', hours: '9am – 8pm' },
+  { day: 'Friday', hours: '9am – 8pm' },
+  { day: 'Saturday', hours: '9am – 8pm' },
+  { day: 'Sunday', hours: 'Leave' },
 ];
 
 const Hours = () => {

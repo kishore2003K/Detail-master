@@ -1,13 +1,13 @@
 .hours {
   padding: 120px 0;
-  background: var(--vanilla);
+  background: var(--white);
 }
 
 .hours-card {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 60px;
-  background: var(--white);
+  background: var(--vanilla);
   border-radius: var(--radius-xl);
   padding: 60px;
   box-shadow: var(--shadow-lg);
@@ -39,7 +39,7 @@
 }
 
 .hours-row.today {
-  background: var(--vanilla);
+  background: var(--white);
   border: 1px solid var(--burnt-orange);
 }
 

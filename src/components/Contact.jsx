@@ -72,131 +72,19 @@ const Contact = () => {
                 </div>
               </div>
             </div>
+
+            <div className="contact-map" style={{ marginTop: '40px', borderRadius: 'var(--radius)', overflow: 'hidden', height: '300px' }}>
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.032954774763!2d77.23808897423896!3d8.29951919173554!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b0455004a6f7003%3A0x938740e61277488c!2sDetailing%20masters!5e0!3m2!1sen!2sin!4v1785078483595!5m2!1sen!2sin" 
+                width="100%" 
+                height="100%" 
+                style={{ border: 0 }} 
+                allowFullScreen="" 
+                loading="lazy" 
+                referrerPolicy="strict-origin-when-cross-origin">
+              </iframe>
+            </div>
           </div>
-
-          <form className="contact-form" onSubmit={handleSubmit}>
-            <div className="form-row">
-              <div className="form-group">
-                <label>First Name</label>
-                <input
-                  type="text"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Last Name</label>
-                <input
-                  type="text"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-            </div>
-            <div className="form-row">
-              <div className="form-group">
-                <label>Email Address</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Phone Number</label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-            <div className="form-group">
-              <label>Service Requested</label>
-              <select
-                name="service"
-                value={formData.service}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select a service…</option>
-                <option value="express">Express Wash</option>
-                <option value="interior">Interior Detail</option>
-                <option value="exterior">Exterior Detail</option>
-                <option value="full">Full Detail Package</option>
-                <option value="paint">Paint Correction</option>
-                <option value="ceramic">Ceramic Coating</option>
-                <option value="other">Other / Not Sure</option>
-              </select>
-            </div>
-            
-            <div className="form-row">
-              <div className="form-group">
-                <label>Preferred Date</label>
-                <input
-                  type="date"
-                  name="date"
-                  value={formData.date}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-            </div>
-
-            {formData.date && (
-              <div className="form-group">
-                <label>Select Time Slot</label>
-                <div className="timeslot-grid">
-                  {availableSlots.map((slot) => {
-                    const isBooked = bookedSlots.includes(slot);
-                    const isSelected = formData.timeSlot === slot;
-                    return (
-                      <button
-                        key={slot}
-                        type="button"
-                        className={`timeslot-btn ${isBooked ? 'booked' : ''} ${isSelected ? 'selected' : ''}`}
-                        disabled={isBooked}
-                        onClick={() => setFormData({ ...formData, timeSlot: slot })}
-                      >
-                        {slot}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
-            <div className="form-group">
-              <label>Vehicle Make & Model</label>
-              <input
-                type="text"
-                name="vehicle"
-                value={formData.vehicle}
-                onChange={handleChange}
-                placeholder="e.g. BMW M4"
-              />
-            </div>
-            <div className="form-group">
-              <label>Additional Notes</label>
-              <textarea
-                name="notes"
-                value={formData.notes}
-                onChange={handleChange}
-                rows={4}
-                placeholder="Tell us about your vehicle's condition or any specific requests..."
-              />
-            </div>
-            <button type="submit" className="btn-primary form-submit">
-              Send Booking Request
-            </button>
-          </form>
         </div>
       </div>
     </section>

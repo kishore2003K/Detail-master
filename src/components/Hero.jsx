@@ -1,9 +1,14 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FiArrowRight } from 'react-icons/fi';
 import './Hero.css';
 
 const Hero = () => {
   const heroRef = useRef(null);
+  const [date, setDate] = useState('');
+  const [timeSlot, setTimeSlot] = useState('');
+
+  const availableSlots = ['09:00 AM', '10:30 AM', '12:00 PM', '01:30 PM', '03:00 PM', '04:30 PM'];
+  const bookedSlots = ['10:30 AM', '03:00 PM'];
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -29,10 +34,7 @@ const Hero = () => {
 
       <div className="container hero-content">
         <div className="hero-text">
-          <div className="hero-badge">
-            <span className="badge-dot" />
-            SUMMER SPECIAL — 20% OFF All Detail Packages
-          </div>
+
           <h1 className="hero-title">
             DETAIL BEYOND<br />
             <span className="title-accent">EXPECTATION</span>
@@ -45,9 +47,7 @@ const Hero = () => {
             <a href="#services" className="btn-primary">
               Explore Services <FiArrowRight />
             </a>
-            <a href="#contact" className="btn-secondary">
-              Book Appointment
-            </a>
+
           </div>
 
           <div className="hero-stats">
@@ -68,23 +68,62 @@ const Hero = () => {
           </div>
         </div>
 
-        <div className="hero-images">
-          <div className="hero-img-main">
-            <img
-              src="https://images.unsplash.com/photo-1592853625511-ad0edcc69c07?w=700&q=80&auto=format&fit=crop"
-              alt="Professional car wash"
-            />
-          </div>
-          <div className="hero-img-float">
-            <img
-              src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400&q=80&auto=format&fit=crop"
-              alt="Polished car detail"
-            />
-          </div>
-          <div className="hero-float-badge">
-            <span className="float-badge-number">15+</span>
-            <span className="float-badge-text">Years Experience</span>
-          </div>
+        <div className="hero-form-wrapper">
+          <form className="hero-booking-form" onSubmit={(e) => { e.preventDefault(); alert('Quick booking requested! We will call you shortly.'); }}>
+            <h3 className="hero-form-title">Quick Booking</h3>
+            <p className="hero-form-subtitle">Reserve your spot in under 60 seconds.</p>
+
+            <div className="hero-form-group">
+              <input type="text" placeholder="Your Name" required />
+            </div>
+            <div className="hero-form-group">
+              <input type="tel" placeholder="Phone Number" required />
+            </div>
+            <div className="hero-form-group">
+              <select required>
+                <option value="">Select Service...</option>
+                <option value="express">Express Wash</option>
+                <option value="interior">Interior Detail</option>
+                <option value="exterior">Exterior Detail</option>
+                <option value="full">Full Detail Package</option>
+              </select>
+            </div>
+            <div className="hero-form-group">
+              <input
+                type="date"
+                required
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                style={{ colorScheme: 'dark' }}
+              />
+            </div>
+
+            {date && (
+              <div className="hero-form-group">
+                <div className="hero-timeslot-grid">
+                  {availableSlots.map((slot) => {
+                    const isBooked = bookedSlots.includes(slot);
+                    const isSelected = timeSlot === slot;
+                    return (
+                      <button
+                        key={slot}
+                        type="button"
+                        className={`hero-timeslot-btn ${isBooked ? 'booked' : ''} ${isSelected ? 'selected' : ''}`}
+                        disabled={isBooked}
+                        onClick={() => setTimeSlot(slot)}
+                      >
+                        {slot}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            <button type="submit" className="btn-primary hero-form-submit">
+              Reserve Now
+            </button>
+          </form>
         </div>
       </div>
     </section>

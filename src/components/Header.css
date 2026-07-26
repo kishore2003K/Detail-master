@@ -31,6 +31,11 @@
   font-family: 'Playfair Display', serif;
   font-size: 1.5rem;
   font-weight: 800;
+  color: var(--white);
+  transition: color 0.3s;
+}
+
+.header.scrolled .logo {
   color: var(--dark);
 }
 
@@ -58,9 +63,13 @@
 .nav-link {
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--dark-secondary);
+  color: var(--white);
   transition: color 0.3s;
   position: relative;
+}
+
+.header.scrolled .nav-link {
+  color: var(--dark-secondary);
 }
 
 .nav-link::after {
@@ -94,8 +103,12 @@
   gap: 6px;
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--dark-secondary);
+  color: var(--white);
   transition: color 0.3s;
+}
+
+.header.scrolled .phone-link {
+  color: var(--dark-secondary);
 }
 
 .phone-link:hover {
@@ -110,8 +123,12 @@
 .mobile-toggle {
   display: none;
   background: none;
-  color: var(--dark);
+  color: var(--white);
   padding: 4px;
+}
+
+.header.scrolled .mobile-toggle {
+  color: var(--dark);
 }
 
 @media (max-width: 968px) {
@@ -137,6 +154,7 @@
     font-size: 1.5rem;
     font-family: 'Playfair Display', serif;
     font-weight: 700;
+    color: var(--dark);
   }
 
   .mobile-toggle {

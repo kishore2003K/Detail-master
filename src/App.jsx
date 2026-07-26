@@ -19,11 +19,11 @@ function App() {
     <>
       <Header />
       <Hero />
+      <Hours />
       <About />
       <Services />
       <Gallery />
       <HowItWorks />
-      <Hours />
       <Testimonials />
       <Contact />
       <Footer
