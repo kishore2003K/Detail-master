@@ -1,133 +1,163 @@
-import { useEffect, useRef, useState } from 'react';
-import { FiArrowRight } from 'react-icons/fi';
-import './Hero.css';
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight } from "lucide-react";
+import { Container } from "./ui/Container";
+import { Button } from "./ui/Button";
+import { LogoMark } from "./ui/LogoMark";
 
-const Hero = () => {
-  const heroRef = useRef(null);
-  const [date, setDate] = useState('');
-  const [timeSlot, setTimeSlot] = useState('');
+const slides = [
+  {
+    src: "/images/hero-wash.jpg",
+    label: "Precision Wash",
+  },
+  {
+    src: "/images/ceramic.png",
+    label: "Ceramic Protection",
+  },
+  {
+    src: "/images/wash.png",
+    label: "Studio Detailing",
+  },
+  {
+    src: "/images/hero-main.jpg",
+    label: "Showroom Finish",
+  },
+];
 
-  const availableSlots = ['09:00 AM', '10:30 AM', '12:00 PM', '01:30 PM', '03:00 PM', '04:30 PM'];
-  const bookedSlots = ['10:30 AM', '03:00 PM'];
+export default function Hero() {
+  const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      if (!heroRef.current) return;
-      const { clientX, clientY } = e;
-      const { innerWidth, innerHeight } = window;
-      const x = (clientX / innerWidth - 0.5) * 20;
-      const y = (clientY / innerHeight - 0.5) * 20;
-      heroRef.current.style.setProperty('--mouse-x', `${x}px`);
-      heroRef.current.style.setProperty('--mouse-y', `${y}px`);
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % slides.length);
+    }, 5500);
+    return () => clearInterval(timer);
   }, []);
 
   return (
-    <section className="hero" ref={heroRef} id="hero">
-      <div className="hero-bg-shapes">
-        <div className="hero-shape shape-1" />
-        <div className="hero-shape shape-2" />
-        <div className="hero-shape shape-3" />
+    <section
+      id="home"
+      className="relative min-h-screen flex items-end md:items-center overflow-hidden"
+    >
+      <div className="absolute inset-0">
+        <AnimatePresence mode="sync">
+          <motion.div
+            key={slides[index].src}
+            className="absolute inset-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.2, ease: "easeInOut" }}
+          >
+            <motion.div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{ backgroundImage: `url("${slides[index].src}")` }}
+              initial={{ scale: 1.12 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 6.5, ease: "easeOut" }}
+            />
+          </motion.div>
+        </AnimatePresence>
       </div>
 
-      <div className="container hero-content">
-        <div className="hero-text">
+      <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/25" />
+      <div className="absolute inset-0 bg-gradient-to-t from-luxury-bg via-luxury-bg/40 to-transparent" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_40%,rgba(245,197,24,0.12),transparent_55%)]" />
 
-          <h1 className="hero-title">
-            DETAIL BEYOND<br />
-            <span className="title-accent">EXPECTATION</span>
-          </h1>
-          <p className="hero-description">
-            Where Precision Meets Passion. DETAILING MASTERS delivers premium auto detailing
-            and car wash services for drivers who demand nothing less than perfection.
-          </p>
-          <div className="hero-buttons">
-            <a href="#services" className="btn-primary">
-              Explore Services <FiArrowRight />
-            </a>
+      <motion.div
+        aria-hidden
+        className="pointer-events-none absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12"
+        animate={{ x: ["-40%", "160%"] }}
+        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", repeatDelay: 3 }}
+      />
 
-          </div>
+      <Container className="relative z-10 w-full pb-24 pt-32 md:py-36">
+        <div className="max-w-2xl">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+          >
+            <LogoMark size="lg" className="mb-8" />
+          </motion.div>
 
-          <div className="hero-stats">
-            <div className="stat">
-              <span className="stat-number">2,500+</span>
-              <span className="stat-label">Cars Detailed</span>
-            </div>
-            <div className="stat-divider" />
-            <div className="stat">
-              <span className="stat-number">5★</span>
-              <span className="stat-label">Rating</span>
-            </div>
-            <div className="stat-divider" />
-            <div className="stat">
-              <span className="stat-number">100%</span>
-              <span className="stat-label">Satisfaction</span>
-            </div>
-          </div>
-        </div>
+          <motion.h1
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.75, delay: 0.18 }}
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.05] mb-5"
+          >
+            Detailing{" "}
+            <span className="text-gradient-gold">Masters</span>
+          </motion.h1>
 
-        <div className="hero-form-wrapper">
-          <form className="hero-booking-form" onSubmit={(e) => { e.preventDefault(); alert('Quick booking requested! We will call you shortly.'); }}>
-            <h3 className="hero-form-title">Quick Booking</h3>
-            <p className="hero-form-subtitle">Reserve your spot in under 60 seconds.</p>
+          <motion.p
+            initial={{ opacity: 0, y: 22 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.28 }}
+            className="text-base md:text-lg text-gray-300 mb-9 max-w-lg leading-relaxed"
+          >
+            Ceramic coating, paint protection, and interior restoration — crafted for cars that deserve perfection.
+          </motion.p>
 
-            <div className="hero-form-group">
-              <input type="text" placeholder="Your Name" required />
-            </div>
-            <div className="hero-form-group">
-              <input type="tel" placeholder="Phone Number" required />
-            </div>
-            <div className="hero-form-group">
-              <select required>
-                <option value="">Select Service...</option>
-                <option value="express">Express Wash</option>
-                <option value="interior">Interior Detail</option>
-                <option value="exterior">Exterior Detail</option>
-                <option value="full">Full Detail Package</option>
-              </select>
-            </div>
-            <div className="hero-form-group">
-              <input
-                type="date"
-                required
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                style={{ colorScheme: 'dark' }}
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65, delay: 0.38 }}
+            className="flex flex-wrap items-center gap-3"
+          >
+            <Button
+              variant="primary"
+              onClick={() =>
+                document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })
+              }
+            >
+              Book Appointment <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() =>
+                document.getElementById("services")?.scrollIntoView({ behavior: "smooth" })
+              }
+            >
+              View Services
+            </Button>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7 }}
+            className="mt-10 flex items-center gap-3"
+          >
+            {slides.map((slide, i) => (
+              <button
+                key={slide.src}
+                type="button"
+                aria-label={`Show ${slide.label}`}
+                onClick={() => setIndex(i)}
+                className={`h-1.5 rounded-full transition-all duration-500 ${
+                  i === index
+                    ? "w-10 bg-luxury-gold"
+                    : "w-5 bg-white/25 hover:bg-white/45"
+                }`}
               />
-            </div>
-
-            {date && (
-              <div className="hero-form-group">
-                <div className="hero-timeslot-grid">
-                  {availableSlots.map((slot) => {
-                    const isBooked = bookedSlots.includes(slot);
-                    const isSelected = timeSlot === slot;
-                    return (
-                      <button
-                        key={slot}
-                        type="button"
-                        className={`hero-timeslot-btn ${isBooked ? 'booked' : ''} ${isSelected ? 'selected' : ''}`}
-                        disabled={isBooked}
-                        onClick={() => setTimeSlot(slot)}
-                      >
-                        {slot}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
-            <button type="submit" className="btn-primary hero-form-submit">
-              Reserve Now
-            </button>
-          </form>
+            ))}
+            <span className="ml-2 text-xs tracking-widest uppercase text-gray-400">
+              {slides[index].label}
+            </span>
+          </motion.div>
         </div>
-      </div>
+      </Container>
+
+      <motion.div
+        animate={{ y: [0, 8, 0] }}
+        transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute bottom-7 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-2 text-gray-500"
+      >
+        <span className="text-[10px] uppercase tracking-[0.35em]">Scroll</span>
+        <div className="w-px h-10 bg-gradient-to-b from-luxury-gold to-transparent" />
+      </motion.div>
     </section>
   );
-};
-
-export default Hero;
+}

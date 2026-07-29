@@ -1,72 +1,87 @@
-import './Testimonials.css';
+import { useCallback } from "react";
+import useEmblaCarousel from "embla-carousel-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Container } from "./ui/Container";
+import { SectionTitle } from "./ui/SectionTitle";
+import { ReviewCard } from "./ui/ReviewCard";
+import { Button } from "./ui/Button";
 
 const reviews = [
   {
+    name: "ABHI",
+    vehicle: "Bike Detailing",
     rating: 5,
-    text: "I washed my bike here today and had a great experience. The staff are polite and professional, and the place is well maintained neat, clean, and organised. Their basic foam wash costs ₹250, and the service quality is excellent. They also offer washing and detailing services for cars, making it a convenient spot for all vehicle owners. Highly recommended for anyone looking for quality bike or car wash in Marthandam!",
-    initials: 'A',
-    name: 'ABHI',
-    detail: 'Customer',
+    text: "I washed my bike here today and had a great experience. The staff are polite and professional, and the place is well maintained neat, clean, and organised. Their basic foam wash costs ₹250, and the service quality is excellent."
   },
   {
+    name: "subair",
+    vehicle: "Full Car Wash & Interior",
     rating: 5,
-    text: "I recently visited Detailing Masters for a full car wash and interior cleaning, and I’m extremely impressed with the results. They paid great attention to detail, leaving the interior spotless and the exterior with a perfect shine. The staff is professional, and the service was quick. Definitely the best place in the area for car detailing at a reasonable price. Highly recommended.",
-    initials: 'S',
-    name: 'subair',
-    detail: 'Customer',
+    text: "I recently visited Detailing Masters for a full car wash and interior cleaning, and I'm extremely impressed with the results. They paid great attention to detail, leaving the interior spotless and the exterior with a perfect shine."
   },
   {
+    name: "Dr.Arun",
+    vehicle: "Ceramic Coating",
     rating: 5,
-    text: "I suggest detailing masters for those who in search of a good car wash .Very well behaved stafs , 4 people will work on your vehicle and finishes of in given time more than time the quality of work speaks here , I haven’t seen this kind of quality work in Marthandam compared to city’s and the customer waiting area is neat comfortable and air conditioned .",
-    initials: 'VV',
-    name: 'vishal vexus',
-    detail: 'Customer',
+    text: "Marthandam's finest car detailing and spa. Excellent work by Mr. Ajin and team. Detailing studio where quality meets satisfaction."
   },
   {
+    name: "Ashwin",
+    vehicle: "General Wash",
     rating: 5,
-    text: "I suggest detailing masters for those who are search for a good detailing studio. Well behaved staff and management. Good atmosphere.",
-    initials: 'RM',
-    name: 'Ron Markose',
-    detail: 'Customer',
-  },
-  {
-    rating: 5,
-    text: "I strongly recommend detailing masters.. I am impressed with their services, professional and loyal to their work..",
-    initials: 'CC',
-    name: 'Chinnu Chinnu',
-    detail: 'Customer',
-  },
+    text: "One of the best car wash experiences in the district! I had to drive 40 kms for a good wash and it was completely worth it."
+  }
 ];
 
-const Testimonials = () => {
+export default function Testimonials() {
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start" });
+
+  const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
+
   return (
-    <section className="testimonials" id="reviews">
-      <div className="container">
-        <div className="testimonials-header">
-          <span className="section-label">Client Reviews</span>
-          <h2 className="section-title">WHAT OUR CLIENTS SAY</h2>
+    <section id="reviews" className="py-24 relative overflow-hidden bg-luxury-secondary/10">
+      <Container>
+        <div className="flex flex-col md:flex-row items-end justify-between gap-6 mb-12">
+          <SectionTitle 
+            title="What Our Clients Say" 
+            subtitle="Google Reviews" 
+            align="left"
+            className="mb-0"
+          />
+          
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={scrollPrev}
+              className="w-12 h-12 rounded-full border border-luxury-border flex items-center justify-center text-white hover:bg-luxury-gold hover:text-luxury-bg hover:border-luxury-gold transition-all"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+            <button 
+              onClick={scrollNext}
+              className="w-12 h-12 rounded-full border border-luxury-border flex items-center justify-center text-white hover:bg-luxury-gold hover:text-luxury-bg hover:border-luxury-gold transition-all"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
+          </div>
         </div>
 
-        <div className="testimonials-grid">
-          {reviews.map((review, i) => (
-            <div className="testimonial-card" key={i}>
-              <div className="testimonial-stars">
-                {'★'.repeat(review.rating)}
+        <div className="overflow-hidden -mx-4" ref={emblaRef}>
+          <div className="flex touch-pan-y">
+            {reviews.map((review, index) => (
+              <div key={index} className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] min-w-0">
+                <ReviewCard {...review} />
               </div>
-              <p className="testimonial-text">"{review.text}"</p>
-              <div className="testimonial-author">
-                <div className="author-avatar">{review.initials}</div>
-                <div>
-                  <h4 className="author-name">{review.name}</h4>
-                  <p className="author-detail">{review.detail}</p>
-                </div>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+
+        <div className="mt-16 text-center">
+          <Button variant="ghost" className="border border-luxury-border" onClick={() => window.open('https://g.page/detailing-masters', '_blank')}>
+            Read More Reviews on Google <ChevronRight className="w-4 h-4 ml-2" />
+          </Button>
+        </div>
+      </Container>
     </section>
   );
-};
-
-export default Testimonials;
+}

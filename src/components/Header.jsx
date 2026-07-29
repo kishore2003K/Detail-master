@@ -1,70 +1,113 @@
-import { useState, useEffect } from 'react';
-import { FiMenu, FiX, FiPhone } from 'react-icons/fi';
-import logo from '../assets/logo.png';
-import './Header.css';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X } from "lucide-react";
+import { Container } from "./ui/Container";
+import { Button } from "./ui/Button";
+import { LogoMark } from "./ui/LogoMark";
 
-const Header = () => {
+const navLinks = [
+  { name: "Home", href: "#home" },
+  { name: "Services", href: "#services" },
+  { name: "Gallery", href: "#gallery" },
+  { name: "Reviews", href: "#reviews" },
+  { name: "Contact", href: "#contact" },
+];
+
+export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navLinks = [
-    { label: 'About', href: '#about' },
-    { label: 'Services', href: '#services' },
-    { label: 'Gallery', href: '#gallery' },
-    { label: 'Reviews', href: '#reviews' },
-    { label: 'Contact', href: '#contact' },
-  ];
-
   return (
-    <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
-      <div className="header-container">
-        <a href="#" className="logo">
-          <img src={logo} alt="Detailing Masters Logo" />
-          <span className="logo-text">DETAILING <span className="logo-highlight">MASTERS</span></span>
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        isScrolled
+          ? "bg-luxury-bg/90 backdrop-blur-xl border-b border-luxury-border py-2.5"
+          : "bg-transparent py-4"
+      }`}
+    >
+      <Container className="flex items-center justify-between">
+        <a href="#home" className="flex items-center gap-3 group">
+          <LogoMark size="sm" />
+          <span className="font-heading font-bold text-lg md:text-xl tracking-wide text-white hidden sm:block">
+            Detailing <span className="text-luxury-gold">Masters</span>
+          </span>
         </a>
 
-        <nav className={`nav ${isMobileOpen ? 'open' : ''}`}>
+        <nav className="hidden lg:flex items-center gap-8">
           {navLinks.map((link) => (
             <a
-              key={link.href}
+              key={link.name}
               href={link.href}
-              className="nav-link"
-              onClick={() => setIsMobileOpen(false)}
+              className="text-sm font-medium text-gray-300 hover:text-luxury-gold transition-colors relative group"
             >
-              {link.label}
+              {link.name}
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-luxury-gold transition-all duration-300 group-hover:w-full" />
             </a>
           ))}
         </nav>
 
-        <div className="header-actions">
-          <div className="phone-links-header">
-            <a href="tel:+919111977721" className="phone-link">
-              <FiPhone size={16} />
-              <span>9111977721</span>
-            </a>
-            <a href="tel:+919894834700" className="phone-link">
-              <FiPhone size={16} />
-              <span>9894834700</span>
-            </a>
-          </div>
-          <a href="#contact" className="btn-primary header-cta">Book Now</a>
-          <button
-            className="mobile-toggle"
-            onClick={() => setIsMobileOpen(!isMobileOpen)}
-            aria-label="Toggle menu"
+        <div className="hidden lg:block">
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={() =>
+              document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })
+            }
           >
-            {isMobileOpen ? <FiX size={24} /> : <FiMenu size={24} />}
-          </button>
+            Book Now
+          </Button>
         </div>
-      </div>
+
+        <button
+          className="lg:hidden text-white p-2"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label="Toggle menu"
+        >
+          {isMobileMenuOpen ? <X /> : <Menu />}
+        </button>
+      </Container>
+
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="absolute top-full left-0 right-0 bg-luxury-card/95 backdrop-blur-xl border-b border-luxury-border shadow-2xl lg:hidden"
+          >
+            <div className="flex flex-col p-6 gap-4">
+              {navLinks.map((link) => (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-lg font-medium text-gray-300 hover:text-luxury-gold py-2 border-b border-luxury-border/50"
+                >
+                  {link.name}
+                </a>
+              ))}
+              <Button
+                variant="primary"
+                className="mt-4 w-full"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+                }}
+              >
+                Book Now
+              </Button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
-};
-
-export default Header;
+}
