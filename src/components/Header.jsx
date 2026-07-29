@@ -35,7 +35,7 @@ export default function Header() {
     >
       <Container className="flex items-center justify-between">
         <a href="#home" className="flex items-center gap-3 group">
-          <LogoMark size="sm" />
+          <LogoMark size="sm" variant="simple" />
           <span className="font-heading font-bold text-lg md:text-xl tracking-wide text-white hidden sm:block">
             Detailing <span className="text-luxury-gold">Masters</span>
           </span>

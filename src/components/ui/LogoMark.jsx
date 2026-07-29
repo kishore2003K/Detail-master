@@ -3,12 +3,13 @@ import logo from "../../assets/logo.png";
 
 export function LogoMark({
   size = "md",
+  variant = "glow",
   className,
   imgClassName,
 }) {
   const imgSizes = {
-    sm: "h-11",
-    md: "h-14",
+    sm: "h-10",
+    md: "h-12",
     lg: "h-28 md:h-36",
   };
 
@@ -18,6 +19,29 @@ export function LogoMark({
     lg: "w-40 h-40 md:w-48 md:h-48",
   };
 
+  const padSizes = {
+    sm: "p-1",
+    md: "p-1.5",
+  };
+
+  if (variant === "simple") {
+    return (
+      <div
+        className={cn(
+          "inline-flex items-center justify-center rounded-lg bg-[#F4EFD8]",
+          padSizes[size] || padSizes.md,
+          className
+        )}
+      >
+        <img
+          src={logo}
+          alt="Detailing Masters"
+          className={cn("w-auto object-contain", imgSizes[size], imgClassName)}
+        />
+      </div>
+    );
+  }
+
   return (
     <div
       className={cn(
@@ -25,7 +49,6 @@ export function LogoMark({
         className
       )}
     >
-      {/* Soft feathered light so black logo details stay readable — no hard box */}
       <div
         aria-hidden
         className={cn(

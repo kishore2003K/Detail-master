@@ -37,7 +37,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="space-y-6">
             <div className="flex items-center gap-3">
-              <LogoMark size="md" />
+              <LogoMark size="md" variant="simple" />
               <span className="font-heading font-bold text-xl tracking-wide text-white">
                 Detailing <span className="text-luxury-gold">Masters</span>
               </span>
