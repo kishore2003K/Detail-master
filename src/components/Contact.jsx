@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { Container } from "./ui/Container";
@@ -7,11 +8,52 @@ import { Textarea } from "./ui/Textarea";
 import { Button } from "./ui/Button";
 
 export default function Contact() {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, formState: { errors }, reset } = useForm();
+  const [services, setServices] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const onSubmit = (data) => {
-    console.log(data);
-    alert("Thank you for your booking request! We will contact you shortly to confirm.");
+  useEffect(() => {
+    fetch('/api/services')
+      .then(res => res.json())
+      .then(data => {
+        // filter out inactive if necessary, or just set all
+        setServices(data.filter(s => s.is_active));
+      })
+      .catch(err => console.error("Error fetching services:", err));
+  }, []);
+
+  const onSubmit = async (data) => {
+    setIsSubmitting(true);
+    try {
+      const response = await fetch('/api/web_bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          full_name: data.name,
+          phone: data.phone,
+          email: data.email,
+          vehicle_brand: data.brand,
+          vehicle_model: data.model,
+          vehicle_type: data.type,
+          service_id: data.service,
+          preferred_date: data.date,
+          additional_notes: data.message
+        })
+      });
+      
+      if (response.ok) {
+        alert("Thank you for your booking request! We will contact you shortly to confirm.");
+        reset();
+      } else {
+        const errorData = await response.json();
+        alert(`Failed to submit booking: ${errorData.message || 'Unknown error'}`);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error submitting booking request. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -61,15 +103,25 @@ export default function Contact() {
                 </div>
               </div>
               
+              <div>
+                <Input 
+                  type="email" 
+                  placeholder="Email Address" 
+                  {...register("email", { required: true })} 
+                  className={errors.email ? "border-red-500" : ""}
+                />
+              </div>
+              
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <select 
                   className="flex h-12 w-full rounded-lg bg-luxury-secondary/50 border border-luxury-border px-4 py-2 text-sm text-gray-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-luxury-gold focus-visible:border-luxury-gold"
                   {...register("type", { required: true })}
                 >
                   <option value="">Vehicle Type</option>
-                  <option value="car">Sedan / Hatchback</option>
+                  <option value="sedan">Sedan / Hatchback</option>
                   <option value="suv">SUV / Truck</option>
                   <option value="bike">Motorcycle</option>
+                  <option value="luxury">Luxury / Exotic</option>
                 </select>
                 
                 <select 
@@ -77,10 +129,11 @@ export default function Contact() {
                   {...register("service", { required: true })}
                 >
                   <option value="">Select Service</option>
-                  <option value="express">Express Detail</option>
-                  <option value="premium">Premium Package</option>
-                  <option value="ceramic">Ceramic Coating</option>
-                  <option value="ppf">Paint Protection Film</option>
+                  {services.map(service => (
+                    <option key={service.id} value={service.id}>
+                      {service.service_name}
+                    </option>
+                  ))}
                 </select>
                 
                 <Input 
@@ -97,8 +150,8 @@ export default function Contact() {
                 />
               </div>
               
-              <Button type="submit" variant="primary" className="w-full h-14 text-lg">
-                Submit Booking Request
+              <Button type="submit" variant="primary" className="w-full h-14 text-lg" disabled={isSubmitting}>
+                {isSubmitting ? "Submitting..." : "Submit Booking Request"}
               </Button>
             </form>
           </div>
