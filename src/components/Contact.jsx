@@ -37,6 +37,7 @@ export default function Contact() {
           vehicle_type: data.type,
           service_id: data.service,
           preferred_date: data.date,
+          preferred_time_period: data.time_period,
           additional_notes: data.message
         })
       });
@@ -112,7 +113,7 @@ export default function Contact() {
                 />
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <select 
                   className="flex h-12 w-full rounded-lg bg-luxury-secondary/50 border border-luxury-border px-4 py-2 text-sm text-gray-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-luxury-gold focus-visible:border-luxury-gold"
                   {...register("type", { required: true })}
@@ -141,6 +142,16 @@ export default function Contact() {
                   {...register("date", { required: true })} 
                   style={{ colorScheme: "dark" }}
                 />
+
+                <select 
+                  className="flex h-12 w-full rounded-lg bg-luxury-secondary/50 border border-luxury-border px-4 py-2 text-sm text-gray-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-luxury-gold focus-visible:border-luxury-gold"
+                  {...register("time_period", { required: true })}
+                >
+                  <option value="">Select Time</option>
+                  <option value="Morning (9 AM - 12 PM)">Morning (9 AM - 12 PM)</option>
+                  <option value="Afternoon (12 PM - 4 PM)">Afternoon (12 PM - 4 PM)</option>
+                  <option value="Evening (4 PM - 8 PM)">Evening (4 PM - 8 PM)</option>
+                </select>
               </div>
               
               <div>
