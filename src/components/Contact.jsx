@@ -12,8 +12,10 @@ export default function Contact() {
   const [services, setServices] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const API_URL = import.meta.env.VITE_API_URL || '';
+
   useEffect(() => {
-    fetch('/api/services')
+    fetch(`${API_URL}/api/services`)
       .then(res => res.json())
       .then(data => {
         // filter out inactive if necessary, or just set all
@@ -25,7 +27,7 @@ export default function Contact() {
   const onSubmit = async (data) => {
     setIsSubmitting(true);
     try {
-      const response = await fetch('/api/web_bookings', {
+      const response = await fetch(`${API_URL}/api/web_bookings`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
