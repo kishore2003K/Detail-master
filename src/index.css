@@ -33,6 +33,11 @@
   h6 {
     @apply font-heading text-white tracking-tight;
   }
+
+  select option {
+    background-color: var(--color-luxury-card);
+    color: white;
+  }
 }
 
 @layer utilities {
