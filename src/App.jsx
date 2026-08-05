@@ -15,10 +15,7 @@ import FloatingButtons from './components/FloatingButtons';
 function App() {
   return (
     <HelmetProvider>
-      <Helmet>
-        <title>Detailing Masters | Premium Car Detailing Studio</title>
-        <meta name="description" content="Marthandam's finest luxury car detailing and spa. We specialize in Ceramic Coating, Paint Protection Film (PPF), and premium interior detailing." />
-      </Helmet>
+
       
       <div className="min-h-screen bg-luxury-bg text-luxury-text font-sans selection:bg-luxury-gold selection:text-luxury-bg">
         <Header />
