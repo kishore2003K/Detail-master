@@ -220,6 +220,25 @@ export default function Contact() {
             </div>
           </div>
           
+          <div className="lg:col-span-2 flex flex-col sm:flex-row gap-4 mt-6">
+            <a 
+              href="https://share.google/Karz2vMmzVsBdwtI7" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex-1 bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg text-center font-bold transition-colors shadow-lg flex items-center justify-center gap-2"
+            >
+              📍 Locate Us on Maps
+            </a>
+            <a 
+              href="https://share.google/Karz2vMmzVsBdwtI7" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex-1 bg-luxury-gold hover:bg-luxury-gold-dim text-black px-6 py-3 rounded-lg text-center font-bold transition-colors shadow-lg flex items-center justify-center gap-2"
+            >
+              ⭐ Leave a Google Review
+            </a>
+          </div>
+          
         </div>
       </Container>
     </section>
