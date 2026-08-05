@@ -12,7 +12,7 @@ export default function Contact() {
   const [services, setServices] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const API_URL = import.meta.env.VITE_API_URL || '';
+  const API_URL = import.meta.env.VITE_API_URL || 'https://detail-master-production.up.railway.app';
 
   useEffect(() => {
     fetch(`${API_URL}/api/services`)
