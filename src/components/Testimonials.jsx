@@ -76,9 +76,19 @@ export default function Testimonials() {
           </div>
         </div>
 
-        <div className="mt-16 text-center">
-          <Button variant="ghost" className="border border-luxury-border" onClick={() => window.open('https://g.page/detailing-masters', '_blank')}>
-            Read More Reviews on Google <ChevronRight className="w-4 h-4 ml-2" />
+        <div className="mt-16 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Button 
+            className="bg-luxury-gold text-luxury-bg hover:bg-white transition-colors"
+            onClick={() => window.open('https://g.page/r/CYxldxLmQleTEBM/review', '_blank')}
+          >
+            Leave a Review on Google <ChevronRight className="w-4 h-4 ml-2" />
+          </Button>
+          <Button 
+            variant="ghost" 
+            className="border border-luxury-border hover:bg-white/5" 
+            onClick={() => window.open('https://g.page/detailing-masters', '_blank')}
+          >
+            Read All Reviews <ChevronRight className="w-4 h-4 ml-2" />
           </Button>
         </div>
       </Container>

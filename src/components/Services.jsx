@@ -1,9 +1,10 @@
 import { Shield, Sparkles, Droplets, Gauge, Bike, Wind } from "lucide-react";
+import { useState, useEffect } from "react";
 import { Container } from "./ui/Container";
 import { SectionTitle } from "./ui/SectionTitle";
 import { ServiceCard } from "./ui/ServiceCard";
 
-const servicesList = [
+const staticServiceMetadata = [
   {
     title: "Premium Wash",
     description: "Meticulous hand wash using pH-neutral snow foam, two-bucket method, and plush microfiber drying to prevent swirl marks.",
@@ -50,11 +51,50 @@ const servicesList = [
     price: "₹1,999",
     duration: "3 Hours",
     icon: Bike,
-    image: "/images/bike.png"
+    image: "/images/bike-detailing-luxury.png"
   }
 ];
 
 export default function Services() {
+  const [services, setServices] = useState(staticServiceMetadata);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await fetch('/api/services');
+        if (response.ok) {
+          const dbServices = await response.json();
+          // Filter active services only
+          const activeServices = dbServices.filter(s => s.is_active !== false);
+          
+          if (activeServices.length > 0) {
+            const mergedServices = activeServices.map(dbService => {
+              // Find matching static metadata by name
+              const meta = staticServiceMetadata.find(
+                s => s.title.toLowerCase() === dbService.service_name.toLowerCase()
+              ) || {};
+              
+              return {
+                title: dbService.service_name,
+                price: `₹${Number(dbService.base_price).toLocaleString('en-IN')}`,
+                description: meta.description || `Professional ${dbService.service_name} service.`,
+                duration: meta.duration || "Varies",
+                icon: meta.icon || Sparkles, // Fallback icon
+                image: meta.image || "/images/wash.png" // Fallback image
+              };
+            });
+            
+            setServices(mergedServices);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching services from backend:", error);
+      }
+    };
+    
+    fetchServices();
+  }, []);
+
   return (
     <section id="services" className="pt-16 pb-24 relative bg-luxury-bg">
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,rgba(245,197,24,0.06),transparent_55%)]" />
@@ -66,7 +106,7 @@ export default function Services() {
         />
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-          {servicesList.map((service, index) => (
+          {services.map((service, index) => (
             <ServiceCard key={service.title} {...service} index={index} />
           ))}
         </div>
