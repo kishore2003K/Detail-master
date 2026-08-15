@@ -6,6 +6,7 @@ export function LogoMark({
   variant = "glow",
   className,
   imgClassName,
+  logoSrc = logo,
 }) {
   const imgSizes = {
     sm: "h-10",
@@ -24,6 +25,18 @@ export function LogoMark({
     md: "p-1.5",
   };
 
+  if (variant === "none") {
+    return (
+      <div className={cn("relative inline-flex items-center justify-center", className)}>
+        <img
+          src={logoSrc}
+          alt="Detailing Masters"
+          className={cn("w-auto object-contain", imgSizes[size], imgClassName)}
+        />
+      </div>
+    );
+  }
+
   if (variant === "simple") {
     return (
       <div
@@ -34,7 +47,7 @@ export function LogoMark({
         )}
       >
         <img
-          src={logo}
+          src={logoSrc}
           alt="Detailing Masters"
           className={cn("w-auto object-contain", imgSizes[size], imgClassName)}
         />
@@ -59,7 +72,7 @@ export function LogoMark({
       />
 
       <img
-        src={logo}
+        src={logoSrc}
         alt="Detailing Masters"
         className={cn(
           "relative z-10 w-auto object-contain",

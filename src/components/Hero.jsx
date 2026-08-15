@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { Container } from "./ui/Container";
 import { Button } from "./ui/Button";
 import { LogoMark } from "./ui/LogoMark";
+import logo1 from "../assets/logo1.svg";
 
 const slides = [
   {
@@ -78,7 +79,7 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
           >
-            <LogoMark size="lg" className="mb-8" />
+            <LogoMark variant="none" size="lg" imgClassName="h-32 md:h-48 lg:h-56" className="mb-8" logoSrc={logo1} />
           </motion.div>
 
           <motion.h1
