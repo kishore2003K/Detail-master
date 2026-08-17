@@ -79,14 +79,14 @@ export default function Testimonials() {
         <div className="mt-16 flex flex-col sm:flex-row items-center justify-center gap-4">
           <Button 
             className="bg-luxury-gold text-luxury-bg hover:bg-white transition-colors"
-            onClick={() => window.open('https://g.page/r/CYxldxLmQleTEBM/review', '_blank')}
+            onClick={() => window.open("https://www.google.com/maps/place/Dirt+Buster's+Diesel+%26+Automotive+Detailing+industry/@32.6031662,-82.3413047,17z/data=!3m1!4b1!4m6!3m5!1s0x88f0a5ab53c918ad:0x6acfd66315b9557!8m2!3d32.6031662!4d-82.3413047!16s%2Fg%2F11h1dgbld7", '_blank')}
           >
             Leave a Review on Google <ChevronRight className="w-4 h-4 ml-2" />
           </Button>
           <Button 
             variant="ghost" 
             className="border border-luxury-border hover:bg-white/5" 
-            onClick={() => window.open('https://g.page/detailing-masters', '_blank')}
+            onClick={() => window.open("https://www.google.com/search?q=Detailing+masters", '_blank')}
           >
             Read All Reviews <ChevronRight className="w-4 h-4 ml-2" />
           </Button>

@@ -43,7 +43,7 @@ export default function Contact() {
           additional_notes: data.message
         })
       });
-      
+
       if (response.ok) {
         alert("Thank you for your booking request! We will contact you shortly to confirm.");
         reset();
@@ -62,61 +62,61 @@ export default function Contact() {
   return (
     <section id="contact" className="py-24 bg-luxury-secondary/10 border-t border-luxury-border">
       <Container>
-        <SectionTitle 
-          title="Reserve Your Spot" 
-          subtitle="Book Appointment" 
+        <SectionTitle
+          title="Reserve Your Spot"
+          subtitle="Book Appointment"
         />
-        
+
         <div className="grid lg:grid-cols-5 gap-12 mt-12">
           {/* Booking Form */}
           <div className="lg:col-span-3 glass-card p-8 md:p-10">
             <h3 className="text-2xl font-bold text-white mb-6">Booking Details</h3>
-            
+
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <Input 
-                    placeholder="Full Name" 
-                    {...register("name", { required: true })} 
+                  <Input
+                    placeholder="Full Name"
+                    {...register("name", { required: true })}
                     className={errors.name ? "border-red-500" : ""}
                   />
                 </div>
                 <div>
-                  <Input 
-                    type="tel" 
-                    placeholder="Phone Number" 
-                    {...register("phone", { required: true })} 
+                  <Input
+                    type="tel"
+                    placeholder="Phone Number"
+                    {...register("phone", { required: true })}
                     className={errors.phone ? "border-red-500" : ""}
                   />
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <Input 
-                    placeholder="Vehicle Brand (e.g. BMW)" 
-                    {...register("brand", { required: true })} 
+                  <Input
+                    placeholder="Vehicle Brand (e.g. BMW)"
+                    {...register("brand", { required: true })}
                   />
                 </div>
                 <div>
-                  <Input 
-                    placeholder="Vehicle Model (e.g. M4)" 
-                    {...register("model", { required: true })} 
+                  <Input
+                    placeholder="Vehicle Model (e.g. M4)"
+                    {...register("model", { required: true })}
                   />
                 </div>
               </div>
-              
+
               <div>
-                <Input 
-                  type="email" 
-                  placeholder="Email Address" 
-                  {...register("email", { required: true })} 
+                <Input
+                  type="email"
+                  placeholder="Email Address"
+                  {...register("email", { required: true })}
                   className={errors.email ? "border-red-500" : ""}
                 />
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <select 
+                <select
                   className="flex h-12 w-full rounded-lg bg-luxury-secondary/50 border border-luxury-border px-4 py-2 text-sm text-gray-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-luxury-gold focus-visible:border-luxury-gold"
                   {...register("type", { required: true })}
                 >
@@ -126,8 +126,8 @@ export default function Contact() {
                   <option value="bike">Motorcycle</option>
                   <option value="luxury">Luxury / Exotic</option>
                 </select>
-                
-                <select 
+
+                <select
                   className="flex h-12 w-full rounded-lg bg-luxury-secondary/50 border border-luxury-border px-4 py-2 text-sm text-gray-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-luxury-gold focus-visible:border-luxury-gold"
                   {...register("service", { required: true })}
                 >
@@ -138,14 +138,14 @@ export default function Contact() {
                     </option>
                   ))}
                 </select>
-                
-                <Input 
-                  type="date" 
-                  {...register("date", { required: true })} 
+
+                <Input
+                  type="date"
+                  {...register("date", { required: true })}
                   style={{ colorScheme: "dark" }}
                 />
 
-                <select 
+                <select
                   className="flex h-12 w-full rounded-lg bg-luxury-secondary/50 border border-luxury-border px-4 py-2 text-sm text-gray-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-luxury-gold focus-visible:border-luxury-gold"
                   {...register("time_period", { required: true })}
                 >
@@ -155,36 +155,36 @@ export default function Contact() {
                   <option value="Evening (4 PM - 8 PM)">Evening (4 PM - 8 PM)</option>
                 </select>
               </div>
-              
+
               <div>
-                <Textarea 
-                  placeholder="Additional Notes or Specific Requests..." 
+                <Textarea
+                  placeholder="Additional Notes or Specific Requests..."
                   {...register("message")}
                 />
               </div>
-              
+
               <Button type="submit" variant="primary" className="w-full h-14 text-lg" disabled={isSubmitting}>
                 {isSubmitting ? "Submitting..." : "Submit Booking Request"}
               </Button>
             </form>
           </div>
-          
+
           {/* Contact Info & Map */}
           <div className="lg:col-span-2 flex flex-col gap-8">
             <div className="glass-card p-8">
               <h3 className="text-xl font-bold text-white mb-6">Contact Information</h3>
-              
+
               <ul className="space-y-6">
                 <li className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-full bg-luxury-gold/10 flex items-center justify-center shrink-0">
                     <MapPin className="w-5 h-5 text-luxury-gold" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-white mb-1">Our Studio</h4>
+                    <h4 className="font-semibold text-white mb-1">Detailing Masters</h4>
                     <p className="text-gray-400 text-sm">Opposite KTM Bike Showroom,<br />Chankai, Marthandam,<br />Tamil Nadu 629155</p>
                   </div>
                 </li>
-                
+
                 <li className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-full bg-luxury-gold/10 flex items-center justify-center shrink-0">
                     <Phone className="w-5 h-5 text-luxury-gold" />
@@ -194,7 +194,7 @@ export default function Contact() {
                     <p className="text-gray-400 text-sm">9111977721<br />9894834700</p>
                   </div>
                 </li>
-                
+
                 <li className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-full bg-luxury-gold/10 flex items-center justify-center shrink-0">
                     <Clock className="w-5 h-5 text-luxury-gold" />
@@ -206,22 +206,22 @@ export default function Contact() {
                 </li>
               </ul>
             </div>
-            
+
             <div className="glass-card overflow-hidden h-[300px] p-2">
-              <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.032954774763!2d77.23808897423896!3d8.29951919173554!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b0455004a6f7003%3A0x938740e61277488c!2sDetailing%20masters!5e0!3m2!1sen!2sin!4v1785078483595!5m2!1sen!2sin" 
-                width="100%" 
-                height="100%" 
-                style={{ border: 0, borderRadius: '0.5rem' }} 
-                allowFullScreen="" 
-                loading="lazy" 
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.032954774763!2d77.23808897423896!3d8.29951919173554!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b0455004a6f7003%3A0x938740e61277488c!2sDetailing%20masters!5e0!3m2!1sen!2sin!4v1785078483595!5m2!1sen!2sin"
+                width="100%"
+                height="100%"
+                style={{ border: 0, borderRadius: '0.5rem' }}
+                allowFullScreen=""
+                loading="lazy"
                 referrerPolicy="strict-origin-when-cross-origin">
               </iframe>
             </div>
           </div>
-          
 
-          
+
+
         </div>
       </Container>
     </section>

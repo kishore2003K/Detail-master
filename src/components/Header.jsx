@@ -27,11 +27,10 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isScrolled
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
           ? "bg-luxury-bg/90 backdrop-blur-xl border-b border-luxury-border py-2.5"
           : "bg-transparent py-4"
-      }`}
+        }`}
     >
       <Container className="flex items-center justify-between">
         <a href="#home" className="flex items-center gap-3 group">
