@@ -86,7 +86,7 @@ export default function Testimonials() {
           <Button 
             variant="ghost" 
             className="border border-luxury-border hover:bg-white/5" 
-            onClick={() => window.open("https://www.google.com/search?q=Detailing+masters", '_blank')}
+            onClick={() => window.open("https://www.google.com/search?q=Detailing+masters#lrd=0x3b0455004a6f7003:0x938740e61277488c,1,,,,", '_blank')}
           >
             Read All Reviews <ChevronRight className="w-4 h-4 ml-2" />
           </Button>

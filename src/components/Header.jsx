@@ -5,6 +5,8 @@ import { Container } from "./ui/Container";
 import { Button } from "./ui/Button";
 import { LogoMark } from "./ui/LogoMark";
 
+import brandLogo from "../assets/brand-logo.png";
+
 const navLinks = [
   { name: "Home", href: "#home" },
   { name: "Services", href: "#services" },
@@ -33,11 +35,12 @@ export default function Header() {
         }`}
     >
       <Container className="flex items-center justify-between">
-        <a href="#home" className="flex items-center gap-3 group">
-          <LogoMark size="sm" variant="simple" />
-          <span className="font-heading font-bold text-lg md:text-xl tracking-wide text-white hidden sm:block">
-            Detailing <span className="text-luxury-gold">Masters</span>
-          </span>
+        <a href="#home" className="flex items-center group">
+          <img 
+            src={brandLogo} 
+            alt="Detailing Masters Logo" 
+            className="h-16 md:h-20 lg:h-24 w-auto object-contain"
+          />
         </a>
 
         <nav className="hidden lg:flex items-center gap-8">
