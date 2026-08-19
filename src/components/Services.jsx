@@ -51,7 +51,7 @@ const staticServiceMetadata = [
     price: "₹1,999",
     duration: "3 Hours",
     icon: Bike,
-    image: "/images/bike-detailing-luxury.png"
+    image: "/images/bike-detailing-1.jpg"
   }
 ];
 

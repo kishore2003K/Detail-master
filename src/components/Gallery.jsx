@@ -12,7 +12,7 @@ const galleryImages = [
   { id: 2, category: "SUV", title: "Ceramic Coating", image: "/images/ceramic.png" },
   { id: 3, category: "Ceramic", title: "Paint Correction", image: "/images/paint.png" },
   { id: 4, category: "Interior", title: "Interior Detailing", image: "/images/interior.png" },
-  { id: 5, category: "Bike", title: "Ducati Panigale", image: "/images/bike.png" },
+  { id: 5, category: "Bike", title: "Ducati Panigale", image: "/images/bike-detailing-2.jpg" },
   { id: 6, category: "Cars", title: "Engine Bay", image: "/images/engine.png" },
 ];
 

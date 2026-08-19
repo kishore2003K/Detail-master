@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 import { Container } from "./ui/Container";
 import { Button } from "./ui/Button";
 import { LogoMark } from "./ui/LogoMark";
+import { useSmoothScroll } from "../hooks/useSmoothScroll";
 
 import brandLogo from "../assets/brand-logo.png";
 
@@ -18,6 +19,7 @@ const navLinks = [
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const scrollTo = useSmoothScroll();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -60,9 +62,7 @@ export default function Header() {
           <Button
             variant="primary"
             size="sm"
-            onClick={() =>
-              document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })
-            }
+            onClick={() => scrollTo("contact")}
           >
             Book Now
           </Button>
@@ -101,7 +101,7 @@ export default function Header() {
                 className="mt-4 w-full"
                 onClick={() => {
                   setIsMobileMenuOpen(false);
-                  document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+                  scrollTo("contact");
                 }}
               >
                 Book Now

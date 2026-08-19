@@ -58,3 +58,12 @@
       0 0 28px rgba(245, 197, 24, 0.2);
   }
 }
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% -200%;
+  }
+  100% {
+    background-position: 200% 200%;
+  }
+}

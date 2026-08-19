@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { motion } from "framer-motion";
 import { Container } from "./ui/Container";
 import { SectionTitle } from "./ui/SectionTitle";
 import { Input } from "./ui/Input";
@@ -37,7 +38,7 @@ export default function Contact() {
           vehicle_brand: data.brand,
           vehicle_model: data.model,
           vehicle_type: data.type,
-          service_id: data.service,
+          service_id: Array.isArray(data.service) ? data.service.join(',') : data.service,
           preferred_date: data.date,
           preferred_time_period: data.time_period,
           additional_notes: data.message
@@ -69,8 +70,17 @@ export default function Contact() {
 
         <div className="grid lg:grid-cols-5 gap-12 mt-12">
           {/* Booking Form */}
-          <div className="lg:col-span-3 glass-card p-8 md:p-10">
-            <h3 className="text-2xl font-bold text-white mb-6">Booking Details</h3>
+          <motion.div 
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.7 }}
+            className="lg:col-span-3 glass-card p-8 md:p-10 relative overflow-hidden group"
+          >
+            {/* Subtle glow effect on focus */}
+            <div className="absolute inset-0 bg-luxury-gold/5 opacity-0 group-focus-within:opacity-100 transition-opacity duration-500 pointer-events-none" />
+            
+            <h3 className="text-2xl font-bold text-white mb-6 relative z-10">Booking Details</h3>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -115,7 +125,7 @@ export default function Contact() {
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <select
                   className="flex h-12 w-full rounded-lg bg-luxury-secondary/50 border border-luxury-border px-4 py-2 text-sm text-gray-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-luxury-gold focus-visible:border-luxury-gold"
                   {...register("type", { required: true })}
@@ -125,18 +135,6 @@ export default function Contact() {
                   <option value="suv">SUV / Truck</option>
                   <option value="bike">Motorcycle</option>
                   <option value="luxury">Luxury / Exotic</option>
-                </select>
-
-                <select
-                  className="flex h-12 w-full rounded-lg bg-luxury-secondary/50 border border-luxury-border px-4 py-2 text-sm text-gray-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-luxury-gold focus-visible:border-luxury-gold"
-                  {...register("service", { required: true })}
-                >
-                  <option value="">Select Service</option>
-                  {services.map(service => (
-                    <option key={service.id} value={service.id}>
-                      {service.service_name}
-                    </option>
-                  ))}
                 </select>
 
                 <Input
@@ -157,6 +155,24 @@ export default function Contact() {
               </div>
 
               <div>
+                <label className="block text-sm font-medium text-gray-300 mb-3">Select Services</label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {services.map(service => (
+                    <label key={service.id} className="flex items-center gap-3 p-3 rounded-lg border border-luxury-border bg-luxury-secondary/50 cursor-pointer hover:border-luxury-gold/50 transition-colors">
+                      <input
+                        type="checkbox"
+                        value={service.id}
+                        {...register("service", { required: true })}
+                        className="w-4 h-4 text-luxury-gold bg-luxury-bg border-gray-600 rounded focus:ring-luxury-gold focus:ring-1"
+                      />
+                      <span className="text-sm text-gray-200">{service.service_name}</span>
+                    </label>
+                  ))}
+                </div>
+                {errors.service && <span className="text-red-500 text-xs mt-2 block">Please select at least one service.</span>}
+              </div>
+
+              <div>
                 <Textarea
                   placeholder="Additional Notes or Specific Requests..."
                   {...register("message")}
@@ -167,10 +183,16 @@ export default function Contact() {
                 {isSubmitting ? "Submitting..." : "Submit Booking Request"}
               </Button>
             </form>
-          </div>
+          </motion.div>
 
           {/* Contact Info & Map */}
-          <div className="lg:col-span-2 flex flex-col gap-8">
+          <motion.div 
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="lg:col-span-2 flex flex-col gap-8"
+          >
             <div className="glass-card p-8">
               <h3 className="text-xl font-bold text-white mb-6">Contact Information</h3>
 
@@ -218,7 +240,7 @@ export default function Contact() {
                 referrerPolicy="strict-origin-when-cross-origin">
               </iframe>
             </div>
-          </div>
+          </motion.div>
 
 
 

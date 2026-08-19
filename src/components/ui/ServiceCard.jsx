@@ -1,8 +1,10 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Button } from "./Button";
+import { useSmoothScroll } from "../../hooks/useSmoothScroll";
 
 export function ServiceCard({ title, description, icon: Icon, image, price, duration, index = 0 }) {
+  const scrollTo = useSmoothScroll();
   return (
     <motion.div 
       initial={{ opacity: 0, y: 30 }}
@@ -32,8 +34,8 @@ export function ServiceCard({ title, description, icon: Icon, image, price, dura
         </div>
         
         <div className="flex items-center gap-4 mt-auto">
-          <Button variant="primary" size="sm" className="w-full" onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}>Book Now</Button>
-          <button className="text-luxury-gold p-2 hover:bg-luxury-gold/10 rounded-full transition-colors" onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}>
+          <Button variant="primary" size="sm" className="w-full" onClick={() => scrollTo("contact")}>Book Now</Button>
+          <button className="text-luxury-gold p-2 hover:bg-luxury-gold/10 rounded-full transition-colors" onClick={() => scrollTo("contact")}>
             <ArrowRight className="w-5 h-5" />
           </button>
         </div>
