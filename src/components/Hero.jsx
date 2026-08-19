@@ -21,6 +21,11 @@ export default function Hero() {
     restDelta: 0.001 
   });
 
+  // Mobile optimization: Use direct scroll progress on touch devices to eliminate perceived "delay" or lag,
+  // since native touch scrolling is already perfectly smooth. Use spring on desktop to smooth out chunky mouse wheels.
+  const isTouchDevice = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
+  const activeProgress = isTouchDevice ? scrollYProgress : smoothProgress;
+
   const [images, setImages] = useState([]);
   const totalFrames = 240;
   const [isLoaded, setIsLoaded] = useState(false);
@@ -53,13 +58,15 @@ export default function Hero() {
     setImages(loadedImages);
   }, []);
 
-  // Update canvas when smooth scroll progress changes
+  // Update canvas when active scroll progress changes
   useEffect(() => {
     const drawFrame = (latest) => {
       if (!isLoaded || images.length === 0) return;
       const canvas = canvasRef.current;
       if (!canvas) return;
-      const ctx = canvas.getContext('2d');
+      
+      // { alpha: false } is a massive performance boost for mobile GPU compositing
+      const ctx = canvas.getContext('2d', { alpha: false });
       
       // Map scroll progress (0-1) to frame index (0-239)
       const frameIndex = Math.min(
@@ -70,19 +77,26 @@ export default function Hero() {
       const img = images[frameIndex];
       if (!img || !img.complete) return;
       
-      // Keep canvas resolution matched to window to avoid blur
-      if (canvas.width !== window.innerWidth || canvas.height !== window.innerHeight) {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+      // Keep canvas resolution crisp on retina displays (cap at 2x for performance)
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const displayWidth = window.innerWidth;
+      const displayHeight = window.innerHeight;
+      
+      if (canvas.width !== displayWidth * dpr || canvas.height !== displayHeight * dpr) {
+        canvas.width = displayWidth * dpr;
+        canvas.height = displayHeight * dpr;
+        canvas.style.width = `${displayWidth}px`;
+        canvas.style.height = `${displayHeight}px`;
+        ctx.scale(dpr, dpr);
       }
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const hRatio = canvas.width / img.width;
-      const vRatio = canvas.height / img.height;
-      const ratio = Math.max(hRatio, vRatio); // Changed to Math.max for "cover"
+      // Draw image using cover mechanics (no need for clearRect since JPEGs with cover fill the whole canvas)
+      const hRatio = displayWidth / img.width;
+      const vRatio = displayHeight / img.height;
+      const ratio = Math.max(hRatio, vRatio);
       
-      const centerShift_x = (canvas.width - img.width * ratio) / 2;
-      const centerShift_y = (canvas.height - img.height * ratio) / 2;
+      const centerShift_x = (displayWidth - img.width * ratio) / 2;
+      const centerShift_y = (displayHeight - img.height * ratio) / 2;
       
       ctx.drawImage(
         img, 0, 0, img.width, img.height,
@@ -90,15 +104,15 @@ export default function Hero() {
       );
     };
 
-    const unsubscribe = smoothProgress.on("change", drawFrame);
+    const unsubscribe = activeProgress.on("change", drawFrame);
 
     // Initial draw when loaded
     if (isLoaded) {
-      drawFrame(smoothProgress.get());
+      drawFrame(activeProgress.get());
     }
 
     const handleResize = () => {
-      drawFrame(smoothProgress.get());
+      drawFrame(activeProgress.get());
     };
     window.addEventListener('resize', handleResize);
 
@@ -106,36 +120,36 @@ export default function Hero() {
       unsubscribe();
       window.removeEventListener('resize', handleResize);
     };
-  }, [smoothProgress, images, isLoaded]);
+  }, [activeProgress, images, isLoaded]);
 
   // --- Animations ---
   
   // 1. Antigravity Lift: Car starts resting, lifts up early in the scroll (0-25%)
-  const carY = useTransform(smoothProgress, [0, 0.25], [0, -30]);
+  const carY = useTransform(activeProgress, [0, 0.25], [0, -30]);
   
   // 2. Contact Shadow: Shrinks and fades as car lifts
-  const shadowScale = useTransform(smoothProgress, [0, 0.25], [1, 0.7]);
-  const shadowOpacity = useTransform(smoothProgress, [0, 0.25], [0.8, 0.3]);
+  const shadowScale = useTransform(activeProgress, [0, 0.25], [1, 0.7]);
+  const shadowOpacity = useTransform(activeProgress, [0, 0.25], [0.8, 0.3]);
 
   // 3. Apple Typography Fades
   // "Layered" fades out between 25% and 50%
-  const text1Opacity = useTransform(smoothProgress, [0.05, 0.25, 0.45, 0.55], [0, 1, 1, 0]);
+  const text1Opacity = useTransform(activeProgress, [0.05, 0.25, 0.45, 0.55], [0, 1, 1, 0]);
   
   // "Ceramic Shield" fades in exactly as the panels "explode" / Layered fades out
-  const text2Opacity = useTransform(smoothProgress, [0.45, 0.55, 0.8, 0.9], [0, 1, 1, 0]);
+  const text2Opacity = useTransform(activeProgress, [0.45, 0.55, 0.8, 0.9], [0, 1, 1, 0]);
 
   // Text Y translations for a slight "rise up" effect when appearing
-  const text1Y = useTransform(smoothProgress, [0.05, 0.25], [20, 0]);
-  const text2Y = useTransform(smoothProgress, [0.45, 0.55], [20, 0]);
+  const text1Y = useTransform(activeProgress, [0.05, 0.25], [20, 0]);
+  const text2Y = useTransform(activeProgress, [0.45, 0.55], [20, 0]);
 
   // 4. Gloss Flash Effect at the end (75% - 100%)
   // Spikes to bright white/gloss at 85%, then resolves to normal
-  const flashOpacity = useTransform(smoothProgress, [0.75, 0.85, 1], [0, 1, 0]);
+  const flashOpacity = useTransform(activeProgress, [0.75, 0.85, 1], [0, 1, 0]);
 
   return (
     <section 
       ref={containerRef}
-      className="relative h-[400vh] bg-[#000000]"
+      className="relative h-[250vh] md:h-[400vh] bg-[#000000]"
     >
       {/* Sticky Container (Locks to viewport) */}
       <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center">
