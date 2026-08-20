@@ -58,23 +58,24 @@ export default function Header() {
           ))}
         </nav>
 
-        <div className="hidden lg:block">
+        <div className="flex items-center gap-3">
           <Button
             variant="primary"
             size="sm"
             onClick={() => scrollTo("contact")}
+            className="text-xs px-3 py-1.5 md:text-sm md:px-4 md:py-2"
           >
             Book Now
           </Button>
-        </div>
 
-        <button
-          className="lg:hidden text-white p-2"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          aria-label="Toggle menu"
-        >
-          {isMobileMenuOpen ? <X /> : <Menu />}
-        </button>
+          <button
+            className="lg:hidden text-white p-1"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </Container>
 
       <AnimatePresence>
