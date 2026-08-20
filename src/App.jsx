@@ -58,7 +58,7 @@ function App() {
         <meta property="og:image" content="https://detailingmasters.in/logo.png" />
       </Helmet>
 
-      <div className="min-h-screen bg-luxury-bg text-luxury-text font-sans selection:bg-luxury-gold selection:text-luxury-bg overflow-x-hidden w-full relative max-w-[100vw]">
+      <div className="min-h-screen bg-luxury-bg text-luxury-text font-sans selection:bg-luxury-gold selection:text-luxury-bg">
         <CustomCursor />
         <Header />
         
