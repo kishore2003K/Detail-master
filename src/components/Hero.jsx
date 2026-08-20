@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion";
 import { Container } from "./ui/Container";
-import brandLogo from "../assets/brand-logo.png";
-import logo1 from "../assets/logo1.svg";
+import { hidePreloader } from "../utils/hidePreloader";
 
 export default function Hero() {
   const containerRef = useRef(null);
@@ -30,30 +29,37 @@ export default function Hero() {
   const totalFrames = 240;
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Preload images with a minimum display time for the intro animation
+  // Preload images with progressive loading to vastly improve initial load time
   useEffect(() => {
     const loadedImages = [];
     let loadedCount = 0;
+    const framesToPreload = Math.min(20, totalFrames); // Only wait for the first 20 frames to unblock UI
     
     // Enforce at least 3 seconds of preloader visibility
     const minTimePromise = new Promise(resolve => setTimeout(resolve, 3000));
 
-    const imagesPromise = new Promise(resolve => {
+    const initialImagesPromise = new Promise(resolve => {
       for (let i = 1; i <= totalFrames; i++) {
         const img = new Image();
         const frameNum = i.toString().padStart(4, '0');
         img.src = `/car-sequence/image_${frameNum}.jpg`;
         img.onload = () => {
           loadedCount++;
-          if (loadedCount === totalFrames) resolve();
+          if (loadedCount >= framesToPreload) resolve();
         };
         loadedImages.push(img);
       }
     });
 
-    Promise.all([imagesPromise, minTimePromise]).then(() => {
+    Promise.all([initialImagesPromise, minTimePromise]).then(() => {
       setIsLoaded(true);
+      hidePreloader();
+    }).catch(() => {
+      hidePreloader(); // Fail-safe
     });
+    
+    // hard ceiling: never show longer than 4s regardless of what's loading
+    setTimeout(hidePreloader, 4000);
     
     setImages(loadedImages);
   }, []);
@@ -187,42 +193,7 @@ export default function Hero() {
         {/* 360 Image Sequence Player */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10">
           
-          <AnimatePresence>
-            {!isLoaded && (
-              <motion.div 
-                initial={{ opacity: 1 }}
-                exit={{ opacity: 0, filter: "blur(10px)" }}
-                transition={{ duration: 1.2, ease: "easeInOut" }}
-                className="fixed inset-0 z-[100] bg-[#050505] flex flex-col items-center justify-center pointer-events-auto"
-              >
-                {/* Animated SVG Logo */}
-                <div className="mb-8 flex items-center justify-center">
-                  <img 
-                    src={logo1} 
-                    alt="Detailing Masters Loading" 
-                    className="h-40 md:h-56 lg:h-64 w-auto object-contain"
-                  />
-                </div>
-
-                {/* Sleek Loader Bar */}
-                <div className="w-48 md:w-64 h-[1px] bg-white/10 overflow-hidden relative mt-4">
-                  <motion.div 
-                    animate={{ x: ["-100%", "100%"] }}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-transparent via-luxury-gold to-transparent"
-                  />
-                </div>
-                
-                <motion.p 
-                  animate={{ opacity: [0.4, 1, 0.4] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                  className="mt-6 text-[10px] md:text-xs tracking-[0.4em] uppercase text-luxury-gold/70"
-                >
-                  Initializing Experience
-                </motion.p>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {/* Static HTML Preloader is handled in index.html and hidePreloader.js */}
 
           {/* Car Container (moves up) */}
           <motion.div 
@@ -260,11 +231,11 @@ export default function Hero() {
         </motion.div>
         
         {/* Brand Logo to Cover Watermark */}
-        <div className="absolute bottom-[calc(4rem-4vh)] right-[calc(1rem+4vw)] md:bottom-[calc(5rem-4vh)] md:right-[calc(2rem+4vw)] z-40 pointer-events-none flex items-center justify-center">
+        <div className="absolute bottom-[calc(4rem-7vh)] right-[calc(1rem+2vw)] md:bottom-[calc(5rem-7vh)] md:right-[calc(2rem+2vw)] z-40 pointer-events-none flex items-center justify-center">
           <img 
-            src={brandLogo} 
+            src="/brand-logo.png" 
             alt="Detailing Masters" 
-            className="h-24 md:h-32 w-auto object-contain"
+            className="h-28 md:h-40 lg:h-44 w-auto object-contain"
           />
         </div>
       </div>

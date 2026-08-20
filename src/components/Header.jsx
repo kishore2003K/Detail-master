@@ -6,7 +6,7 @@ import { Button } from "./ui/Button";
 import { LogoMark } from "./ui/LogoMark";
 import { useSmoothScroll } from "../hooks/useSmoothScroll";
 
-import brandLogo from "../assets/brand-logo.png";
+
 
 const navLinks = [
   { name: "Home", href: "#home" },
@@ -39,7 +39,7 @@ export default function Header() {
       <Container className="flex items-center justify-between">
         <a href="#home" className="flex items-center group">
           <img 
-            src={brandLogo} 
+            src="/brand-logo.png" 
             alt="Detailing Masters Logo" 
             className="h-16 md:h-20 lg:h-24 w-auto object-contain"
           />

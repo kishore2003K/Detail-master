@@ -22,6 +22,78 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      html, body { margin: 0; padding: 0; }
+      body.loading { overflow: hidden; }
+
+      #preloader {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #050505;
+        z-index: 99999;
+        transition: opacity 1.2s ease-in-out, filter 1.2s ease-in-out;
+      }
+      #preloader.hide {
+        opacity: 0;
+        pointer-events: none;
+      }
+      .preloader-logo {
+        height: 10rem; /* h-40 approx */
+        width: auto;
+        object-fit: contain;
+        margin-bottom: 2rem;
+      }
+      @media (min-width: 768px) {
+        .preloader-logo { height: 14rem; } /* h-56 */
+      }
+      @media (min-width: 1024px) {
+        .preloader-logo { height: 16rem; } /* h-64 */
+      }
+
+      .loader-bar-container {
+        width: 12rem;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+        position: relative;
+        margin-top: 1rem;
+      }
+      @media (min-width: 768px) {
+        .loader-bar-container { width: 16rem; }
+      }
+      .loader-bar {
+        position: absolute;
+        top: 0; bottom: 0; left: 0;
+        width: 50%;
+        /* Equivalent to bg-gradient-to-r from-transparent via-luxury-gold to-transparent */
+        background: linear-gradient(to right, transparent, #D4AF37, transparent);
+        animation: slide-bar 1.5s ease-in-out infinite;
+      }
+      @keyframes slide-bar {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(200%); }
+      }
+
+      .loader-text {
+        margin-top: 1.5rem;
+        font-size: 10px;
+        letter-spacing: 0.4em;
+        text-transform: uppercase;
+        color: rgba(212, 175, 55, 0.7);
+        animation: pulse-text 2s ease-in-out infinite;
+      }
+      @media (min-width: 768px) {
+        .loader-text { font-size: 12px; }
+      }
+      @keyframes pulse-text {
+        0%, 100% { opacity: 0.4; }
+        50% { opacity: 1; }
+      }
+    </style>
 
     <!-- GEO & Local Business Schema -->
     <script type="application/ld+json">
@@ -116,7 +188,14 @@
 }
     </script>
   </head>
-  <body>
+  <body class="loading">
+    <div id="preloader" aria-hidden="true">
+      <img src="/logo1.svg" alt="Detailing Masters Loading" class="preloader-logo" />
+      <div class="loader-bar-container">
+        <div class="loader-bar"></div>
+      </div>
+      <p class="loader-text">Initializing Experience</p>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

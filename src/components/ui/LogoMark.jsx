@@ -1,12 +1,11 @@
 import { cn } from "../../lib/utils";
-import logo from "../../assets/logo.png";
 
 export function LogoMark({
   size = "md",
   variant = "glow",
   className,
   imgClassName,
-  logoSrc = logo,
+  logoSrc = "/logo.png",
 }) {
   const imgSizes = {
     sm: "h-10",

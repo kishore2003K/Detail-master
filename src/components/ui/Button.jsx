@@ -1,5 +1,6 @@
 import { cn } from "../../lib/utils";
 import { motion } from "framer-motion";
+import { Magnetic } from "./Magnetic";
 
 export function Button({ 
   className, 
@@ -23,13 +24,15 @@ export function Button({
   };
 
   return (
-    <motion.button 
-      whileHover={{ y: -2 }}
-      whileTap={{ scale: 0.98 }}
-      className={cn(baseStyles, variants[variant], sizes[size], className)}
-      {...props}
-    >
-      {children}
-    </motion.button>
+    <Magnetic>
+      <motion.button 
+        whileHover={{ y: -2 }}
+        whileTap={{ scale: 0.98 }}
+        className={cn(baseStyles, variants[variant], sizes[size], className)}
+        {...props}
+      >
+        {children}
+      </motion.button>
+    </Magnetic>
   );
 }

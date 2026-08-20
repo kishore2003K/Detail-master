@@ -27,7 +27,7 @@ const staticServiceMetadata = [
     price: "₹4,999",
     duration: "1-2 Days",
     icon: Sparkles,
-    image: "/images/paint.png"
+    image: "/images/Paint Correction-1.jpg"
   },
   {
     title: "Interior Detailing",
@@ -61,7 +61,8 @@ export default function Services() {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await fetch('/api/services');
+        const API_URL = import.meta.env.VITE_API_URL || 'https://detail-master-production.up.railway.app';
+        const response = await fetch(`${API_URL}/api/services`);
         if (response.ok) {
           const dbServices = await response.json();
           // Filter active services only

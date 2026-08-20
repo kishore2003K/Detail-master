@@ -28,6 +28,8 @@ export default function Contact() {
   const onSubmit = async (data) => {
     setIsSubmitting(true);
     try {
+      const selectedServices = Array.isArray(data.service) ? data.service : [data.service];
+
       const response = await fetch(`${API_URL}/api/web_bookings`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -38,10 +40,10 @@ export default function Contact() {
           vehicle_brand: data.brand,
           vehicle_model: data.model,
           vehicle_type: data.type,
-          service_id: Array.isArray(data.service) ? data.service.join(',') : data.service,
+          service_id: selectedServices,
           preferred_date: data.date,
           preferred_time_period: data.time_period,
-          additional_notes: data.message
+          additional_notes: data.message || ''
         })
       });
 
