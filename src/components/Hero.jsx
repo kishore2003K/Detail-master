@@ -43,23 +43,35 @@ export default function Hero() {
         const img = new Image();
         const frameNum = i.toString().padStart(4, '0');
         img.src = `/car-sequence/image_${frameNum}.jpg`;
-        img.onload = () => {
+        
+        const handleLoadOrError = () => {
           loadedCount++;
           if (loadedCount >= framesToPreload) resolve();
         };
+        
+        img.onload = handleLoadOrError;
+        img.onerror = handleLoadOrError; // Handle errors so it doesn't hang
+        
         loadedImages.push(img);
       }
+      
+      // Secondary hard failsafe for the promise itself
+      setTimeout(resolve, 4000); 
     });
 
     Promise.all([initialImagesPromise, minTimePromise]).then(() => {
       setIsLoaded(true);
       hidePreloader();
     }).catch(() => {
+      setIsLoaded(true);
       hidePreloader(); // Fail-safe
     });
     
     // hard ceiling: never show longer than 4s regardless of what's loading
-    setTimeout(hidePreloader, 4000);
+    setTimeout(() => {
+      setIsLoaded(true);
+      hidePreloader();
+    }, 4000);
     
     setImages(loadedImages);
   }, []);
