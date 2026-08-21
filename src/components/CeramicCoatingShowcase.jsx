@@ -4,70 +4,76 @@ import { Shield, Check } from 'lucide-react';
 import { Container } from './ui/Container';
 import { Button } from './ui/Button';
 import { useSmoothScroll } from '../hooks/useSmoothScroll';
+import { preloadImageSequence, getImageSequence, getLoadedSet, subscribeSequenceLoad } from '../utils/imageSequenceCache';
 
 export default function CeramicCoatingShowcase() {
   const scrollTo = useSmoothScroll();
   const canvasRef = useRef(null);
   
-  const [images, setImages] = useState([]);
   const [currentFrame, setCurrentFrame] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   
   const totalFrames = 240;
-  
-  // Preload frames
+
+  // Use shared cache preloader
   useEffect(() => {
-    const loadedImages = [];
-    let loadedCount = 0;
-    
-    const loadImages = () => {
-      for (let i = 1; i <= totalFrames; i++) {
-        const img = new Image();
-        const frameNum = i.toString().padStart(4, '0');
-        img.src = `/car-sequence/image_${frameNum}.jpg`;
-        img.onload = () => {
-          loadedCount++;
-          if (loadedCount === totalFrames) {
-            setIsLoaded(true);
-          }
-        };
-        // Add to array anyway so indexes align
-        loadedImages.push(img);
+    preloadImageSequence().then(() => {
+      setIsLoaded(true);
+    });
+
+    const unsubscribe = subscribeSequenceLoad(() => {
+      if (getLoadedSet().size > 0) {
+        setIsLoaded(true);
       }
-      setImages(loadedImages);
-    };
-    
-    loadImages();
+    });
+
+    return () => unsubscribe();
   }, []);
 
   // Update canvas
   useEffect(() => {
-    if (images.length > 0 && images[currentFrame] && images[currentFrame].complete) {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      
-      // Clean up previous frame
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const img = images[currentFrame];
-      
-      // Draw image centered and scaled
-      const hRatio = canvas.width / img.width;
-      const vRatio = canvas.height / img.height;
-      
-      // Containing is usually safer so we don't crop the car
-      const ratio = Math.min(hRatio, vRatio); 
-      
-      const centerShift_x = (canvas.width - img.width * ratio) / 2;
-      const centerShift_y = (canvas.height - img.height * ratio) / 2;
-      
-      ctx.drawImage(
-        img, 0, 0, img.width, img.height,
-        centerShift_x, centerShift_y, img.width * ratio, img.height * ratio
-      );
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const imagesCache = getImageSequence();
+    const loadedSet = getLoadedSet();
+
+    // Find nearest loaded frame if currentFrame is not ready
+    let targetIndex = currentFrame;
+    if (!loadedSet.has(targetIndex)) {
+      for (let offset = 1; offset < totalFrames; offset++) {
+        if (currentFrame - offset >= 0 && loadedSet.has(currentFrame - offset)) {
+          targetIndex = currentFrame - offset;
+          break;
+        }
+        if (currentFrame + offset < totalFrames && loadedSet.has(currentFrame + offset)) {
+          targetIndex = currentFrame + offset;
+          break;
+        }
+      }
     }
-  }, [currentFrame, images, isLoaded]);
+
+    const img = imagesCache[targetIndex];
+    if (!img || !img.complete || img.naturalWidth === 0) return;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const hRatio = canvas.width / img.width;
+    const vRatio = canvas.height / img.height;
+    const ratio = Math.min(hRatio, vRatio);
+
+    const centerShift_x = (canvas.width - img.width * ratio) / 2;
+    const centerShift_y = (canvas.height - img.height * ratio) / 2;
+
+    ctx.drawImage(
+      img, 0, 0, img.width, img.height,
+      centerShift_x, centerShift_y, img.width * ratio, img.height * ratio
+    );
+  }, [currentFrame, isLoaded]);
 
   // Scrubbing Interaction
   const startX = useRef(0);
@@ -109,9 +115,8 @@ export default function CeramicCoatingShowcase() {
       window.removeEventListener('touchend', handlePointerUp);
       window.removeEventListener('touchmove', handlePointerMove);
     };
-  }, [isDragging]);
+  }, [isDragging, currentFrame]);
 
-  // Floating animation definition
   const floatAnimation = {
     y: [0, -15, 0],
     transition: {
@@ -203,7 +208,6 @@ export default function CeramicCoatingShowcase() {
             className={`relative h-[400px] sm:h-[500px] lg:h-[700px] w-full rounded-2xl overflow-hidden glass-card border border-luxury-border/50 group ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
             onPointerDown={handlePointerDown}
           >
-            {/* Shimmer Overlay - activated on hover/drag */}
             <div className={`absolute inset-0 z-20 pointer-events-none transition-opacity duration-700 bg-gradient-to-tr from-transparent via-white/10 to-transparent ${isDragging ? 'opacity-100 mix-blend-overlay' : 'opacity-0'}`} style={{ backgroundSize: '200% 200%', animation: isDragging ? 'shimmer 2s linear infinite' : 'none' }} />
 
             <div className="absolute inset-0 bg-transparent flex items-center justify-center">
@@ -214,7 +218,6 @@ export default function CeramicCoatingShowcase() {
                 </div>
               )}
               
-              {/* The Container for Antigravity Float */}
               <motion.div 
                 className="relative w-full h-full flex flex-col items-center justify-center"
                 animate={isLoaded ? floatAnimation : {}}
@@ -223,11 +226,10 @@ export default function CeramicCoatingShowcase() {
                   ref={canvasRef} 
                   width={800} 
                   height={800} 
-                  className={`w-full h-full object-contain transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+                  className={`w-full h-full object-contain transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
                 />
               </motion.div>
 
-              {/* Contact Shadow (Ground) */}
               {isLoaded && (
                 <motion.div 
                   className="absolute bottom-12 left-1/2 -translate-x-1/2 w-[60%] h-4 bg-black/60 rounded-[100%] blur-xl pointer-events-none"
@@ -236,7 +238,6 @@ export default function CeramicCoatingShowcase() {
               )}
             </div>
             
-            {/* Interactive hint */}
             <div className="absolute bottom-6 left-0 right-0 text-center z-30 pointer-events-none transition-opacity duration-300">
               <span className={`text-sm font-medium tracking-widest uppercase text-luxury-gold/80 bg-[#0A0A0A]/80 px-4 py-2 rounded-full backdrop-blur-md border border-luxury-gold/20 transition-opacity duration-300 ${isDragging ? 'opacity-0' : 'opacity-100'}`}>
                 Drag to rotate

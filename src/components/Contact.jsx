@@ -72,7 +72,7 @@ export default function Contact() {
 
         <div className="grid lg:grid-cols-5 gap-12 mt-12">
           {/* Booking Form */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -81,7 +81,7 @@ export default function Contact() {
           >
             {/* Subtle glow effect on focus */}
             <div className="absolute inset-0 bg-luxury-gold/5 opacity-0 group-focus-within:opacity-100 transition-opacity duration-500 pointer-events-none" />
-            
+
             <h3 className="text-2xl font-bold text-white mb-6 relative z-10">Booking Details</h3>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -188,7 +188,7 @@ export default function Contact() {
           </motion.div>
 
           {/* Contact Info & Map */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -225,7 +225,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <h4 className="font-semibold text-white mb-1">Business Hours</h4>
-                    <p className="text-gray-400 text-sm">Mon - Sat: 9:00 AM - 8:00 PM<br />Sunday: Leave</p>
+                    <p className="text-gray-400 text-sm">Mon - Sat: 9:00 AM - 8:00 PM<br />Sunday: Closed</p>
                   </div>
                 </li>
               </ul>
