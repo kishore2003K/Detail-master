@@ -157,21 +157,18 @@ export default function Contact() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-3">Select Services</label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <select
+                  className="flex h-12 w-full rounded-lg bg-luxury-secondary/50 border border-luxury-border px-4 py-2 text-sm text-gray-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-luxury-gold focus-visible:border-luxury-gold"
+                  {...register("service", { required: true })}
+                >
+                  <option value="">Select Service</option>
                   {services.map(service => (
-                    <label key={service.id} className="flex items-center gap-3 p-3 rounded-lg border border-luxury-border bg-luxury-secondary/50 cursor-pointer hover:border-luxury-gold/50 transition-colors">
-                      <input
-                        type="checkbox"
-                        value={service.id}
-                        {...register("service", { required: true })}
-                        className="w-4 h-4 text-luxury-gold bg-luxury-bg border-gray-600 rounded focus:ring-luxury-gold focus:ring-1"
-                      />
-                      <span className="text-sm text-gray-200">{service.service_name}</span>
-                    </label>
+                    <option key={service.id} value={service.id}>
+                      {service.service_name}
+                    </option>
                   ))}
-                </div>
-                {errors.service && <span className="text-red-500 text-xs mt-2 block">Please select at least one service.</span>}
+                </select>
+                {errors.service && <span className="text-red-500 text-xs mt-2 block">Please select a service.</span>}
               </div>
 
               <div>
