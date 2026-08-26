@@ -65,31 +65,32 @@ export default function Services() {
         const response = await fetch(`${API_URL}/api/services`);
         if (response.ok) {
           const dbServices = await response.json();
-          // Filter active services only
-          const activeServices = dbServices.filter(s => s.is_active !== false);
-          
-          if (activeServices.length > 0) {
-            const mergedServices = activeServices.map(dbService => {
-              // Find matching static metadata by name
-              const meta = staticServiceMetadata.find(
-                s => s.title.toLowerCase() === dbService.service_name.toLowerCase()
-              ) || {};
-              
-              return {
-                title: dbService.service_name,
-                price: `₹${Number(dbService.base_price).toLocaleString('en-IN')}`,
-                description: meta.description || `Professional ${dbService.service_name} service.`,
-                duration: meta.duration || "Varies",
-                icon: meta.icon || Sparkles, // Fallback icon
-                image: meta.image || "/images/wash.png" // Fallback image
-              };
-            });
+          if (Array.isArray(dbServices)) {
+            const activeServices = dbServices.filter(s => s && s.is_active !== false);
             
-            setServices(mergedServices);
+            if (activeServices.length > 0) {
+              const mergedServices = activeServices.map(dbService => {
+                const meta = staticServiceMetadata.find(
+                  s => s.title.toLowerCase() === (dbService.service_name || '').toLowerCase()
+                ) || {};
+                
+                return {
+                  id: dbService.id || meta.id || dbService.service_name,
+                  title: dbService.service_name || meta.title,
+                  price: dbService.base_price ? `₹${Number(dbService.base_price).toLocaleString('en-IN')}` : meta.price,
+                  description: meta.description || `Professional ${dbService.service_name} service.`,
+                  duration: meta.duration || "Varies",
+                  icon: meta.icon || Sparkles,
+                  image: meta.image || "/images/wash.png"
+                };
+              });
+              
+              setServices(mergedServices);
+            }
           }
         }
       } catch (error) {
-        console.error("Error fetching services from backend:", error);
+        console.warn("Backend services unavailable, using static services:", error);
       }
     };
     

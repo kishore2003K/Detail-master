@@ -8,21 +8,40 @@ import { Input } from "./ui/Input";
 import { Textarea } from "./ui/Textarea";
 import { Button } from "./ui/Button";
 
+const fallbackServices = [
+  { id: "wash", service_name: "Premium Wash" },
+  { id: "ceramic", service_name: "Ceramic Coating" },
+  { id: "paint", service_name: "Paint Correction" },
+  { id: "interior", service_name: "Interior Detailing" },
+  { id: "engine", service_name: "Engine Bay Cleaning" },
+  { id: "bike", service_name: "Bike Detailing" }
+];
+
 export default function Contact() {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
-  const [services, setServices] = useState([]);
+  const [services, setServices] = useState(fallbackServices);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const API_URL = import.meta.env.VITE_API_URL || 'https://detail-master-production.up.railway.app';
 
   useEffect(() => {
-    fetch(`${API_URL}/api/services`)
-      .then(res => res.json())
-      .then(data => {
-        // filter out inactive if necessary, or just set all
-        setServices(data.filter(s => s.is_active));
-      })
-      .catch(err => console.error("Error fetching services:", err));
+    const fetchServices = async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/services`);
+        if (response.ok) {
+          const data = await response.json();
+          if (Array.isArray(data)) {
+            const activeServices = data.filter(s => s && s.is_active !== false);
+            if (activeServices.length > 0) {
+              setServices(activeServices);
+            }
+          }
+        }
+      } catch (err) {
+        console.warn("Backend services unavailable, using fallback:", err);
+      }
+    };
+    fetchServices();
   }, []);
 
   const onSubmit = async (data) => {
