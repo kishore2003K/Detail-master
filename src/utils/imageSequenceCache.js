@@ -76,7 +76,13 @@ function loadSheetImage(mode, sheetIndex) {
     img.src = `/sprites/${mode}/sheet_${sheetIndex}.webp`;
     img.decoding = 'async';
 
-    img.onload = () => {
+    img.onload = async () => {
+      try {
+        if ('decode' in img) {
+          await img.decode().catch(() => {});
+        }
+      } catch (_) {}
+
       sheetImages[mode][sheetIndex] = img;
       loadedSheets[mode].add(sheetIndex);
 

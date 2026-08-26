@@ -24,28 +24,29 @@ export default function Hero() {
   const text3Ref = useRef(null);
   const scrollHintRef = useRef(null);
 
-  const lastDrawnFrameRef = useRef(0);
+  const lastDrawnFrameRef = useRef(-1);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Helper to draw a specific frame onto canvas with cover mechanics & retina support
-  const renderFrame = (targetIndex, explicitMode) => {
+  // Cached layout metrics to completely eliminate layout thrashing during scroll ticks
+  const metricsRef = useRef({
+    displayWidth: 0,
+    displayHeight: 0,
+    dpr: 1,
+    ratio: 1,
+    centerShift_x: 0,
+    centerShift_y: 0,
+    sWidth: 1280,
+    sHeight: 720,
+  });
+
+  const updateMetrics = (explicitMode) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext("2d", { alpha: false, desynchronized: true });
-    if (!ctx) return;
-
-    const currentMode = explicitMode || modeRef.current || getSequenceMode();
-    const frameSource = getFrameSource(targetIndex, currentMode);
-    if (!frameSource) return;
-
-    const { img, sx, sy, sWidth, sHeight, actualIndex } = frameSource;
-    lastDrawnFrameRef.current = actualIndex;
-
     const isMobile = window.innerWidth < 768;
+    const currentMode = explicitMode || modeRef.current || (isMobile ? "mobile" : "desktop");
     const displayWidth = window.innerWidth;
     const displayHeight = window.innerHeight;
-    // Cap mobile DPR at 1.5 for buttery 120fps GPU performance; desktop at 2.0
     const dpr = isMobile
       ? Math.min(window.devicePixelRatio || 1, 1.5)
       : Math.min(window.devicePixelRatio || 1, 2);
@@ -60,17 +61,49 @@ export default function Hero() {
       canvas.style.height = `${displayHeight}px`;
     }
 
-    // Reset context scale & draw image using cover mechanics
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
+    const sWidth = currentMode === "mobile" ? 540 : 1280;
+    const sHeight = currentMode === "mobile" ? 960 : 720;
     const hRatio = displayWidth / sWidth;
     const vRatio = displayHeight / sHeight;
     const ratio = Math.max(hRatio, vRatio);
 
-    const centerShift_x = (displayWidth - sWidth * ratio) / 2;
-    const centerShift_y = (displayHeight - sHeight * ratio) / 2;
+    metricsRef.current = {
+      displayWidth,
+      displayHeight,
+      dpr,
+      ratio,
+      centerShift_x: (displayWidth - sWidth * ratio) / 2,
+      centerShift_y: (displayHeight - sHeight * ratio) / 2,
+      sWidth,
+      sHeight,
+    };
 
-    ctx.clearRect(0, 0, displayWidth, displayHeight);
+    const ctx = canvas.getContext("2d", { alpha: false, desynchronized: true });
+    if (ctx) {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.imageSmoothingQuality = isMobile ? "low" : "medium";
+    }
+  };
+
+  // Helper to draw a specific frame onto canvas with cover mechanics & retina support
+  const renderFrame = (targetIndex, explicitMode, forceRedraw = false) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d", { alpha: false, desynchronized: true });
+    if (!ctx) return;
+
+    const currentMode = explicitMode || modeRef.current || getSequenceMode();
+    const frameSource = getFrameSource(targetIndex, currentMode);
+    if (!frameSource) return;
+
+    const { img, sx, sy, sWidth, sHeight, actualIndex } = frameSource;
+
+    // Skip redundant draw calls if already showing this frame
+    if (!forceRedraw && actualIndex === lastDrawnFrameRef.current) return;
+    lastDrawnFrameRef.current = actualIndex;
+
+    const { ratio, centerShift_x, centerShift_y } = metricsRef.current;
 
     ctx.drawImage(
       img,
@@ -89,17 +122,18 @@ export default function Hero() {
   useEffect(() => {
     const initialMode = getSequenceMode();
     modeRef.current = initialMode;
+    updateMetrics(initialMode);
 
     preloadImageSequence(initialMode).then(() => {
       setIsLoaded(true);
       hidePreloader();
-      renderFrame(0, initialMode);
+      renderFrame(0, initialMode, true);
     });
 
     const unsubscribe = subscribeSequenceLoad((_loadedCount, _isTier1, updatedMode) => {
       // Re-render current frame when new sprite sheets load for active mode
       if (updatedMode === modeRef.current) {
-        renderFrame(lastDrawnFrameRef.current, updatedMode);
+        renderFrame(lastDrawnFrameRef.current >= 0 ? lastDrawnFrameRef.current : 0, updatedMode, true);
       }
     });
 
@@ -107,7 +141,7 @@ export default function Hero() {
     const timer = setTimeout(() => {
       setIsLoaded(true);
       hidePreloader();
-      renderFrame(0, modeRef.current);
+      renderFrame(0, modeRef.current, true);
     }, 1200);
 
     return () => {
@@ -120,18 +154,24 @@ export default function Hero() {
   useEffect(() => {
     const handleResize = () => {
       const newMode = getSequenceMode();
-      if (newMode !== modeRef.current) {
-        modeRef.current = newMode;
-        preloadImageSequence(newMode).then(() => {
-          renderFrame(lastDrawnFrameRef.current, newMode);
-        });
-      } else {
-        renderFrame(lastDrawnFrameRef.current, newMode);
-      }
+      modeRef.current = newMode;
+      updateMetrics(newMode);
+      preloadImageSequence(newMode).then(() => {
+        renderFrame(lastDrawnFrameRef.current >= 0 ? lastDrawnFrameRef.current : 0, newMode, true);
+      });
     };
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize, { passive: true });
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  // Direct zero-overhead hardware transform helper for text overlays
+  const applyTextTransform = (ref, opacity, y) => {
+    if (!ref.current) return;
+    const el = ref.current;
+    el.style.opacity = opacity;
+    el.style.transform = opacity > 0.01 ? `translate3d(0, ${y}px, 0)` : "translate3d(0, 30px, 0)";
+    el.style.visibility = opacity > 0.01 ? "visible" : "hidden";
+  };
 
   // Set up GSAP ScrollTrigger sequence & pinning
   useEffect(() => {
@@ -144,10 +184,12 @@ export default function Hero() {
       ScrollTrigger.create({
         trigger: container,
         start: "top top",
-        end: isMobile ? "+=100%" : "+=180%", // Snappy 1-swipe distance on mobile, smooth on desktop
+        end: isMobile ? "+=90%" : "+=180%", // Snappy single flick on mobile, silky smooth on desktop
         pin: true,
-        scrub: isMobile ? 0.1 : 0.4, // Instant 1:1 finger tracking on mobile, gentle inertia on desktop
+        scrub: isMobile ? 0.05 : 0.35, // Instant 1:1 tracking on mobile, gentle inertia on desktop
         anticipatePin: 1,
+        fastScrollEnd: true,
+        preventOverlaps: true,
         onUpdate: (self) => {
           const progress = self.progress;
           const targetFrame = Math.min(
@@ -157,7 +199,7 @@ export default function Hero() {
 
           renderFrame(targetFrame);
 
-          // Synchronized typography opacity and transform
+          // Fast direct typography opacity and transform
           if (text1Ref.current) {
             let opacity = 0;
             let y = 30;
@@ -173,7 +215,7 @@ export default function Hero() {
                 y = 0;
               }
             }
-            gsap.set(text1Ref.current, { opacity, y });
+            applyTextTransform(text1Ref, opacity, y);
           }
 
           if (text2Ref.current) {
@@ -191,7 +233,7 @@ export default function Hero() {
                 y = 0;
               }
             }
-            gsap.set(text2Ref.current, { opacity, y });
+            applyTextTransform(text2Ref, opacity, y);
           }
 
           if (text3Ref.current) {
@@ -208,12 +250,13 @@ export default function Hero() {
                 y = 0;
               }
             }
-            gsap.set(text3Ref.current, { opacity, y });
+            applyTextTransform(text3Ref, opacity, y);
           }
 
           if (scrollHintRef.current) {
             const hintOpacity = Math.max(0, 1 - progress * 4);
-            gsap.set(scrollHintRef.current, { opacity: hintOpacity });
+            scrollHintRef.current.style.opacity = hintOpacity;
+            scrollHintRef.current.style.visibility = hintOpacity > 0.01 ? "visible" : "hidden";
           }
         },
       });
