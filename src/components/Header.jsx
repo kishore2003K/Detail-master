@@ -6,8 +6,6 @@ import { Button } from "./ui/Button";
 import { LogoMark } from "./ui/LogoMark";
 import { useSmoothScroll } from "../hooks/useSmoothScroll";
 
-
-
 const navLinks = [
   { name: "Home", href: "#home" },
   { name: "Services", href: "#services" },
@@ -32,8 +30,8 @@ export default function Header() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
-          ? "bg-luxury-bg/90 backdrop-blur-xl border-b border-luxury-border py-2.5"
-          : "bg-transparent py-4"
+          ? "bg-luxury-bg/90 backdrop-blur-xl border-b border-luxury-border py-2"
+          : "bg-transparent py-2.5 md:py-4"
         }`}
     >
       <Container className="flex items-center justify-between">
@@ -41,7 +39,7 @@ export default function Header() {
           <img 
             src="/brand-logo.png" 
             alt="Detailing Masters Logo" 
-            className="h-16 md:h-20 lg:h-24 w-auto object-contain"
+            className="h-12 md:h-16 lg:h-20 w-auto object-contain"
           />
         </a>
 

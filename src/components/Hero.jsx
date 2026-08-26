@@ -222,7 +222,7 @@ export default function Hero() {
       ref={containerRef} 
       className="relative w-full bg-[#000000] overflow-hidden"
     >
-      <div className="relative h-screen w-full flex items-center justify-center overflow-hidden">
+      <div className="relative h-screen h-[100dvh] w-full flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-[#000000] z-0" />
 
         <Container className="relative h-full w-full flex items-center justify-between pointer-events-none z-20">
@@ -276,7 +276,7 @@ export default function Hero() {
           </div>
         </Container>
 
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+        <div className="absolute inset-0 pointer-events-none z-10">
           <canvas
             ref={canvasRef}
             className={`w-full h-full object-cover transition-opacity duration-500 ${
