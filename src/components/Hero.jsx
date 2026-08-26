@@ -3,15 +3,20 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Container } from "./ui/Container";
 import { hidePreloader } from "../utils/hidePreloader";
-import { preloadImageSequence, getImageSequence, getLoadedSet, subscribeSequenceLoad } from "../utils/imageSequenceCache";
+import {
+  preloadImageSequence,
+  getFrameSource,
+  subscribeSequenceLoad,
+  getSequenceMode,
+  TOTAL_FRAMES,
+} from "../utils/imageSequenceCache";
 
 gsap.registerPlugin(ScrollTrigger);
-
-const TOTAL_FRAMES = 240;
 
 export default function Hero() {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
+  const modeRef = useRef(getSequenceMode());
 
   // Ref elements for text overlays
   const text1Ref = useRef(null);
@@ -23,40 +28,18 @@ export default function Hero() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   // Helper to draw a specific frame onto canvas with cover mechanics & retina support
-  const renderFrame = (targetIndex) => {
+  const renderFrame = (targetIndex, explicitMode) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     const ctx = canvas.getContext("2d", { alpha: false });
     if (!ctx) return;
 
-    const imagesCache = getImageSequence();
-    const loadedSet = getLoadedSet();
+    const currentMode = explicitMode || modeRef.current || getSequenceMode();
+    const frameSource = getFrameSource(targetIndex, currentMode);
+    if (!frameSource) return;
 
-    // Find nearest loaded frame if target isn't ready
-    let actualIndex = targetIndex;
-    if (!loadedSet.has(actualIndex)) {
-      let found = false;
-      for (let offset = 1; offset < TOTAL_FRAMES; offset++) {
-        if (targetIndex - offset >= 0 && loadedSet.has(targetIndex - offset)) {
-          actualIndex = targetIndex - offset;
-          found = true;
-          break;
-        }
-        if (targetIndex + offset < TOTAL_FRAMES && loadedSet.has(targetIndex + offset)) {
-          actualIndex = targetIndex + offset;
-          found = true;
-          break;
-        }
-      }
-      if (!found && loadedSet.size > 0) {
-        actualIndex = lastDrawnFrameRef.current;
-      }
-    }
-
-    const img = imagesCache[actualIndex];
-    if (!img || !img.complete || img.naturalWidth === 0) return;
-
+    const { img, sx, sy, sWidth, sHeight, actualIndex } = frameSource;
     lastDrawnFrameRef.current = actualIndex;
 
     const displayWidth = window.innerWidth;
@@ -76,44 +59,51 @@ export default function Hero() {
     // Reset context scale & draw image using cover mechanics
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    const hRatio = displayWidth / img.width;
-    const vRatio = displayHeight / img.height;
+    const hRatio = displayWidth / sWidth;
+    const vRatio = displayHeight / sHeight;
     const ratio = Math.max(hRatio, vRatio);
 
-    const centerShift_x = (displayWidth - img.width * ratio) / 2;
-    const centerShift_y = (displayHeight - img.height * ratio) / 2;
+    const centerShift_x = (displayWidth - sWidth * ratio) / 2;
+    const centerShift_y = (displayHeight - sHeight * ratio) / 2;
+
+    ctx.clearRect(0, 0, displayWidth, displayHeight);
 
     ctx.drawImage(
       img,
-      0,
-      0,
-      img.width,
-      img.height,
+      sx,
+      sy,
+      sWidth,
+      sHeight,
       centerShift_x,
       centerShift_y,
-      img.width * ratio,
-      img.height * ratio
+      sWidth * ratio,
+      sHeight * ratio
     );
   };
 
   // Preload frames via shared cache module
   useEffect(() => {
-    preloadImageSequence().then(() => {
+    const initialMode = getSequenceMode();
+    modeRef.current = initialMode;
+
+    preloadImageSequence(initialMode).then(() => {
       setIsLoaded(true);
       hidePreloader();
-      renderFrame(0);
+      renderFrame(0, initialMode);
     });
 
-    const unsubscribe = subscribeSequenceLoad(() => {
-      // Re-render current frame when new images load
-      renderFrame(lastDrawnFrameRef.current);
+    const unsubscribe = subscribeSequenceLoad((_loadedCount, _isTier1, updatedMode) => {
+      // Re-render current frame when new sprite sheets load for active mode
+      if (updatedMode === modeRef.current) {
+        renderFrame(lastDrawnFrameRef.current, updatedMode);
+      }
     });
 
     // Hard ceiling safety for preloader (1.2s max delay)
     const timer = setTimeout(() => {
       setIsLoaded(true);
       hidePreloader();
-      renderFrame(0);
+      renderFrame(0, modeRef.current);
     }, 1200);
 
     return () => {
@@ -122,10 +112,18 @@ export default function Hero() {
     };
   }, []);
 
-  // Handle window resize
+  // Handle window resize & responsive sequence mode switching
   useEffect(() => {
     const handleResize = () => {
-      renderFrame(lastDrawnFrameRef.current);
+      const newMode = getSequenceMode();
+      if (newMode !== modeRef.current) {
+        modeRef.current = newMode;
+        preloadImageSequence(newMode).then(() => {
+          renderFrame(lastDrawnFrameRef.current, newMode);
+        });
+      } else {
+        renderFrame(lastDrawnFrameRef.current, newMode);
+      }
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -295,16 +293,6 @@ export default function Hero() {
             Scroll to Explore
           </span>
           <div className="w-px h-8 bg-gradient-to-b from-luxury-gold to-transparent animate-pulse" />
-        </div>
-
-        <div className="absolute bottom-6 right-6 md:bottom-8 md:right-10 z-40 pointer-events-none flex items-center justify-center">
-          <img
-            src="/brand-logo.png"
-            alt="Detailing Masters"
-            className="h-20 md:h-32 lg:h-36 w-auto object-contain opacity-90"
-            loading="eager"
-            decoding="async"
-          />
         </div>
 
       </div>

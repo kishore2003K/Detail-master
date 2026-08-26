@@ -4,7 +4,13 @@ import { Shield, Check } from 'lucide-react';
 import { Container } from './ui/Container';
 import { Button } from './ui/Button';
 import { useSmoothScroll } from '../hooks/useSmoothScroll';
-import { preloadImageSequence, getImageSequence, getLoadedSet, subscribeSequenceLoad } from '../utils/imageSequenceCache';
+import {
+  preloadImageSequence,
+  getFrameSource,
+  subscribeSequenceLoad,
+  getSequenceMode,
+  TOTAL_FRAMES,
+} from '../utils/imageSequenceCache';
 
 export default function CeramicCoatingShowcase() {
   const scrollTo = useSmoothScroll();
@@ -13,17 +19,19 @@ export default function CeramicCoatingShowcase() {
   const [currentFrame, setCurrentFrame] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
-  
-  const totalFrames = 240;
+  const modeRef = useRef(getSequenceMode());
 
   // Use shared cache preloader
   useEffect(() => {
-    preloadImageSequence().then(() => {
+    const mode = getSequenceMode();
+    modeRef.current = mode;
+
+    preloadImageSequence(mode).then(() => {
       setIsLoaded(true);
     });
 
-    const unsubscribe = subscribeSequenceLoad(() => {
-      if (getLoadedSet().size > 0) {
+    const unsubscribe = subscribeSequenceLoad((_count, _isTier1, updatedMode) => {
+      if (updatedMode === modeRef.current) {
         setIsLoaded(true);
       }
     });
@@ -39,39 +47,32 @@ export default function CeramicCoatingShowcase() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const imagesCache = getImageSequence();
-    const loadedSet = getLoadedSet();
+    const mode = getSequenceMode();
+    modeRef.current = mode;
+    const frameSource = getFrameSource(currentFrame, mode);
+    if (!frameSource) return;
 
-    // Find nearest loaded frame if currentFrame is not ready
-    let targetIndex = currentFrame;
-    if (!loadedSet.has(targetIndex)) {
-      for (let offset = 1; offset < totalFrames; offset++) {
-        if (currentFrame - offset >= 0 && loadedSet.has(currentFrame - offset)) {
-          targetIndex = currentFrame - offset;
-          break;
-        }
-        if (currentFrame + offset < totalFrames && loadedSet.has(currentFrame + offset)) {
-          targetIndex = currentFrame + offset;
-          break;
-        }
-      }
-    }
-
-    const img = imagesCache[targetIndex];
-    if (!img || !img.complete || img.naturalWidth === 0) return;
+    const { img, sx, sy, sWidth, sHeight } = frameSource;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const hRatio = canvas.width / img.width;
-    const vRatio = canvas.height / img.height;
+    const hRatio = canvas.width / sWidth;
+    const vRatio = canvas.height / sHeight;
     const ratio = Math.min(hRatio, vRatio);
 
-    const centerShift_x = (canvas.width - img.width * ratio) / 2;
-    const centerShift_y = (canvas.height - img.height * ratio) / 2;
+    const centerShift_x = (canvas.width - sWidth * ratio) / 2;
+    const centerShift_y = (canvas.height - sHeight * ratio) / 2;
 
     ctx.drawImage(
-      img, 0, 0, img.width, img.height,
-      centerShift_x, centerShift_y, img.width * ratio, img.height * ratio
+      img,
+      sx,
+      sy,
+      sWidth,
+      sHeight,
+      centerShift_x,
+      centerShift_y,
+      sWidth * ratio,
+      sHeight * ratio
     );
   }, [currentFrame, isLoaded]);
 
@@ -94,7 +95,7 @@ export default function CeramicCoatingShowcase() {
       const sensitivity = 5; 
       let newFrame = Math.floor(startFrame.current - (deltaX / sensitivity));
       
-      newFrame = ((newFrame % totalFrames) + totalFrames) % totalFrames;
+      newFrame = ((newFrame % TOTAL_FRAMES) + TOTAL_FRAMES) % TOTAL_FRAMES;
       setCurrentFrame(newFrame);
     };
 
