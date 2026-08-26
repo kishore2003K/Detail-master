@@ -137,12 +137,12 @@ export default function Hero() {
       }
     });
 
-    // Hard ceiling safety for preloader (1.2s max delay)
+    // Hard ceiling safety for preloader (2.8s max delay)
     const timer = setTimeout(() => {
       setIsLoaded(true);
       hidePreloader();
       renderFrame(0, modeRef.current, true);
-    }, 1200);
+    }, 2800);
 
     return () => {
       unsubscribe();
