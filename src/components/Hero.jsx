@@ -32,7 +32,7 @@ export default function Hero() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext("2d", { alpha: false });
+    const ctx = canvas.getContext("2d", { alpha: false, desynchronized: true });
     if (!ctx) return;
 
     const currentMode = explicitMode || modeRef.current || getSequenceMode();
@@ -42,9 +42,13 @@ export default function Hero() {
     const { img, sx, sy, sWidth, sHeight, actualIndex } = frameSource;
     lastDrawnFrameRef.current = actualIndex;
 
+    const isMobile = window.innerWidth < 768;
     const displayWidth = window.innerWidth;
     const displayHeight = window.innerHeight;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    // Cap mobile DPR at 1.5 for buttery 120fps GPU performance; desktop at 2.0
+    const dpr = isMobile
+      ? Math.min(window.devicePixelRatio || 1, 1.5)
+      : Math.min(window.devicePixelRatio || 1, 2);
 
     const targetWidth = Math.floor(displayWidth * dpr);
     const targetHeight = Math.floor(displayHeight * dpr);
@@ -134,14 +138,15 @@ export default function Hero() {
     if (!containerRef.current) return;
 
     const container = containerRef.current;
+    const isMobile = window.innerWidth < 768;
 
     const ctx = gsap.context(() => {
       ScrollTrigger.create({
         trigger: container,
         start: "top top",
-        end: "+=220%",
+        end: isMobile ? "+=100%" : "+=180%", // Snappy 1-swipe distance on mobile, smooth on desktop
         pin: true,
-        scrub: 0.5, // 0.5s lerp for fast, responsive, 120fps video scrub
+        scrub: isMobile ? 0.1 : 0.4, // Instant 1:1 finger tracking on mobile, gentle inertia on desktop
         anticipatePin: 1,
         onUpdate: (self) => {
           const progress = self.progress;
@@ -279,7 +284,7 @@ export default function Hero() {
         <div className="absolute inset-0 pointer-events-none z-10">
           <canvas
             ref={canvasRef}
-            className={`w-full h-full object-cover transition-opacity duration-500 ${
+            className={`w-full h-full object-cover transform-gpu will-change-transform transition-opacity duration-500 ${
               isLoaded ? "opacity-100" : "opacity-0"
             }`}
           />

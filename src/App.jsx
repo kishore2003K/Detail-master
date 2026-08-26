@@ -21,25 +21,41 @@ gsap.registerPlugin(ScrollTrigger);
 
 function App() {
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
-      touchMultiplier: 2,
-    });
+    // Apple-standard: Allow mobile & touch devices to use native 120Hz/60Hz GPU hardware momentum scrolling
+    const isTouch = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
 
-    lenis.on('scroll', ScrollTrigger.update);
+    let lenis = null;
+    let updateGSAP = null;
 
-    const updateGSAP = (time) => {
-      lenis.raf(time * 1000);
-    };
+    if (!isTouch) {
+      lenis = new Lenis({
+        duration: 1.0,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+        smoothTouch: false,
+        syncTouch: false,
+        touchMultiplier: 0,
+      });
 
-    gsap.ticker.add(updateGSAP);
-    gsap.ticker.lagSmoothing(0);
+      lenis.on('scroll', ScrollTrigger.update);
+
+      updateGSAP = (time) => {
+        lenis.raf(time * 1000);
+      };
+
+      gsap.ticker.add(updateGSAP);
+      gsap.ticker.lagSmoothing(0);
+    } else {
+      // Native touch momentum for mobile with GSAP ScrollTrigger
+      ScrollTrigger.config({
+        ignoreMobileResize: true,
+        autoRefreshEvents: "visibilitychange,DOMContentLoaded,load"
+      });
+    }
 
     return () => {
-      gsap.ticker.remove(updateGSAP);
-      lenis.destroy();
+      if (updateGSAP) gsap.ticker.remove(updateGSAP);
+      if (lenis) lenis.destroy();
     };
   }, []);
 
