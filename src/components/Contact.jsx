@@ -45,11 +45,29 @@ export default function Contact() {
     fetchServices();
   }, []);
 
+  const handleWhatsAppFallback = (data, selectedServices) => {
+    const serviceNames = selectedServices
+      .map(id => services.find(s => s.id === id || s.service_name === id)?.service_name || id)
+      .join(', ');
+
+    const text = `*New Detailing Booking Request*\n\n` +
+      `👤 *Name:* ${data.name}\n` +
+      `📞 *Phone:* ${data.phone}\n` +
+      `📧 *Email:* ${data.email || 'N/A'}\n` +
+      `🚗 *Vehicle:* ${data.brand || ''} ${data.model || ''} (${data.type || 'Car'})\n` +
+      `✨ *Service:* ${serviceNames || 'Detailing'}\n` +
+      `📅 *Preferred Date:* ${data.date || 'Flexible'} (${data.time_period || 'Anytime'})\n` +
+      `📝 *Notes:* ${data.message || 'None'}`;
+
+    const encodedText = encodeURIComponent(text);
+    window.open(`https://wa.me/919111977721?text=${encodedText}`, '_blank');
+  };
+
   const onSubmit = async (data) => {
     setIsSubmitting(true);
-    try {
-      const selectedServices = Array.isArray(data.service) ? data.service : [data.service];
+    const selectedServices = Array.isArray(data.service) ? data.service : [data.service];
 
+    try {
       const response = await fetch(`${API_URL}/api/web_bookings`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -76,12 +94,19 @@ export default function Contact() {
         alert("Thank you for your booking request! We will contact you shortly to confirm.");
         reset();
       } else {
-        const errorData = await response.json();
-        alert(`Failed to submit booking: ${errorData.message || 'Unknown error'}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Backend service unavailable');
       }
     } catch (err) {
-      console.error(err);
-      alert("Error submitting booking request. Please try again later.");
+      console.warn("Backend booking API unreachable, switching to WhatsApp instant booking fallback:", err);
+      trackBookingSubmit({
+        service: selectedServices,
+        vehicle_type: data.type,
+        vehicle_brand: data.brand
+      });
+      alert("We've prepared your booking details directly on WhatsApp for instant confirmation. Redirecting now...");
+      handleWhatsAppFallback(data, selectedServices);
+      reset();
     } finally {
       setIsSubmitting(false);
     }

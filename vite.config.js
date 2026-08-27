@@ -12,5 +12,26 @@ export default defineConfig({
         changeOrigin: true,
       }
     }
+  },
+  build: {
+    cssCodeSplit: true,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('framer-motion') || id.includes('gsap') || id.includes('lenis')) {
+              return 'vendor-animation';
+            }
+            if (id.includes('lucide-react')) {
+              return 'vendor-icons';
+            }
+            if (id.includes('react') || id.includes('react-dom')) {
+              return 'vendor-react';
+            }
+            return 'vendor-libs';
+          }
+        }
+      }
+    }
   }
 })
