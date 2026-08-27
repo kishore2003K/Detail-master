@@ -10,12 +10,12 @@ import { Button } from "./ui/Button";
 import { trackBookingSubmit, trackCallClick, trackDirectionsClick } from "../utils/analytics";
 
 const fallbackServices = [
-  { id: "wash", service_name: "Premium Wash" },
-  { id: "ceramic", service_name: "Ceramic Coating" },
-  { id: "paint", service_name: "Paint Correction" },
-  { id: "interior", service_name: "Interior Detailing" },
-  { id: "engine", service_name: "Engine Bay Cleaning" },
-  { id: "bike", service_name: "Bike Detailing" }
+  { id: 1, service_name: "Premium Wash" },
+  { id: 2, service_name: "Ceramic Coating" },
+  { id: 3, service_name: "Paint Correction" },
+  { id: 4, service_name: "Interior Detailing" },
+  { id: 5, service_name: "Engine Bay Cleaning" },
+  { id: 6, service_name: "Bike Detailing" }
 ];
 
 export default function Contact() {
@@ -32,7 +32,13 @@ export default function Contact() {
         if (response.ok) {
           const data = await response.json();
           if (Array.isArray(data)) {
-            const activeServices = data.filter(s => s && s.is_active !== false);
+            const activeServices = data
+              .filter(s => s && s.is_active !== false)
+              .map(s => ({
+                id: Number(s.service_id || s.id),
+                service_name: s.service_name || s.name
+              }));
+
             if (activeServices.length > 0) {
               setServices(activeServices);
             }
@@ -43,7 +49,7 @@ export default function Contact() {
       }
     };
     fetchServices();
-  }, []);
+  }, [API_URL]);
 
   const handleWhatsAppFallback = (data, selectedServices) => {
     const serviceNames = selectedServices
@@ -65,7 +71,11 @@ export default function Contact() {
 
   const onSubmit = async (data) => {
     setIsSubmitting(true);
-    const selectedServices = Array.isArray(data.service) ? data.service : [data.service];
+    const rawServices = Array.isArray(data.service) ? data.service : [data.service];
+    const selectedServices = rawServices.map(val => {
+      const num = parseInt(val, 10);
+      return isNaN(num) ? 1 : num;
+    });
 
     try {
       const response = await fetch(`${API_URL}/api/web_bookings`, {
