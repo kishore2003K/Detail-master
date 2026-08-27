@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Container } from "./ui/Container";
 import { Button } from "./ui/Button";
-import { LogoMark } from "./ui/LogoMark";
 import { useSmoothScroll } from "../hooks/useSmoothScroll";
 
 const navLinks = [

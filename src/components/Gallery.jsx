@@ -8,12 +8,48 @@ import { Button } from "./ui/Button";
 const categories = ["All", "Cars", "SUV", "Bike", "Ceramic", "Interior"];
 
 const galleryImages = [
-  { id: 1, category: "Cars", title: "Premium Wash", image: "/images/wash.png" },
-  { id: 2, category: "SUV", title: "Ceramic Coating", image: "/images/ceramic.png" },
-  { id: 3, category: "Ceramic", title: "Paint Correction", image: "/images/Paint Correction-1.jpg" },
-  { id: 4, category: "Interior", title: "Interior Detailing", image: "/images/interior.png" },
-  { id: 5, category: "Bike", title: "Ducati Panigale", image: "/images/bike-detailing-2.jpg" },
-  { id: 6, category: "Cars", title: "Engine Bay", image: "/images/engine.png" },
+  { 
+    id: 1, 
+    category: "Cars", 
+    title: "Premium Wash", 
+    image: "/images/wash.png",
+    alt: "Premium Car Wash and Foam Cleaning at Detailing Masters Marthandam"
+  },
+  { 
+    id: 2, 
+    category: "SUV", 
+    title: "Ceramic Coating", 
+    image: "/images/ceramic.png",
+    alt: "SUV 9H Ceramic Coating Protection at Detailing Masters Marthandam"
+  },
+  { 
+    id: 3, 
+    category: "Ceramic", 
+    title: "Paint Correction", 
+    image: "/images/Paint Correction-1.jpg",
+    alt: "Multi-stage Paint Correction and Scratch Removal in Marthandam"
+  },
+  { 
+    id: 4, 
+    category: "Interior", 
+    title: "Interior Detailing", 
+    image: "/images/interior.png",
+    alt: "Deep Interior Car Detailing and Steam Cleaning Marthandam"
+  },
+  { 
+    id: 5, 
+    category: "Bike", 
+    title: "Ducati Panigale", 
+    image: "/images/bike-detailing-2.jpg",
+    alt: "Superbike Detailing and Ceramic Coating on Ducati Panigale"
+  },
+  { 
+    id: 6, 
+    category: "Cars", 
+    title: "Engine Bay", 
+    image: "/images/engine.png",
+    alt: "Complete Engine Bay Degreasing and Detailing Marthandam"
+  },
 ];
 
 export default function Gallery() {

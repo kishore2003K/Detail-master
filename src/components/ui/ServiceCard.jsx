@@ -15,9 +15,12 @@ export function ServiceCard({ title, description, icon: Icon, image, price, dura
     >
       <div className="absolute inset-0 bg-gradient-to-b from-transparent to-luxury-bg/90 z-10" />
       
-      <div 
-        className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-        style={{ backgroundImage: `url("${image}")` }}
+      <img 
+        src={image}
+        alt={`${title} - Car & Bike Detailing Service at Detailing Masters Marthandam`}
+        loading="lazy"
+        decoding="async"
+        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
       />
 
       <div className="relative z-20 p-8 flex flex-col h-full justify-end">

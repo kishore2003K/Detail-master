@@ -281,14 +281,15 @@ export default function Hero() {
               className="absolute left-0 opacity-0 translate-y-8 transition-none"
             >
               <span className="text-luxury-gold text-xs md:text-sm font-semibold uppercase tracking-[0.3em] mb-2 block">
-                Precision Detailing
+                Precision Detailing • Marthandam
               </span>
-              <h2 className="text-4xl md:text-6xl font-heading font-bold text-white leading-tight">
+              <h1 className="text-4xl md:text-6xl font-heading font-bold text-white leading-tight">
+                <span className="sr-only">Detailing Masters — Car &amp; Bike Detailing in Marthandam: </span>
                 Layered <br />
                 <span className="text-gray-400 text-2xl md:text-4xl font-normal">
                   Protection.
                 </span>
-              </h2>
+              </h1>
             </div>
 
             <div 
@@ -327,10 +328,14 @@ export default function Hero() {
         <div className="absolute inset-0 pointer-events-none z-10">
           <canvas
             ref={canvasRef}
+            role="img"
+            aria-label="Interactive 3D visualization of car detailing, ceramic coating and paint protection at Detailing Masters Marthandam"
             className={`w-full h-full object-cover transform-gpu will-change-transform transition-opacity duration-500 ${
               isLoaded ? "opacity-100" : "opacity-0"
             }`}
-          />
+          >
+            <p>Detailing Masters Marthandam — Premium ceramic coating, paint correction, and vehicle detailing animation.</p>
+          </canvas>
         </div>
 
         <div

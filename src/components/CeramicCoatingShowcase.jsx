@@ -227,8 +227,12 @@ export default function CeramicCoatingShowcase() {
                   ref={canvasRef} 
                   width={800} 
                   height={800} 
+                  role="img"
+                  aria-label="Interactive 360-degree rotating model of nano-ceramic coated vehicle"
                   className={`w-full h-full object-contain transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
-                />
+                >
+                  <p>Interactive 360-degree ceramic coating gloss and hydrophobic layer demonstration.</p>
+                </canvas>
               </motion.div>
 
               {isLoaded && (

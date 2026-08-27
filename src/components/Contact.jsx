@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { MapPin, Phone, Clock } from "lucide-react";
 import { motion } from "framer-motion";
 import { Container } from "./ui/Container";
 import { SectionTitle } from "./ui/SectionTitle";
 import { Input } from "./ui/Input";
 import { Textarea } from "./ui/Textarea";
 import { Button } from "./ui/Button";
+import { trackBookingSubmit, trackCallClick, trackDirectionsClick } from "../utils/analytics";
 
 const fallbackServices = [
   { id: "wash", service_name: "Premium Wash" },
@@ -67,6 +68,11 @@ export default function Contact() {
       });
 
       if (response.ok) {
+        trackBookingSubmit({
+          service: selectedServices,
+          vehicle_type: data.type,
+          vehicle_brand: data.brand
+        });
         alert("Thank you for your booking request! We will contact you shortly to confirm.");
         reset();
       } else {
@@ -221,7 +227,15 @@ export default function Contact() {
                   </div>
                   <div>
                     <h4 className="font-semibold text-white mb-1">Detailing Masters</h4>
-                    <p className="text-gray-400 text-sm">Opposite KTM Bike Showroom,<br />Chankai, Marthandam,<br />Tamil Nadu 629155</p>
+                    <a 
+                      href="https://maps.google.com/?cid=10630559981881673868" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      onClick={trackDirectionsClick}
+                      className="text-gray-400 text-sm hover:text-luxury-gold transition-colors block"
+                    >
+                      Opposite KTM Bike Showroom,<br />Chankai, Marthandam,<br />Tamil Nadu 629155
+                    </a>
                   </div>
                 </li>
 
@@ -231,7 +245,22 @@ export default function Contact() {
                   </div>
                   <div>
                     <h4 className="font-semibold text-white mb-1">Call Us</h4>
-                    <p className="text-gray-400 text-sm">9111977721<br />9894834700</p>
+                    <div className="flex flex-col gap-1 text-sm">
+                      <a 
+                        href="tel:9111977721" 
+                        onClick={() => trackCallClick('contact_info')}
+                        className="text-gray-400 hover:text-luxury-gold transition-colors"
+                      >
+                        +91 91119 77721
+                      </a>
+                      <a 
+                        href="tel:9894834700" 
+                        onClick={() => trackCallClick('contact_info')}
+                        className="text-gray-400 hover:text-luxury-gold transition-colors"
+                      >
+                        +91 98948 34700
+                      </a>
+                    </div>
                   </div>
                 </li>
 
@@ -249,6 +278,7 @@ export default function Contact() {
 
             <div className="glass-card overflow-hidden h-[300px] p-2">
               <iframe
+                title="Detailing Masters Google Maps Location in Marthandam"
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.032954774763!2d77.23808897423896!3d8.29951919173554!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b0455004a6f7003%3A0x938740e61277488c!2sDetailing%20masters!5e0!3m2!1sen!2sin!4v1785078483595!5m2!1sen!2sin"
                 width="100%"
                 height="100%"

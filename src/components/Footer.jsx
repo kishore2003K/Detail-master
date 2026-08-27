@@ -46,14 +46,23 @@ export default function Footer() {
               Premium automotive detailing studio specializing in ceramic coatings, paint correction, and interior restoration.
             </p>
             <div className="flex items-center gap-4">
-              <a href="#" className="w-10 h-10 rounded-full bg-luxury-secondary flex items-center justify-center text-gray-400 hover:text-luxury-gold hover:bg-luxury-gold/10 transition-colors">
+              <a 
+                href="https://www.instagram.com/detailingmasters_offical" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                aria-label="Detailing Masters on Instagram"
+                className="w-10 h-10 rounded-full bg-luxury-secondary flex items-center justify-center text-gray-400 hover:text-luxury-gold hover:bg-luxury-gold/10 transition-colors"
+              >
                 <SocialIcon type="instagram" />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-luxury-secondary flex items-center justify-center text-gray-400 hover:text-luxury-gold hover:bg-luxury-gold/10 transition-colors">
-                <SocialIcon type="facebook" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-luxury-secondary flex items-center justify-center text-gray-400 hover:text-luxury-gold hover:bg-luxury-gold/10 transition-colors">
-                <SocialIcon type="twitter" />
+              <a 
+                href="https://www.google.com/maps?cid=10630559981881673868" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                aria-label="Detailing Masters on Google Maps"
+                className="w-10 h-10 rounded-full bg-luxury-secondary flex items-center justify-center text-gray-400 hover:text-luxury-gold hover:bg-luxury-gold/10 transition-colors"
+              >
+                <MapPin className="w-5 h-5" />
               </a>
             </div>
           </div>
@@ -92,11 +101,21 @@ export default function Footer() {
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-luxury-gold shrink-0 mt-0.5" />
-                <span className="text-gray-400 text-sm">Opposite KTM Bike Showroom, Chankai, Marthandam, Tamil Nadu 629155</span>
+                <a 
+                  href="https://maps.google.com/?cid=10630559981881673868" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-gray-400 text-sm hover:text-white transition-colors"
+                >
+                  Opposite KTM Bike Showroom, Chankai, Marthandam, Tamil Nadu 629155
+                </a>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-luxury-gold shrink-0" />
-                <a href="tel:9111977721" className="text-gray-400 text-sm hover:text-white transition-colors">9111977721, 9894834700</a>
+                <div className="flex gap-2 text-sm text-gray-400">
+                  <a href="tel:9111977721" className="hover:text-white transition-colors">9111977721</a>,
+                  <a href="tel:9894834700" className="hover:text-white transition-colors">9894834700</a>
+                </div>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-luxury-gold shrink-0" />

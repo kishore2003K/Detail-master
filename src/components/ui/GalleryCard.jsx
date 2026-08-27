@@ -1,7 +1,9 @@
 import { motion } from "framer-motion";
 import { Search } from "lucide-react";
 
-export function GalleryCard({ image, category, title, onClick }) {
+export function GalleryCard({ image, category, title, alt, onClick }) {
+  const imageAlt = alt || `${title} - ${category} Detailing at Detailing Masters Marthandam`;
+
   return (
     <motion.div 
       layout
@@ -12,9 +14,12 @@ export function GalleryCard({ image, category, title, onClick }) {
       className="group relative overflow-hidden rounded-2xl aspect-square cursor-pointer"
       onClick={onClick}
     >
-      <div 
-        className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-        style={{ backgroundImage: `url("${image}")` }}
+      <img 
+        src={image}
+        alt={imageAlt}
+        loading="lazy"
+        decoding="async"
+        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
       />
       
       <div className="absolute inset-0 bg-luxury-bg/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center">
