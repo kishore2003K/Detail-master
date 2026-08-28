@@ -11,6 +11,7 @@ import { Input } from "./ui/Input";
 import { Textarea } from "./ui/Textarea";
 import { Button } from "./ui/Button";
 import { trackBookingSubmit, trackCallClick, trackDirectionsClick } from "../utils/analytics";
+import { getCustomerBookingWhatsAppUrl } from "../utils/whatsappConfirmation";
 
 const fallbackServices = [
   { id: 1, service_name: "Premium Wash" },
@@ -95,23 +96,9 @@ export default function Contact() {
     setServiceError(false);
   };
 
-  const getWhatsAppMessage = (data, serviceNames, refId) => {
-    const text = `*New Booking Request (Ref: #${refId})*\n\n` +
-      `👤 *Customer:* ${data.name}\n` +
-      `📞 *Phone:* ${data.phone}\n` +
-      `📧 *Email:* ${data.email || 'N/A'}\n` +
-      `🚗 *Vehicle:* ${data.brand || ''} ${data.model || ''} (${data.type || 'Car'})\n` +
-      `✨ *Services:* ${serviceNames || 'Detailing'}\n` +
-      `📅 *Date:* ${data.date || 'Flexible'}\n` +
-      `⏰ *Time Slot:* ${data.time_period || 'Anytime'}\n` +
-      `📝 *Notes:* ${data.message || 'None'}\n\n` +
-      `_Please confirm availability and slot timings._`;
-    return encodeURIComponent(text);
-  };
-
   const openWhatsAppChat = (data, serviceNames, refId) => {
-    const encoded = getWhatsAppMessage(data, serviceNames, refId);
-    window.open(`https://wa.me/919111977721?text=${encoded}`, '_blank');
+    const url = getCustomerBookingWhatsAppUrl(data, serviceNames, refId);
+    window.open(url, '_blank');
   };
 
   const onSubmit = async (data) => {
