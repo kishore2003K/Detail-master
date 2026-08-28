@@ -109,7 +109,15 @@ export default function Contact() {
     }
 
     setIsSubmitting(true);
-    const serviceIdsToSend = selectedServiceIds.map(Number);
+    const serviceIds = selectedServiceIds.map(Number);
+    const primaryServiceId = serviceIds[0] || 1;
+    const selectedServiceNames = serviceIds
+      .map(id => services.find(s => s.id === id)?.service_name || `Service #${id}`)
+      .join(', ');
+
+    const combinedNotes = serviceIds.length > 1
+      ? `Selected Services: ${selectedServiceNames}${data.message ? `\nCustomer Notes: ${data.message}` : ''}`
+      : (data.message || '');
 
     try {
       const response = await fetch(`${API_URL}/api/web_bookings`, {
@@ -122,16 +130,17 @@ export default function Contact() {
           vehicle_brand: data.brand,
           vehicle_model: data.model,
           vehicle_type: data.type,
-          service_id: serviceIdsToSend,
+          service_id: primaryServiceId,
+          service_ids: serviceIds,
           preferred_date: data.date,
           preferred_time_period: data.time_period,
-          additional_notes: data.message || ''
+          additional_notes: combinedNotes
         })
       });
 
       if (response.ok) {
         trackBookingSubmit({
-          service: serviceIdsToSend,
+          service: serviceIds,
           vehicle_type: data.type,
           vehicle_brand: data.brand
         });
