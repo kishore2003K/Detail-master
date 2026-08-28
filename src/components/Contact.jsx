@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
-import { MapPin, Phone, Clock, Calendar, ChevronDown, Check, X, Sparkles } from "lucide-react";
+import { 
+  MapPin, Phone, Clock, Calendar, ChevronDown, Check, X, Sparkles, 
+  CheckCircle2, MessageSquare, Car, ExternalLink 
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Container } from "./ui/Container";
 import { SectionTitle } from "./ui/SectionTitle";
@@ -25,9 +28,11 @@ export default function Contact() {
   const [isServiceDropdownOpen, setIsServiceDropdownOpen] = useState(false);
   const [serviceError, setServiceError] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successModalData, setSuccessModalData] = useState(null);
   const dropdownRef = useRef(null);
 
   const API_URL = import.meta.env.VITE_API_URL || 'https://detail-master-production.up.railway.app';
+  const NOTIFICATION_EMAIL = import.meta.env.VITE_NOTIFICATION_EMAIL || 'info@detailingmasters.com';
   const todayDate = new Date().toISOString().split("T")[0];
 
   // Fetch backend services if available
@@ -90,22 +95,23 @@ export default function Contact() {
     setServiceError(false);
   };
 
-  const handleWhatsAppFallback = (data, selectedServices) => {
-    const serviceNames = selectedServices
-      .map(id => services.find(s => s.id === id)?.service_name || `Service #${id}`)
-      .join(', ');
-
-    const text = `*New Detailing Booking Request*\n\n` +
-      `👤 *Name:* ${data.name}\n` +
+  const getWhatsAppMessage = (data, serviceNames, refId) => {
+    const text = `*New Booking Request (Ref: #${refId})*\n\n` +
+      `👤 *Customer:* ${data.name}\n` +
       `📞 *Phone:* ${data.phone}\n` +
       `📧 *Email:* ${data.email || 'N/A'}\n` +
       `🚗 *Vehicle:* ${data.brand || ''} ${data.model || ''} (${data.type || 'Car'})\n` +
       `✨ *Services:* ${serviceNames || 'Detailing'}\n` +
-      `📅 *Preferred Date:* ${data.date || 'Flexible'} (${data.time_period || 'Anytime'})\n` +
-      `📝 *Notes:* ${data.message || 'None'}`;
+      `📅 *Date:* ${data.date || 'Flexible'}\n` +
+      `⏰ *Time Slot:* ${data.time_period || 'Anytime'}\n` +
+      `📝 *Notes:* ${data.message || 'None'}\n\n` +
+      `_Please confirm availability and slot timings._`;
+    return encodeURIComponent(text);
+  };
 
-    const encodedText = encodeURIComponent(text);
-    window.open(`https://wa.me/919111977721?text=${encodedText}`, '_blank');
+  const openWhatsAppChat = (data, serviceNames, refId) => {
+    const encoded = getWhatsAppMessage(data, serviceNames, refId);
+    window.open(`https://wa.me/919111977721?text=${encoded}`, '_blank');
   };
 
   const onSubmit = async (data) => {
@@ -121,12 +127,15 @@ export default function Contact() {
       .map(id => services.find(s => s.id === id)?.service_name || `Service #${id}`)
       .join(', ');
 
+    const refId = `DM-${Math.floor(10000 + Math.random() * 90000)}`;
+
     const combinedNotes = serviceIds.length > 1
       ? `Selected Services: ${selectedServiceNames}${data.message ? `\nCustomer Notes: ${data.message}` : ''}`
       : (data.message || '');
 
+    // 1. Try sending to database backend
     try {
-      const response = await fetch(`${API_URL}/api/web_bookings`, {
+      await fetch(`${API_URL}/api/web_bookings`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -143,35 +152,61 @@ export default function Contact() {
           preferred_time_period: data.time_period,
           additional_notes: combinedNotes
         })
-      });
-
-      if (response.ok) {
-        trackBookingSubmit({
-          service: serviceIds,
-          vehicle_type: data.type,
-          vehicle_brand: data.brand
-        });
-        alert("Thank you for your booking request! We will contact you shortly to confirm.");
-        reset();
-        setSelectedServiceIds([]);
-      } else {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Backend service unavailable');
-      }
-    } catch (err) {
-      console.warn("Backend booking API unreachable, switching to WhatsApp instant booking fallback:", err);
-      trackBookingSubmit({
-        service: serviceIds,
-        vehicle_type: data.type,
-        vehicle_brand: data.brand
-      });
-      alert("We've prepared your booking details directly on WhatsApp for instant confirmation. Redirecting now...");
-      handleWhatsAppFallback(data, serviceIds);
-      reset();
-      setSelectedServiceIds([]);
-    } finally {
-      setIsSubmitting(false);
+      }).catch(err => console.warn("DB booking log:", err));
+    } catch (e) {
+      console.warn("DB save note:", e);
     }
+
+    // 2. Free background email dispatch (via FormSubmit - 100% free forever)
+    try {
+      fetch(`https://formsubmit.co/ajax/${NOTIFICATION_EMAIL}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          _subject: `🚗 New Booking #${refId} - ${data.name} (${data.brand} ${data.model})`,
+          Customer_Name: data.name,
+          Phone: data.phone,
+          Email: data.email,
+          Vehicle: `${data.brand} ${data.model} (${data.type})`,
+          Services: selectedServiceNames,
+          Preferred_Date: data.date,
+          Preferred_Time: data.time_period,
+          Notes: data.message || 'None',
+          Reference_ID: refId
+        })
+      }).catch(() => {});
+    } catch {
+      // ignore
+    }
+
+    trackBookingSubmit({
+      service: serviceIds,
+      vehicle_type: data.type,
+      vehicle_brand: data.brand
+    });
+
+    // 3. Set Modal details
+    setSuccessModalData({
+      refId,
+      name: data.name,
+      phone: data.phone,
+      email: data.email,
+      vehicle: `${data.brand || ''} ${data.model || ''} (${data.type || 'Car'})`,
+      services: selectedServiceNames,
+      date: data.date,
+      time: data.time_period,
+      notes: data.message,
+      formData: data
+    });
+
+    // 4. Auto-open WhatsApp for instant real-world confirmation
+    setTimeout(() => {
+      openWhatsAppChat(data, selectedServiceNames, refId);
+    }, 600);
+
+    reset();
+    setSelectedServiceIds([]);
+    setIsSubmitting(false);
   };
 
   return (
@@ -531,6 +566,99 @@ export default function Contact() {
           </motion.div>
         </div>
       </Container>
+
+      {/* Luxury Booking Confirmation Modal */}
+      <AnimatePresence>
+        {successModalData && (
+          <div className="fixed inset-0 z-[999999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ duration: 0.25 }}
+              data-lenis-prevent="true"
+              className="relative w-full max-w-lg rounded-2xl bg-[#121212] border border-luxury-gold/30 shadow-2xl p-6 md:p-8 text-center text-white overflow-hidden"
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setSuccessModalData(null)}
+                className="absolute top-4 right-4 p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                aria-label="Close modal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              {/* Glowing Success Badge */}
+              <div className="mx-auto mb-3 w-14 h-14 rounded-full bg-emerald-500/15 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shadow-[0_0_25px_rgba(16,185,129,0.3)]">
+                <CheckCircle2 className="w-8 h-8 stroke-[2.5]" />
+              </div>
+
+              <span className="text-[11px] uppercase tracking-widest font-bold text-luxury-gold bg-luxury-gold/10 px-3 py-1 rounded-full border border-luxury-gold/25">
+                Booking Request Received
+              </span>
+
+              <h3 className="text-2xl font-bold mt-3 mb-1">Appointment Registered!</h3>
+              <p className="text-xs text-gray-400 mb-4">
+                Booking Reference: <span className="text-white font-mono font-bold">{successModalData.refId}</span>
+              </p>
+
+              {/* Booking Summary Box */}
+              <div className="bg-black/50 border border-white/10 rounded-xl p-4 text-left text-xs space-y-2 mb-5 text-gray-300">
+                <div className="flex justify-between py-1 border-b border-white/5">
+                  <span className="text-gray-400">Customer:</span>
+                  <span className="font-semibold text-white">{successModalData.name} ({successModalData.phone})</span>
+                </div>
+                <div className="flex justify-between py-1 border-b border-white/5">
+                  <span className="text-gray-400">Vehicle:</span>
+                  <span className="font-semibold text-white">{successModalData.vehicle}</span>
+                </div>
+                <div className="flex justify-between py-1 border-b border-white/5">
+                  <span className="text-gray-400">Services:</span>
+                  <span className="font-semibold text-luxury-gold">{successModalData.services}</span>
+                </div>
+                <div className="flex justify-between py-1">
+                  <span className="text-gray-400">Schedule:</span>
+                  <span className="font-semibold text-white">{successModalData.date} • {successModalData.time}</span>
+                </div>
+              </div>
+
+              <p className="text-xs text-gray-400 mb-4">
+                For instant confirmation & priority slot allocation, chat with our studio on WhatsApp:
+              </p>
+
+              {/* Action Buttons */}
+              <div className="space-y-2.5">
+                <button
+                  type="button"
+                  onClick={() => openWhatsAppChat(successModalData.formData, successModalData.services, successModalData.refId)}
+                  className="w-full h-12 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-black font-bold flex items-center justify-center gap-2 text-sm transition-transform active:scale-[0.98] shadow-lg shadow-[#25D366]/25 cursor-pointer"
+                >
+                  <MessageSquare className="w-5 h-5 fill-current" />
+                  Confirm & Chat on WhatsApp
+                </button>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <a
+                    href="tel:+919111977721"
+                    onClick={() => trackCallClick("modal")}
+                    className="h-10 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-gray-200 font-medium flex items-center justify-center gap-1.5 text-xs transition-colors"
+                  >
+                    <Phone className="w-3.5 h-3.5 text-luxury-gold" />
+                    Call Studio
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => setSuccessModalData(null)}
+                    className="h-10 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-gray-400 hover:text-white font-medium flex items-center justify-center text-xs transition-colors cursor-pointer"
+                  >
+                    Done
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
