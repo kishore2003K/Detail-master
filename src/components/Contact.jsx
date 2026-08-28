@@ -132,6 +132,7 @@ export default function Contact() {
           vehicle_type: data.type,
           service_id: primaryServiceId,
           service_ids: serviceIds,
+          services: serviceIds,
           preferred_date: data.date,
           preferred_time_period: data.time_period,
           additional_notes: combinedNotes
