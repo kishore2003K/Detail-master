@@ -1,10 +1,9 @@
 import { Shield, Sparkles, Droplets, Gauge, Bike, Wind } from "lucide-react";
-import { useState, useEffect } from "react";
 import { Container } from "./ui/Container";
 import { SectionTitle } from "./ui/SectionTitle";
 import { ServiceCard } from "./ui/ServiceCard";
 
-const staticServiceMetadata = [
+const services = [
   {
     title: "Premium Wash",
     description: "Meticulous hand wash using pH-neutral snow foam, two-bucket method, and plush microfiber drying to prevent swirl marks.",
@@ -56,47 +55,6 @@ const staticServiceMetadata = [
 ];
 
 export default function Services() {
-  const [services, setServices] = useState(staticServiceMetadata);
-
-  useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        const API_URL = import.meta.env.VITE_API_URL || 'https://detail-master-production.up.railway.app';
-        const response = await fetch(`${API_URL}/api/services`);
-        if (response.ok) {
-          const dbServices = await response.json();
-          if (Array.isArray(dbServices)) {
-            const activeServices = dbServices.filter(s => s && s.is_active !== false);
-            
-            if (activeServices.length > 0) {
-              const mergedServices = activeServices.map(dbService => {
-                const meta = staticServiceMetadata.find(
-                  s => s.title.toLowerCase() === (dbService.service_name || '').toLowerCase()
-                ) || {};
-                
-                return {
-                  id: dbService.id || meta.id || dbService.service_name,
-                  title: dbService.service_name || meta.title,
-                  price: dbService.base_price ? `₹${Number(dbService.base_price).toLocaleString('en-IN')}` : meta.price,
-                  description: meta.description || `Professional ${dbService.service_name} service.`,
-                  duration: meta.duration || "Varies",
-                  icon: meta.icon || Sparkles,
-                  image: meta.image || "/images/wash.png"
-                };
-              });
-              
-              setServices(mergedServices);
-            }
-          }
-        }
-      } catch (error) {
-        console.warn("Backend services unavailable, using static services:", error);
-      }
-    };
-    
-    fetchServices();
-  }, []);
-
   return (
     <section id="services" className="pt-16 pb-24 relative bg-luxury-bg">
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,rgba(245,197,24,0.06),transparent_55%)]" />
@@ -116,3 +74,4 @@ export default function Services() {
     </section>
   );
 }
+

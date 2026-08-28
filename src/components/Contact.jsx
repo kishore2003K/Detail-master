@@ -155,12 +155,12 @@ export default function Contact() {
     } catch (err) {
       console.warn("Backend booking API unreachable, switching to WhatsApp instant booking fallback:", err);
       trackBookingSubmit({
-        service: serviceIdsToSend,
+        service: serviceIds,
         vehicle_type: data.type,
         vehicle_brand: data.brand
       });
       alert("We've prepared your booking details directly on WhatsApp for instant confirmation. Redirecting now...");
-      handleWhatsAppFallback(data, serviceIdsToSend);
+      handleWhatsAppFallback(data, serviceIds);
       reset();
       setSelectedServiceIds([]);
     } finally {
