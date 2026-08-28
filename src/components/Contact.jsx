@@ -84,6 +84,12 @@ export default function Contact() {
     setSelectedServiceIds(prev => prev.filter(item => item !== id));
   };
 
+  const clearAllServices = (e) => {
+    e?.stopPropagation();
+    setSelectedServiceIds([]);
+    setServiceError(false);
+  };
+
   const handleWhatsAppFallback = (data, selectedServices) => {
     const serviceNames = selectedServices
       .map(id => services.find(s => s.id === id)?.service_name || `Service #${id}`)
@@ -364,10 +370,31 @@ export default function Contact() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -6 }}
                       transition={{ duration: 0.15 }}
-                      className="absolute z-50 mt-2 w-full rounded-xl bg-[#111111]/98 backdrop-blur-xl border border-luxury-border shadow-2xl p-2 max-h-60 overflow-y-auto"
+                      data-lenis-prevent="true"
+                      data-lenis-prevent-wheel="true"
+                      data-lenis-prevent-touch="true"
+                      onWheel={(e) => e.stopPropagation()}
+                      onTouchMove={(e) => e.stopPropagation()}
+                      className="absolute z-50 mt-2 w-full rounded-xl bg-[#111111]/98 backdrop-blur-xl border border-luxury-border shadow-2xl p-2 max-h-64 overflow-y-auto overscroll-contain custom-scrollbar touch-pan-y"
                     >
-                      <div className="text-[11px] font-semibold text-gray-400 px-3 py-1.5 uppercase tracking-wider border-b border-luxury-border/40 mb-1">
-                        Click to Select / Deselect Services
+                      <div className="sticky top-0 z-10 bg-[#151515] px-3 py-2 border-b border-luxury-border/30 mb-1.5 flex items-center justify-between rounded-lg select-none shadow-sm">
+                        <span className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">
+                          Select Services
+                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[11px] text-luxury-gold font-medium">
+                            {selectedServiceIds.length} of {services.length} selected
+                          </span>
+                          {selectedServiceIds.length > 0 && (
+                            <button
+                              type="button"
+                              onClick={clearAllServices}
+                              className="text-[11px] text-gray-400 hover:text-red-400 transition-colors underline ml-1 cursor-pointer"
+                            >
+                              Clear
+                            </button>
+                          )}
+                        </div>
                       </div>
                       <div className="space-y-1">
                         {services.map(service => {
