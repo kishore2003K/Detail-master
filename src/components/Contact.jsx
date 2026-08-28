@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
-import { MapPin, Phone, Clock } from "lucide-react";
-import { motion } from "framer-motion";
+import { MapPin, Phone, Clock, Calendar, ChevronDown, Check, X, Sparkles } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Container } from "./ui/Container";
 import { SectionTitle } from "./ui/SectionTitle";
 import { Input } from "./ui/Input";
@@ -21,10 +21,16 @@ const fallbackServices = [
 export default function Contact() {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const [services, setServices] = useState(fallbackServices);
+  const [selectedServiceIds, setSelectedServiceIds] = useState([]);
+  const [isServiceDropdownOpen, setIsServiceDropdownOpen] = useState(false);
+  const [serviceError, setServiceError] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const dropdownRef = useRef(null);
 
   const API_URL = import.meta.env.VITE_API_URL || 'https://detail-master-production.up.railway.app';
+  const todayDate = new Date().toISOString().split("T")[0];
 
+  // Fetch backend services if available
   useEffect(() => {
     const fetchServices = async () => {
       try {
@@ -51,9 +57,36 @@ export default function Contact() {
     fetchServices();
   }, [API_URL]);
 
+  // Close service multi-select on click outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsServiceDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const toggleService = (id) => {
+    setServiceError(false);
+    setSelectedServiceIds(prev => {
+      if (prev.includes(id)) {
+        return prev.filter(item => item !== id);
+      } else {
+        return [...prev, id];
+      }
+    });
+  };
+
+  const removeService = (id, e) => {
+    e.stopPropagation();
+    setSelectedServiceIds(prev => prev.filter(item => item !== id));
+  };
+
   const handleWhatsAppFallback = (data, selectedServices) => {
     const serviceNames = selectedServices
-      .map(id => services.find(s => s.id === id || s.service_name === id)?.service_name || id)
+      .map(id => services.find(s => s.id === id)?.service_name || `Service #${id}`)
       .join(', ');
 
     const text = `*New Detailing Booking Request*\n\n` +
@@ -61,7 +94,7 @@ export default function Contact() {
       `📞 *Phone:* ${data.phone}\n` +
       `📧 *Email:* ${data.email || 'N/A'}\n` +
       `🚗 *Vehicle:* ${data.brand || ''} ${data.model || ''} (${data.type || 'Car'})\n` +
-      `✨ *Service:* ${serviceNames || 'Detailing'}\n` +
+      `✨ *Services:* ${serviceNames || 'Detailing'}\n` +
       `📅 *Preferred Date:* ${data.date || 'Flexible'} (${data.time_period || 'Anytime'})\n` +
       `📝 *Notes:* ${data.message || 'None'}`;
 
@@ -70,12 +103,13 @@ export default function Contact() {
   };
 
   const onSubmit = async (data) => {
+    if (selectedServiceIds.length === 0) {
+      setServiceError(true);
+      return;
+    }
+
     setIsSubmitting(true);
-    const rawServices = Array.isArray(data.service) ? data.service : [data.service];
-    const selectedServices = rawServices.map(val => {
-      const num = parseInt(val, 10);
-      return isNaN(num) ? 1 : num;
-    });
+    const serviceIdsToSend = selectedServiceIds.map(Number);
 
     try {
       const response = await fetch(`${API_URL}/api/web_bookings`, {
@@ -88,7 +122,7 @@ export default function Contact() {
           vehicle_brand: data.brand,
           vehicle_model: data.model,
           vehicle_type: data.type,
-          service_id: selectedServices,
+          service_id: serviceIdsToSend,
           preferred_date: data.date,
           preferred_time_period: data.time_period,
           additional_notes: data.message || ''
@@ -97,12 +131,13 @@ export default function Contact() {
 
       if (response.ok) {
         trackBookingSubmit({
-          service: selectedServices,
+          service: serviceIdsToSend,
           vehicle_type: data.type,
           vehicle_brand: data.brand
         });
         alert("Thank you for your booking request! We will contact you shortly to confirm.");
         reset();
+        setSelectedServiceIds([]);
       } else {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.message || 'Backend service unavailable');
@@ -110,13 +145,14 @@ export default function Contact() {
     } catch (err) {
       console.warn("Backend booking API unreachable, switching to WhatsApp instant booking fallback:", err);
       trackBookingSubmit({
-        service: selectedServices,
+        service: serviceIdsToSend,
         vehicle_type: data.type,
         vehicle_brand: data.brand
       });
       alert("We've prepared your booking details directly on WhatsApp for instant confirmation. Redirecting now...");
-      handleWhatsAppFallback(data, selectedServices);
+      handleWhatsAppFallback(data, serviceIdsToSend);
       reset();
+      setSelectedServiceIds([]);
     } finally {
       setIsSubmitting(false);
     }
@@ -139,107 +175,239 @@ export default function Contact() {
             transition={{ duration: 0.7 }}
             className="lg:col-span-3 glass-card p-8 md:p-10 relative overflow-hidden group"
           >
-            {/* Subtle glow effect on focus */}
             <div className="absolute inset-0 bg-luxury-gold/5 opacity-0 group-focus-within:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-            <h3 className="text-2xl font-bold text-white mb-6 relative z-10">Booking Details</h3>
+            <div className="flex items-center justify-between mb-6 relative z-10">
+              <h3 className="text-2xl font-bold text-white">Booking Details</h3>
+              <span className="text-xs text-luxury-gold uppercase tracking-wider font-semibold bg-luxury-gold/10 px-3 py-1 rounded-full border border-luxury-gold/20">
+                Online Reservation
+              </span>
+            </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              {/* Name & Phone */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
+                  <label className="text-xs text-gray-400 font-medium mb-1.5 block">Full Name *</label>
                   <Input
-                    placeholder="Full Name"
+                    placeholder="Enter your full name"
                     {...register("name", { required: true })}
                     className={errors.name ? "border-red-500" : ""}
                   />
+                  {errors.name && <span className="text-red-500 text-xs mt-1 block">Name is required</span>}
                 </div>
                 <div>
+                  <label className="text-xs text-gray-400 font-medium mb-1.5 block">Phone Number *</label>
                   <Input
                     type="tel"
-                    placeholder="Phone Number"
+                    placeholder="Enter 10-digit mobile number"
                     {...register("phone", { required: true })}
                     className={errors.phone ? "border-red-500" : ""}
                   />
+                  {errors.phone && <span className="text-red-500 text-xs mt-1 block">Phone number is required</span>}
                 </div>
               </div>
 
+              {/* Vehicle Brand & Model */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
+                  <label className="text-xs text-gray-400 font-medium mb-1.5 block">Vehicle Brand *</label>
                   <Input
-                    placeholder="Vehicle Brand (e.g. BMW)"
+                    placeholder="e.g. BMW, Hyundai, Royal Enfield"
                     {...register("brand", { required: true })}
+                    className={errors.brand ? "border-red-500" : ""}
                   />
+                  {errors.brand && <span className="text-red-500 text-xs mt-1 block">Brand is required</span>}
                 </div>
                 <div>
+                  <label className="text-xs text-gray-400 font-medium mb-1.5 block">Vehicle Model *</label>
                   <Input
-                    placeholder="Vehicle Model (e.g. M4)"
+                    placeholder="e.g. M4, Creta, GT 650"
                     {...register("model", { required: true })}
+                    className={errors.model ? "border-red-500" : ""}
                   />
+                  {errors.model && <span className="text-red-500 text-xs mt-1 block">Model is required</span>}
                 </div>
               </div>
 
+              {/* Email Address */}
               <div>
+                <label className="text-xs text-gray-400 font-medium mb-1.5 block">Email Address *</label>
                 <Input
                   type="email"
-                  placeholder="Email Address"
+                  placeholder="name@example.com"
                   {...register("email", { required: true })}
                   className={errors.email ? "border-red-500" : ""}
                 />
+                {errors.email && <span className="text-red-500 text-xs mt-1 block">Valid email is required</span>}
               </div>
 
+              {/* Vehicle Type, Date & Time Period */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <select
-                  className="flex h-12 w-full rounded-lg bg-luxury-secondary/50 border border-luxury-border px-4 py-2 text-sm text-gray-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-luxury-gold focus-visible:border-luxury-gold"
-                  {...register("type", { required: true })}
-                >
-                  <option value="">Vehicle Type</option>
-                  <option value="sedan">Sedan / Hatchback</option>
-                  <option value="suv">SUV / Truck</option>
-                  <option value="bike">Motorcycle</option>
-                  <option value="luxury">Luxury / Exotic</option>
-                </select>
+                <div>
+                  <label className="text-xs text-gray-400 font-medium mb-1.5 block">Vehicle Type *</label>
+                  <select
+                    className="flex h-12 w-full rounded-lg bg-luxury-secondary/50 border border-luxury-border px-4 py-2 text-sm text-gray-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-luxury-gold focus-visible:border-luxury-gold"
+                    {...register("type", { required: true })}
+                  >
+                    <option value="" className="bg-[#111] text-gray-400">Select Type</option>
+                    <option value="sedan" className="bg-[#111]">Sedan / Hatchback</option>
+                    <option value="suv" className="bg-[#111]">SUV / Compact SUV</option>
+                    <option value="bike" className="bg-[#111]">Motorcycle / Superbike</option>
+                    <option value="luxury" className="bg-[#111]">Luxury / Exotic Car</option>
+                  </select>
+                  {errors.type && <span className="text-red-500 text-xs mt-1 block">Select vehicle type</span>}
+                </div>
 
-                <Input
-                  type="date"
-                  {...register("date", { required: true })}
-                  style={{ colorScheme: "dark" }}
-                />
+                <div>
+                  <label className="text-xs text-gray-400 font-medium mb-1.5 flex items-center gap-1">
+                    <Calendar className="w-3.5 h-3.5 text-luxury-gold" /> Preferred Date *
+                  </label>
+                  <Input
+                    type="date"
+                    min={todayDate}
+                    {...register("date", { required: true })}
+                    className={`text-gray-200 ${errors.date ? "border-red-500" : ""}`}
+                    style={{ colorScheme: "dark" }}
+                  />
+                  {errors.date && <span className="text-red-500 text-xs mt-1 block">Select a date</span>}
+                </div>
 
-                <select
-                  className="flex h-12 w-full rounded-lg bg-luxury-secondary/50 border border-luxury-border px-4 py-2 text-sm text-gray-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-luxury-gold focus-visible:border-luxury-gold"
-                  {...register("time_period", { required: true })}
-                >
-                  <option value="">Select Time</option>
-                  <option value="Morning (9 AM - 12 PM)">Morning (9 AM - 12 PM)</option>
-                  <option value="Afternoon (12 PM - 4 PM)">Afternoon (12 PM - 4 PM)</option>
-                  <option value="Evening (4 PM - 8 PM)">Evening (4 PM - 8 PM)</option>
-                </select>
+                <div>
+                  <label className="text-xs text-gray-400 font-medium mb-1.5 flex items-center gap-1">
+                    <Clock className="w-3.5 h-3.5 text-luxury-gold" /> Preferred Time *
+                  </label>
+                  <select
+                    className="flex h-12 w-full rounded-lg bg-luxury-secondary/50 border border-luxury-border px-4 py-2 text-sm text-gray-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-luxury-gold focus-visible:border-luxury-gold"
+                    {...register("time_period", { required: true })}
+                  >
+                    <option value="" className="bg-[#111] text-gray-400">Select Time</option>
+                    <option value="Morning (9 AM - 12 PM)" className="bg-[#111]">Morning (9 AM - 12 PM)</option>
+                    <option value="Afternoon (12 PM - 4 PM)" className="bg-[#111]">Afternoon (12 PM - 4 PM)</option>
+                    <option value="Evening (4 PM - 8 PM)" className="bg-[#111]">Evening (4 PM - 8 PM)</option>
+                  </select>
+                  {errors.time_period && <span className="text-red-500 text-xs mt-1 block">Select a time slot</span>}
+                </div>
               </div>
 
-              <div>
-                <select
-                  className="flex h-12 w-full rounded-lg bg-luxury-secondary/50 border border-luxury-border px-4 py-2 text-sm text-gray-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-luxury-gold focus-visible:border-luxury-gold"
-                  {...register("service", { required: true })}
+              {/* Multiple Service Selection Dropdown */}
+              <div className="relative" ref={dropdownRef}>
+                <label className="text-xs text-gray-400 font-medium mb-1.5 flex items-center justify-between">
+                  <span className="flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-luxury-gold" /> Select Services (Multiple Selection) *
+                  </span>
+                  {selectedServiceIds.length > 0 && (
+                    <span className="text-luxury-gold text-[11px] font-semibold">
+                      {selectedServiceIds.length} service{selectedServiceIds.length > 1 ? "s" : ""} selected
+                    </span>
+                  )}
+                </label>
+
+                {/* Dropdown Trigger Box */}
+                <div
+                  onClick={() => setIsServiceDropdownOpen(!isServiceDropdownOpen)}
+                  className={`min-h-[48px] w-full rounded-lg bg-luxury-secondary/50 border ${
+                    serviceError ? "border-red-500" : isServiceDropdownOpen ? "border-luxury-gold ring-1 ring-luxury-gold" : "border-luxury-border"
+                  } px-3 py-2 text-sm cursor-pointer flex items-center justify-between transition-all select-none`}
                 >
-                  <option value="">Select Service</option>
-                  {services.map(service => (
-                    <option key={service.id} value={service.id}>
-                      {service.service_name}
-                    </option>
-                  ))}
-                </select>
-                {errors.service && <span className="text-red-500 text-xs mt-2 block">Please select a service.</span>}
+                  <div className="flex flex-wrap gap-1.5 items-center flex-1 mr-2">
+                    {selectedServiceIds.length === 0 ? (
+                      <span className="text-gray-500">Choose one or multiple detailing services...</span>
+                    ) : (
+                      selectedServiceIds.map(id => {
+                        const serviceObj = services.find(s => s.id === id);
+                        return (
+                          <span
+                            key={id}
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-luxury-gold/15 text-luxury-gold border border-luxury-gold/30"
+                          >
+                            {serviceObj?.service_name || `Service #${id}`}
+                            <button
+                              type="button"
+                              onClick={(e) => removeService(id, e)}
+                              className="hover:text-white hover:bg-luxury-gold/30 rounded-full p-0.5 transition-colors"
+                              aria-label="Remove service"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </span>
+                        );
+                      })
+                    )}
+                  </div>
+                  <ChevronDown
+                    className={`w-4 h-4 text-luxury-gold shrink-0 transition-transform duration-200 ${
+                      isServiceDropdownOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </div>
+
+                {serviceError && (
+                  <span className="text-red-500 text-xs mt-1 block">Please select at least one service.</span>
+                )}
+
+                {/* Dropdown Options Menu */}
+                <AnimatePresence>
+                  {isServiceDropdownOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute z-50 mt-2 w-full rounded-xl bg-[#111111]/98 backdrop-blur-xl border border-luxury-border shadow-2xl p-2 max-h-60 overflow-y-auto"
+                    >
+                      <div className="text-[11px] font-semibold text-gray-400 px-3 py-1.5 uppercase tracking-wider border-b border-luxury-border/40 mb-1">
+                        Click to Select / Deselect Services
+                      </div>
+                      <div className="space-y-1">
+                        {services.map(service => {
+                          const isSelected = selectedServiceIds.includes(service.id);
+                          return (
+                            <div
+                              key={service.id}
+                              onClick={() => toggleService(service.id)}
+                              className={`flex items-center justify-between px-3 py-2.5 rounded-lg cursor-pointer transition-colors text-sm ${
+                                isSelected
+                                  ? "bg-luxury-gold/15 text-white font-semibold border border-luxury-gold/30"
+                                  : "text-gray-300 hover:bg-white/5 hover:text-white"
+                              }`}
+                            >
+                              <div className="flex items-center gap-3">
+                                <div
+                                  className={`w-4 h-4 rounded flex items-center justify-center border transition-colors ${
+                                    isSelected
+                                      ? "bg-luxury-gold border-luxury-gold text-luxury-bg"
+                                      : "border-gray-600 bg-transparent"
+                                  }`}
+                                >
+                                  {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
+                                </div>
+                                <span>{service.service_name}</span>
+                              </div>
+                              {isSelected && (
+                                <span className="text-xs text-luxury-gold font-medium">Selected</span>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
+              {/* Additional Notes */}
               <div>
+                <label className="text-xs text-gray-400 font-medium mb-1.5 block">Additional Notes or Custom Requests</label>
                 <Textarea
-                  placeholder="Additional Notes or Specific Requests..."
+                  placeholder="Mention any specific scratches, deep stains, or custom detailing requirements..."
                   {...register("message")}
                 />
               </div>
 
-              <Button type="submit" variant="primary" className="w-full h-14 text-lg" disabled={isSubmitting}>
-                {isSubmitting ? "Submitting..." : "Submit Booking Request"}
+              {/* Submit Button */}
+              <Button type="submit" variant="primary" className="w-full h-14 text-lg font-bold tracking-wide" disabled={isSubmitting}>
+                {isSubmitting ? "Submitting Booking Request..." : "Submit Booking Request"}
               </Button>
             </form>
           </motion.div>
@@ -324,9 +492,6 @@ export default function Contact() {
               </iframe>
             </div>
           </motion.div>
-
-
-
         </div>
       </Container>
     </section>
