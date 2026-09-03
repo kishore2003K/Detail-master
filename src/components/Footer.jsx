@@ -1,8 +1,6 @@
-import { useState } from "react";
 import { MapPin, Phone, Mail } from "lucide-react";
 import { Container } from "./ui/Container";
 import { LogoMark } from "./ui/LogoMark";
-import LegalModal from "./LegalModal";
 
 const SocialIcon = ({ type }) => {
   if (type === 'instagram') {
@@ -143,28 +141,35 @@ export default function Footer() {
             © {new Date().getFullYear()} Detailing Masters. All rights reserved.
           </p>
           <div className="flex gap-4 text-xs text-gray-500">
-            <button 
-              onClick={() => setLegalModalState({ isOpen: true, type: "privacy" })}
-              className="hover:text-white transition-colors cursor-pointer"
+            <a 
+              href="/privacy" 
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey) {
+                  e.preventDefault();
+                  window.history.pushState({}, '', '/privacy');
+                  window.dispatchEvent(new Event('popstate'));
+                }
+              }}
+              className="hover:text-white transition-colors"
             >
               Privacy Policy
-            </button>
-            <button 
-              onClick={() => setLegalModalState({ isOpen: true, type: "terms" })}
-              className="hover:text-white transition-colors cursor-pointer"
+            </a>
+            <a 
+              href="/terms" 
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey) {
+                  e.preventDefault();
+                  window.history.pushState({}, '', '/terms');
+                  window.dispatchEvent(new Event('popstate'));
+                }
+              }}
+              className="hover:text-white transition-colors"
             >
               Terms of Service
-            </button>
+            </a>
           </div>
         </div>
       </Container>
-
-      {/* DPDP Legal Modal */}
-      <LegalModal
-        isOpen={legalModalState.isOpen}
-        type={legalModalState.type}
-        onClose={() => setLegalModalState({ isOpen: false, type: "privacy" })}
-      />
     </footer>
   );
 }
