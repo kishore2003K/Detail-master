@@ -70,10 +70,11 @@ export function LogoMark({
         )}
       />
 
-      <img
-        src={logoSrc}
-        alt="Detailing Masters"
-        className={cn(
+        <img
+          src={logoSrc}
+          alt="Detailing Masters"
+          decoding="async"
+          className={cn(
           "relative z-10 w-auto object-contain",
           "drop-shadow-[0_8px_24px_rgba(0,0,0,0.45)]",
           imgSizes[size],

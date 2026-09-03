@@ -6,20 +6,32 @@ import { SectionTitle } from "./ui/SectionTitle";
 
 const faqs = [
   {
+    question: "What is included in your Car Wash and Car Water Wash in Marthandam?",
+    answer: "Our premium car wash goes far beyond an ordinary water wash. We perform a pH-neutral high-density snow foam pre-soak, undercarriage high-pressure wash, scratch-safe two-bucket contact wash, deep alloy wheel de-ironing, interior vacuuming, dashboard sanitization, and streak-free warm blower drying to prevent swirl marks."
+  },
+  {
+    question: "Why do I need Underbody Anti-Rust Coating for my car?",
+    answer: "In coastal and humid regions like Kanyakumari, Marthandam, and Arumanai, road moisture, mud, and humidity lead to severe chassis rust. Our rubberized bitumen underbody coating creates an impenetrable barrier against moisture, prevents rust, reduces cabin road noise, and protects against flying gravel damage."
+  },
+  {
+    question: "What is the difference between Wax Coating and Ceramic Coating?",
+    answer: "Wax coating provides a warm, deep mirror gloss and hydrophobic paint protection that lasts 2 to 3 months—perfect for budget-friendly regular upkeep. Ceramic coating forms a permanent 9H chemical nano-bond that lasts 3 to 5 years, providing extreme scratch resistance, UV protection, chemical defense, and intense showroom shine."
+  },
+  {
+    question: "Where is Detailing Masters located?",
+    answer: "Detailing Masters is located opposite the KTM Bike Showroom, Chankai, Marthandam (Unnamalaikadai, Tamil Nadu 629155). We are easily accessible from Melpuram-Arumanai Road, Kuzhithurai, and Nagercoil."
+  },
+  {
+    question: "Do you offer Bike Wash & Motorcycle Ceramic Coating?",
+    answer: "Yes! We offer specialized foam bike washes, engine degreasing, chain cleaning & lubrication, chrome polishing, and dedicated multi-layer ceramic coatings for all sports bikes, cruisers, and commuter motorcycles."
+  },
+  {
     question: "How long does a premium ceramic coating take?",
     answer: "A proper ceramic coating installation typically takes 2-3 days. This includes a thorough wash, deep chemical decontamination, multi-stage paint correction to remove imperfections, and the precise application of the ceramic coating, followed by adequate curing time in our controlled environment."
   },
   {
-    question: "What is paint correction and do I need it?",
-    answer: "Paint correction is the process of machine polishing the clear coat to permanently remove swirl marks, light scratches, oxidation, and etching. If you want maximum gloss and a flawless finish, or if you are getting a ceramic coating, paint correction is essential."
-  },
-  {
     question: "Do you offer pickup and drop services?",
     answer: "Yes, we offer complimentary pickup and drop services within a 15km radius for all premium detailing and ceramic coating packages. We ensure your vehicle is handled with the utmost care during transit."
-  },
-  {
-    question: "How often should I get my car detailed?",
-    answer: "We recommend a comprehensive detail every 6 months to maintain the vehicle's aesthetic and resale value. For maintenance washes, every 2-4 weeks is ideal depending on how often the vehicle is driven and where it is parked."
   }
 ];
 

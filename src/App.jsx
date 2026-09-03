@@ -6,6 +6,7 @@ import WhyChooseUs from './components/WhyChooseUs';
 import Process from './components/Process';
 import Gallery from './components/Gallery';
 import Testimonials from './components/Testimonials';
+import Blog from './components/Blog';
 import FAQ from './components/FAQ';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
@@ -71,6 +72,7 @@ function App() {
         <Process />
         <Gallery />
         <Testimonials />
+        <Blog />
         <FAQ />
         <Contact />
       </main>

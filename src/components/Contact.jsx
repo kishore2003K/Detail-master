@@ -14,12 +14,17 @@ import { trackBookingSubmit, trackCallClick, trackDirectionsClick } from "../uti
 import { getCustomerBookingWhatsAppUrl } from "../utils/whatsappConfirmation";
 
 const fallbackServices = [
-  { id: 1, service_name: "Premium Wash" },
-  { id: 2, service_name: "Ceramic Coating" },
-  { id: 3, service_name: "Paint Correction" },
-  { id: 4, service_name: "Interior Detailing" },
-  { id: 5, service_name: "Engine Bay Cleaning" },
-  { id: 6, service_name: "Bike Detailing" }
+  { id: 1, service_name: "Basic Bike Foam Wash & Lube (₹250)" },
+  { id: 2, service_name: "Express Car Foam Wash (₹499)" },
+  { id: 3, service_name: "Premium Car Wash & Water Wash" },
+  { id: 4, service_name: "Bike Wash & Complete Detailing" },
+  { id: 5, service_name: "Ceramic & Graphene Coating" },
+  { id: 6, service_name: "Paint Correction & Scratch Removal" },
+  { id: 7, service_name: "Interior Detailing & A/C Steaming" },
+  { id: 8, service_name: "Underbody Anti-Rust Coating" },
+  { id: 9, service_name: "Wax Coating & Gloss Sealant" },
+  { id: 10, service_name: "Paint Protection Film (PPF) & Tint" },
+  { id: 11, service_name: "Engine Bay Cleaning & Dressing" }
 ];
 
 export default function Contact() {
@@ -268,16 +273,14 @@ export default function Contact() {
                 </div>
               </div>
 
-              {/* Email Address */}
+              {/* Email Address (Optional) */}
               <div>
-                <label className="text-xs text-gray-400 font-medium mb-1.5 block">Email Address *</label>
+                <label className="text-xs text-gray-400 font-medium mb-1.5 block">Email Address (Optional)</label>
                 <Input
                   type="email"
-                  placeholder="name@example.com"
-                  {...register("email", { required: true })}
-                  className={errors.email ? "border-red-500" : ""}
+                  placeholder="name@example.com (optional)"
+                  {...register("email", { required: false })}
                 />
-                {errors.email && <span className="text-red-500 text-xs mt-1 block">Valid email is required</span>}
               </div>
 
               {/* Vehicle Type, Date & Time Period */}
@@ -465,8 +468,20 @@ export default function Contact() {
               </div>
 
               {/* Submit Button */}
-              <Button type="submit" variant="primary" className="w-full h-14 text-lg font-bold tracking-wide" disabled={isSubmitting}>
-                {isSubmitting ? "Submitting Booking Request..." : "Submit Booking Request"}
+              <Button 
+                type="submit" 
+                variant="primary" 
+                className="w-full h-14 text-base md:text-lg font-bold tracking-wide flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-luxury-gold/20 disabled:opacity-70 disabled:cursor-not-allowed" 
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                    <span>Processing Your Reservation...</span>
+                  </>
+                ) : (
+                  "Submit Booking Request"
+                )}
               </Button>
             </form>
           </motion.div>
@@ -538,17 +553,50 @@ export default function Contact() {
               </ul>
             </div>
 
-            <div className="glass-card overflow-hidden h-[300px] p-2">
-              <iframe
-                title="Detailing Masters Google Maps Location in Marthandam"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.032954774763!2d77.23808897423896!3d8.29951919173554!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b0455004a6f7003%3A0x938740e61277488c!2sDetailing%20masters!5e0!3m2!1sen!2sin!4v1785078483595!5m2!1sen!2sin"
-                width="100%"
-                height="100%"
-                style={{ border: 0, borderRadius: '0.5rem' }}
-                allowFullScreen=""
-                loading="lazy"
-                referrerPolicy="strict-origin-when-cross-origin">
-              </iframe>
+            {/* Interactive Google Map with Landmark & Navigation Actions */}
+            <div className="glass-card overflow-hidden p-3 border border-luxury-gold/25 relative group">
+              <div className="flex items-center justify-between px-2 py-2 mb-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
+                  <span className="text-xs font-bold text-white">Live Studio Location</span>
+                </div>
+                <span className="text-[11px] text-luxury-gold font-semibold bg-luxury-gold/10 px-2.5 py-0.5 rounded-full border border-luxury-gold/20">
+                  ⭐ 4.8 / 5.0 Google Rating
+                </span>
+              </div>
+
+              <div className="relative h-[240px] md:h-[270px] w-full rounded-xl overflow-hidden border border-white/10">
+                <iframe
+                  title="Detailing Masters Google Maps Interactive Location in Marthandam"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.032954774763!2d77.23808897423896!3d8.29951919173554!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b0455004a6f7003%3A0x938740e61277488c!2sDetailing%20masters!5e0!3m2!1sen!2sin!4v1785078483595!5m2!1sen!2sin"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen=""
+                  loading="lazy"
+                  referrerPolicy="strict-origin-when-cross-origin">
+                </iframe>
+              </div>
+
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                <a
+                  href="https://www.google.com/maps/dir/?api=1&destination=Detailing+masters+Marthandam"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => trackDirectionsClick()}
+                  className="py-2.5 px-3 rounded-xl bg-luxury-gold hover:bg-white text-black font-bold text-xs flex items-center justify-center gap-1.5 transition-colors shadow-sm"
+                >
+                  <MapPin className="w-3.5 h-3.5" /> Get Directions
+                </a>
+                <a
+                  href="https://maps.google.com/?cid=10630559981881673868"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-gray-200 font-medium text-xs flex items-center justify-center gap-1.5 transition-colors"
+                >
+                  <ExternalLink className="w-3.5 h-3.5 text-luxury-gold" /> View on Maps
+                </a>
+              </div>
             </div>
           </motion.div>
         </div>
@@ -557,7 +605,7 @@ export default function Contact() {
       {/* Luxury Booking Confirmation Modal */}
       <AnimatePresence>
         {successModalData && (
-          <div className="fixed inset-0 z-[999999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}

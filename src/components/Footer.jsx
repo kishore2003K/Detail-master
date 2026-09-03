@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { MapPin, Phone, Mail } from "lucide-react";
 import { Container } from "./ui/Container";
 import { LogoMark } from "./ui/LogoMark";
+import LegalModal from "./LegalModal";
 
 const SocialIcon = ({ type }) => {
   if (type === 'instagram') {
@@ -30,6 +32,8 @@ const SocialIcon = ({ type }) => {
 };
 
 export default function Footer() {
+  const [legalModalState, setLegalModalState] = useState({ isOpen: false, type: "privacy" });
+
   return (
     <footer className="bg-[#050505] pt-20 pb-10 border-t border-luxury-border">
       <Container>
@@ -71,7 +75,7 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-bold mb-6 tracking-wide uppercase text-sm">Quick Links</h4>
             <ul className="space-y-3">
-              {['Home', 'Services', 'Gallery', 'Reviews', 'Contact'].map(link => (
+              {['Home', 'Services', 'Gallery', 'Reviews', 'Blog', 'Contact'].map(link => (
                 <li key={link}>
                   <a href={`#${link.toLowerCase().replace(' ', '-')}`} className="text-gray-400 text-sm hover:text-luxury-gold transition-colors">
                     {link}
@@ -85,7 +89,15 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-bold mb-6 tracking-wide uppercase text-sm">Our Services</h4>
             <ul className="space-y-3">
-              {['Ceramic Coating', 'Paint Correction', 'Paint Protection Film', 'Interior Detailing', 'Premium Wash', 'Engine Bay Detailing'].map(link => (
+              {[
+                'Car Wash & Water Wash',
+                'Bike Wash & Detailing',
+                'Ceramic & Graphene Coating',
+                'Underbody Anti-Rust Coating',
+                'Wax Coating & Paint Sealant',
+                'Paint Protection Film (PPF)',
+                'Interior Detailing & Steaming'
+              ].map(link => (
                 <li key={link}>
                   <a href="#services" className="text-gray-400 text-sm hover:text-luxury-gold transition-colors">
                     {link}
@@ -105,9 +117,10 @@ export default function Footer() {
                   href="https://maps.google.com/?cid=10630559981881673868" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-gray-400 text-sm hover:text-white transition-colors"
+                  className="text-gray-400 text-sm hover:text-white transition-colors leading-relaxed"
                 >
-                  Opposite KTM Bike Showroom, Chankai, Marthandam, Tamil Nadu 629155
+                  Opposite KTM Bike Showroom, Chankai, Marthandam, Unnamalaikadai, Tamil Nadu 629155
+                  <span className="block text-xs text-luxury-gold mt-1">Serving Marthandam, Arumanai, Melpuram & Kanyakumari</span>
                 </a>
               </li>
               <li className="flex items-center gap-3">
@@ -130,11 +143,28 @@ export default function Footer() {
             © {new Date().getFullYear()} Detailing Masters. All rights reserved.
           </p>
           <div className="flex gap-4 text-xs text-gray-500">
-            <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+            <button 
+              onClick={() => setLegalModalState({ isOpen: true, type: "privacy" })}
+              className="hover:text-white transition-colors cursor-pointer"
+            >
+              Privacy Policy
+            </button>
+            <button 
+              onClick={() => setLegalModalState({ isOpen: true, type: "terms" })}
+              className="hover:text-white transition-colors cursor-pointer"
+            >
+              Terms of Service
+            </button>
           </div>
         </div>
       </Container>
+
+      {/* DPDP Legal Modal */}
+      <LegalModal
+        isOpen={legalModalState.isOpen}
+        type={legalModalState.type}
+        onClose={() => setLegalModalState({ isOpen: false, type: "privacy" })}
+      />
     </footer>
   );
 }
