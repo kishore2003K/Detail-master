@@ -1,63 +1,75 @@
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { 
-  ChevronLeft, ChevronRight, Play, Star, MapPin, 
-  CheckCircle2, X, Volume2, ShieldCheck, Video 
+  ChevronLeft, ChevronRight, Play, MapPin, 
+  ExternalLink, Sparkles
 } from "lucide-react";
 import { Container } from "./ui/Container";
 import { SectionTitle } from "./ui/SectionTitle";
 import { ReviewCard } from "./ui/ReviewCard";
 import { Button } from "./ui/Button";
 
-const videoTestimonials = [
+const INSTAGRAM_URL = "https://www.instagram.com/detailingmasters_offical";
+
+// Instagram Icon Component
+const InstagramIcon = ({ className = "w-4 h-4" }) => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
+    className={className}
+  >
+    <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+  </svg>
+);
+
+const instagramReels = [
   {
-    id: "video-1",
-    name: "Dr. Arun S.",
-    location: "Nagercoil",
+    id: "reel-1",
+    title: "9H Ceramic Coating & Mirror Gloss",
     vehicle: "BMW 3 Series Gran Limousine",
-    service: "9H Ceramic Coating & Paint Correction",
-    duration: "0:45",
-    rating: 5,
+    location: "Marthandam Studio",
+    tag: "#CeramicCoating #Marthandam",
+    duration: "Reel",
     thumbnail: "/images/ceramic.png",
-    quote: "I drove 45 mins all the way from Nagercoil to Detailing Masters Marthandam for their 9H Ceramic Coating. The paint depth and water beading are extraordinary—better than showroom delivery!",
-    highlight: "Flawless Swirl Removal & 9H Glass Gloss"
+    highlight: "Extreme Hydrophobic & 9H Glass Gloss"
   },
   {
-    id: "video-2",
-    name: "Subair M.",
-    location: "Marthandam",
+    id: "reel-2",
+    title: "Snow Foam Wash & Decontamination",
     vehicle: "Mahindra XUV700 AX7",
-    service: "Full Car Wash & A/C Steaming",
-    duration: "0:38",
-    rating: 5,
-    thumbnail: "/images/interior.png",
-    quote: "Finding a proper car wash that uses pH-neutral foam and steam cleans the A/C ducts without damaging upholstery was tough until I visited Detailing Masters near KTM showroom.",
-    highlight: "Hospital-Grade Cabin Sanitization"
-  },
-  {
-    id: "video-3",
-    name: "Abhishek K.",
-    location: "Thuckalay",
-    vehicle: "Royal Enfield Continental GT 650",
-    service: "Superbike Foam Wash & Chain Detailing",
-    duration: "0:52",
-    rating: 5,
-    thumbnail: "/images/bike.png",
-    quote: "They took 2 hours on my GT 650—chain degreasing, ultrasonic cleaning, ceramic lube, and chrome tank polish. The best motorcycle detailing studio in Kanyakumari district.",
-    highlight: "Dedicated Superbike Care"
-  },
-  {
-    id: "video-4",
-    name: "Ashwin V.",
-    location: "Arumanai",
-    vehicle: "Toyota Fortuner 4x4",
-    service: "Underbody Anti-Rust Coating",
-    duration: "0:40",
-    rating: 5,
+    location: "Opposite KTM Showroom",
+    tag: "#CarWash #SnowFoam",
+    duration: "Reel",
     thumbnail: "/images/hero-wash.jpg",
-    quote: "Living near Melpuram-Arumanai road, mud and rust were always an issue. Their rubberized underbody coating sealed the chassis completely and made highway drives so much quieter.",
-    highlight: "100% Chassis Rust Protection"
+    highlight: "100% Swirl-Free Contact Wash"
+  },
+  {
+    id: "reel-3",
+    title: "Superbike Deep Foam Wash & Chain Care",
+    vehicle: "Continental GT 650 & Superbikes",
+    location: "Chankai, Marthandam",
+    tag: "#BikeDetailing #Superbike",
+    duration: "Reel",
+    thumbnail: "/images/bike.png",
+    highlight: "Ultrasonic Degrease & Chrome Polish"
+  },
+  {
+    id: "reel-4",
+    title: "Interior Steam Spa & Sanitization",
+    vehicle: "Toyota Fortuner 4x4",
+    location: "Marthandam Studio",
+    tag: "#InteriorDetailing #DeepClean",
+    duration: "Reel",
+    thumbnail: "/images/interior.png",
+    highlight: "Hospital-Grade A/C Sanitization"
   }
 ];
 
@@ -89,91 +101,123 @@ const reviews = [
 ];
 
 export default function Testimonials() {
-  const [activeVideo, setActiveVideo] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start" });
 
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
 
-  const handleOpenVideo = (video) => {
-    setActiveVideo(video);
-    setIsPlaying(true);
-  };
-
   return (
     <section id="reviews" className="py-24 relative overflow-hidden bg-luxury-secondary/10">
       <Container>
-        {/* Section 1: Customer Video Testimonials */}
+        {/* Section 1: Official Instagram Reels Showcase */}
         <div className="mb-20">
-          <div className="flex flex-col md:flex-row items-end justify-between gap-6 mb-12">
+          <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-12">
             <SectionTitle 
-              title="Real Stories, Real Results" 
-              subtitle="Video Testimonials from Local Owners" 
+              title="Daily Studio Transformations" 
+              subtitle="Watch Our Latest Instagram Reels" 
               align="left"
               className="mb-0"
             />
-            <div className="hidden md:flex items-center gap-2 text-xs font-semibold text-luxury-gold bg-luxury-gold/10 px-4 py-2 rounded-full border border-luxury-gold/25">
-              <Video className="w-4 h-4" />
-              Verified Local Customers (Nagercoil, Marthandam, Thuckalay)
-            </div>
+            <a
+              href={INSTAGRAM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2.5 text-xs font-semibold text-white bg-gradient-to-r from-[#833ab4]/80 via-[#fd1d1d]/80 to-[#fcb045]/80 hover:from-[#833ab4] hover:via-[#fd1d1d] hover:to-[#fcb045] px-4 py-2.5 rounded-full border border-white/20 shadow-[0_0_20px_rgba(253,29,29,0.3)] transition-all transform hover:scale-105 group"
+            >
+              <InstagramIcon className="w-4 h-4 text-white" />
+              <span>@detailingmasters_offical</span>
+              <ExternalLink className="w-3.5 h-3.5 opacity-80 group-hover:opacity-100 group-hover:translate-x-0.5 transition-transform" />
+            </a>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {videoTestimonials.map((video, index) => (
-              <motion.div
-                key={video.id}
+            {instagramReels.map((reel, index) => (
+              <motion.a
+                key={reel.id}
+                href={INSTAGRAM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1, duration: 0.4 }}
-                onClick={() => handleOpenVideo(video)}
-                className="glass-card group relative overflow-hidden rounded-2xl cursor-pointer hover:border-luxury-gold/50 transition-all duration-300"
+                className="glass-card group relative overflow-hidden rounded-2xl cursor-pointer hover:border-luxury-gold/60 transition-all duration-300 block"
               >
-                {/* Video Thumbnail Box */}
+                {/* Reel Thumbnail Box */}
                 <div className="relative aspect-[4/5] w-full overflow-hidden bg-black">
                   <img
-                    src={video.thumbnail}
-                    alt={`${video.name} - ${video.vehicle} review at Detailing Masters`}
+                    src={reel.thumbnail}
+                    alt={`${reel.title} - Detailing Masters Instagram Reel`}
                     loading="lazy"
                     decoding="async"
-                    className="w-full h-full object-cover opacity-85 transition-transform duration-700 group-hover:scale-105"
+                    className="w-full h-full object-cover opacity-85 transition-transform duration-700 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-black/20" />
 
-                  {/* Play Button Overlay */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-14 h-14 rounded-full bg-luxury-gold text-luxury-bg flex items-center justify-center shadow-[0_0_20px_rgba(245,197,24,0.5)] transform group-hover:scale-110 transition-transform duration-300">
-                      <Play className="w-6 h-6 fill-current ml-0.5" />
-                    </div>
-                  </div>
-
-                  {/* Badges on Thumbnail */}
-                  <div className="absolute top-3 left-3 right-3 flex items-center justify-between text-[11px]">
-                    <span className="flex items-center gap-1 font-bold text-white bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/15">
-                      <MapPin className="w-3 h-3 text-luxury-gold" /> {video.location}
+                  {/* Top Badges */}
+                  <div className="absolute top-3 left-3 right-3 flex items-center justify-between text-[11px] z-10">
+                    <span className="flex items-center gap-1 font-semibold text-white bg-black/75 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/15 shadow-sm">
+                      <MapPin className="w-3 h-3 text-luxury-gold" /> {reel.location}
                     </span>
-                    <span className="font-mono text-[10px] text-gray-300 bg-black/70 backdrop-blur-md px-2 py-0.5 rounded-full border border-white/10">
-                      {video.duration}
+                    <span className="flex items-center gap-1 font-mono text-[10px] text-white bg-gradient-to-r from-[#833ab4] to-[#fd1d1d] px-2 py-0.5 rounded-full border border-white/20 shadow-sm">
+                      <InstagramIcon className="w-2.5 h-2.5" /> Reel
                     </span>
                   </div>
 
-                  {/* Bottom Info */}
-                  <div className="absolute bottom-3 left-3 right-3 text-white">
-                    <div className="flex items-center gap-1 text-luxury-gold mb-1">
-                      {[...Array(video.rating)].map((_, i) => (
-                        <Star key={i} className="w-3.5 h-3.5 fill-current" />
-                      ))}
+                  {/* Center Play / Watch Reel Button */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div className="w-14 h-14 rounded-full bg-luxury-gold text-luxury-bg flex items-center justify-center shadow-[0_0_25px_rgba(245,197,24,0.6)] transform group-hover:scale-115 group-hover:bg-white transition-all duration-300">
+                      <Play className="w-6 h-6 fill-current ml-0.5 text-luxury-bg" />
                     </div>
-                    <h4 className="font-bold text-sm leading-tight text-white">{video.name}</h4>
-                    <p className="text-[11px] text-gray-300 truncate">{video.vehicle}</p>
-                    <span className="inline-block mt-1 text-[10px] text-luxury-gold font-medium bg-luxury-gold/15 px-2 py-0.5 rounded border border-luxury-gold/30">
-                      {video.highlight}
+                  </div>
+
+                  {/* Bottom Reel Details */}
+                  <div className="absolute bottom-3 left-3 right-3 text-white z-10">
+                    <span className="text-[10px] text-luxury-gold font-mono tracking-wider block mb-1">
+                      {reel.tag}
                     </span>
+                    <h4 className="font-bold text-sm leading-snug text-white group-hover:text-luxury-gold transition-colors">
+                      {reel.title}
+                    </h4>
+                    <p className="text-[11px] text-gray-300 truncate mt-0.5">
+                      {reel.vehicle}
+                    </p>
+                    <div className="mt-2 flex items-center justify-between">
+                      <span className="inline-block text-[10px] text-luxury-gold font-medium bg-luxury-gold/15 px-2 py-0.5 rounded border border-luxury-gold/30">
+                        {reel.highlight}
+                      </span>
+                      <span className="flex items-center gap-1 text-[11px] text-white/90 font-medium group-hover:text-luxury-gold transition-colors">
+                        Watch <ExternalLink className="w-3 h-3" />
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </motion.div>
+              </motion.a>
             ))}
+          </div>
+
+          {/* Follow Call to Action Bar */}
+          <div className="mt-8 bg-gradient-to-r from-luxury-secondary/60 via-black to-luxury-secondary/60 border border-luxury-border/60 rounded-2xl p-4 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3 text-center sm:text-left">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] flex items-center justify-center shrink-0 shadow-md">
+                <InstagramIcon className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-white">
+                  Want to see real-time customer deliveries & detailing stories?
+                </p>
+                <p className="text-xs text-gray-400">
+                  Follow <span className="text-luxury-gold font-medium">@detailingmasters_offical</span> for new reels posted every week!
+                </p>
+              </div>
+            </div>
+
+            <Button
+              className="bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045] hover:opacity-90 text-white font-semibold text-xs sm:text-sm px-5 py-2.5 rounded-xl shrink-0 shadow-lg"
+              onClick={() => window.open(INSTAGRAM_URL, '_blank')}
+            >
+              <InstagramIcon className="w-4 h-4 mr-2" /> Follow on Instagram
+            </Button>
           </div>
         </div>
 
@@ -232,117 +276,6 @@ export default function Testimonials() {
           </div>
         </div>
       </Container>
-
-      {/* Video Modal Player */}
-      <AnimatePresence>
-        {activeVideo && (
-          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ duration: 0.25 }}
-              data-lenis-prevent="true"
-              className="relative w-full max-w-lg rounded-2xl bg-[#121212] border border-luxury-gold/30 shadow-2xl p-6 text-white overflow-hidden"
-            >
-              {/* Close Button */}
-              <button
-                onClick={() => {
-                  setActiveVideo(null);
-                  setIsPlaying(false);
-                }}
-                className="absolute top-4 right-4 p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors z-20 cursor-pointer"
-                aria-label="Close video testimonial"
-              >
-                <X className="w-5 h-5" />
-              </button>
-
-              {/* Video Player Display */}
-              <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-black mb-5 border border-white/10">
-                <img 
-                  src={activeVideo.thumbnail} 
-                  alt={activeVideo.name} 
-                  className="w-full h-full object-cover opacity-90"
-                />
-                
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/40 flex flex-col justify-between p-4">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-bold text-luxury-gold bg-black/80 px-2.5 py-1 rounded-full border border-luxury-gold/30">
-                      Customer Experience Video
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <button
-                      onClick={() => setIsPlaying(!isPlaying)}
-                      className="w-12 h-12 rounded-full bg-luxury-gold text-black flex items-center justify-center shadow-lg cursor-pointer hover:scale-105 transition-transform"
-                    >
-                      {isPlaying ? (
-                        <div className="flex gap-1">
-                          <div className="w-1.5 h-4 bg-black rounded-sm" />
-                          <div className="w-1.5 h-4 bg-black rounded-sm" />
-                        </div>
-                      ) : (
-                        <Play className="w-5 h-5 fill-current ml-0.5" />
-                      )}
-                    </button>
-
-                    <div className="flex items-center gap-2 bg-black/70 px-3 py-1.5 rounded-full border border-white/10 text-xs text-gray-300">
-                      <Volume2 className="w-3.5 h-3.5 text-luxury-gold" />
-                      <span>HD Audio • {activeVideo.duration}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Verified Customer Card */}
-              <div className="space-y-3 text-left">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-lg font-bold text-white">{activeVideo.name}</h3>
-                      <span className="flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/30">
-                        <CheckCircle2 className="w-3 h-3" /> Verified Studio Visit
-                      </span>
-                    </div>
-                    <p className="text-xs text-luxury-gold font-medium">
-                      {activeVideo.vehicle} • <span className="text-gray-400">{activeVideo.location}</span>
-                    </p>
-                  </div>
-
-                  <div className="flex text-luxury-gold">
-                    {[...Array(activeVideo.rating)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-current" />
-                    ))}
-                  </div>
-                </div>
-
-                <div className="bg-black/40 border border-white/5 p-4 rounded-xl">
-                  <p className="text-xs text-gray-300 leading-relaxed italic">
-                    "{activeVideo.quote}"
-                  </p>
-                </div>
-
-                <div className="flex items-center justify-between text-xs text-gray-400 pt-2">
-                  <span className="flex items-center gap-1">
-                    <ShieldCheck className="w-4 h-4 text-luxury-gold" /> {activeVideo.service}
-                  </span>
-                  <a
-                    href="#contact"
-                    onClick={() => {
-                      setActiveVideo(null);
-                      document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                    className="text-luxury-gold hover:underline font-semibold"
-                  >
-                    Book Similar Service →
-                  </a>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </section>
   );
 }

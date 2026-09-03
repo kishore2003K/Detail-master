@@ -1,25 +1,10 @@
-import { Shield, Sparkles, Droplets, Gauge, Bike, Wind, Layers, Sun, ShieldCheck } from "lucide-react";
+import { Shield, Sparkles, Droplets, Bike, Wind, Layers, Gift, MessageCircle } from "lucide-react";
 import { Container } from "./ui/Container";
 import { SectionTitle } from "./ui/SectionTitle";
 import { ServiceCard } from "./ui/ServiceCard";
+import { Button } from "./ui/Button";
 
 const services = [
-  {
-    title: "Basic Bike Foam Wash & Lube",
-    description: "Quick pH-neutral snow foam wash for two-wheelers, pressure wheel rinse, chain de-grime & lube, and clean microfiber dry.",
-    price: "₹250",
-    duration: "25 mins",
-    icon: Bike,
-    image: "/images/bike.png"
-  },
-  {
-    title: "Express Car Foam Wash",
-    description: "Quick exterior snow foam wash, high-pressure body rinse, wheel clean, glass wipe, and streak-free chamois dry for regular maintenance.",
-    price: "₹499",
-    duration: "30 mins",
-    icon: Droplets,
-    image: "/images/hero-wash.jpg"
-  },
   {
     title: "Premium Car Wash & Water Wash",
     description: "Multi-stage pH-neutral snow foam bath, undercarriage high-pressure wash, two-bucket scratch-safe hand wash, wheel de-ironing, and streak-free blower dry.",
@@ -27,14 +12,6 @@ const services = [
     duration: "45 mins",
     icon: Droplets,
     image: "/images/wash.png"
-  },
-  {
-    title: "Bike Wash & Detailing",
-    description: "Specialized foam bike wash, engine degreasing, chain cleaning & ceramic lube, alloy chrome polishing, and hydrophobic tank paint protection.",
-    price: "₹1,499",
-    duration: "2 Hours",
-    icon: Bike,
-    image: "/images/bike.png"
   },
   {
     title: "Ceramic & Graphene Coating",
@@ -69,28 +46,12 @@ const services = [
     image: "/images/paint.png"
   },
   {
-    title: "Wax Coating & Gloss Sealant",
-    description: "Premium carnauba mirror wax and synthetic polymer paint sealant providing intense showroom reflection and 3 months of hydrophobic UV protection.",
-    price: "₹1,999",
-    duration: "2 Hours",
-    icon: Sun,
-    image: "/images/hero-wash.jpg"
-  },
-  {
-    title: "Paint Protection Film (PPF) & Tint",
-    description: "Ultra-clear self-healing TPU film and high heat-rejection sun control tint to shield vulnerable panels against rock chips, scratches, and harsh sunlight.",
-    price: "₹34,999",
-    duration: "3-4 Days",
-    icon: ShieldCheck,
-    image: "/images/hero.png"
-  },
-  {
-    title: "Engine Bay Cleaning & Dressing",
-    description: "Safe precision degreasing, steam cleaning, non-conductive drying, and high-temperature plastic & hose conditioning for a factory-fresh bay.",
+    title: "Bike Wash & Complete Detailing",
+    description: "Specialized foam bike wash, engine degreasing, chain cleaning & ceramic lube, alloy chrome polishing, and hydrophobic tank paint protection.",
     price: "₹1,499",
     duration: "2 Hours",
-    icon: Gauge,
-    image: "/images/engine.png"
+    icon: Bike,
+    image: "/images/bike.png"
   }
 ];
 
@@ -105,10 +66,45 @@ export default function Services() {
           subtitle="Precision Care for Cars & Bikes in Marthandam"
         />
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 mb-12">
           {services.map((service, index) => (
             <ServiceCard key={service.title} {...service} index={index} />
           ))}
+        </div>
+
+        {/* Regular Customer & Loyalty Package Privilege Banner */}
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-luxury-secondary/80 via-black to-luxury-secondary/80 border border-luxury-gold/30 p-6 md:p-8 shadow-[0_0_30px_rgba(245,197,24,0.08)]">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-xl bg-luxury-gold/15 border border-luxury-gold/30 flex items-center justify-center text-luxury-gold shrink-0 mt-1">
+                <Gift className="w-6 h-6" />
+              </div>
+              <div className="space-y-1 text-left">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-luxury-gold bg-luxury-gold/10 px-2.5 py-0.5 rounded border border-luxury-gold/20">
+                    Studio Privilege
+                  </span>
+                  <span className="text-xs text-gray-400">Regular Clients & Combo Packages</span>
+                </div>
+                <h3 className="text-lg md:text-xl font-bold text-white">
+                  Exclusive Loyalty Perks & Multi-Service Package Offers
+                </h3>
+                <p className="text-gray-300 text-xs md:text-sm leading-relaxed max-w-2xl">
+                  Are you a regular client or bundling services together (e.g., Ceramic Coating + Underbody Protection + Interior Spa)? Ask our studio manager for special repeat customer rates, bundled package savings, and priority weekend slots.
+                </p>
+              </div>
+            </div>
+
+            <Button
+              className="bg-luxury-gold text-luxury-bg hover:bg-white transition-colors shrink-0 font-semibold px-6 py-3 shadow-lg"
+              onClick={() => {
+                const message = encodeURIComponent("Hi Detailing Masters, I am interested in your multi-service package offers and regular customer detailing plans.");
+                window.open(`https://wa.me/919111977721?text=${message}`, '_blank');
+              }}
+            >
+              <MessageCircle className="w-4 h-4 mr-2" /> Inquire About Package Offers
+            </Button>
+          </div>
         </div>
       </Container>
     </section>

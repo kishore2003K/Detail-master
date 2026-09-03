@@ -33,8 +33,8 @@ function App() {
   });
 
   useEffect(() => {
-    // Ensure preloader is always dismissed once React mounts
-    hidePreloader(400);
+    // Ensure preloader displays the full animated logo before fading out
+    hidePreloader(2400);
 
     const handlePopState = () => {
       const path = window.location.pathname.toLowerCase();

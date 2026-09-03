@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { 
   MapPin, Phone, Clock, Calendar, ChevronDown, Check, X, Sparkles, 
-  CheckCircle2, MessageSquare, Car, ExternalLink 
+  CheckCircle2, MessageSquare, Car, ExternalLink, Gift 
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Container } from "./ui/Container";
@@ -13,23 +13,19 @@ import { Button } from "./ui/Button";
 import { trackBookingSubmit, trackCallClick, trackDirectionsClick } from "../utils/analytics";
 import { getCustomerBookingWhatsAppUrl } from "../utils/whatsappConfirmation";
 
-const fallbackServices = [
-  { id: 1, service_name: "Basic Bike Foam Wash & Lube (₹250)" },
-  { id: 2, service_name: "Express Car Foam Wash (₹499)" },
-  { id: 3, service_name: "Premium Car Wash & Water Wash" },
-  { id: 4, service_name: "Bike Wash & Complete Detailing" },
-  { id: 5, service_name: "Ceramic & Graphene Coating" },
-  { id: 6, service_name: "Paint Correction & Scratch Removal" },
-  { id: 7, service_name: "Interior Detailing & A/C Steaming" },
-  { id: 8, service_name: "Underbody Anti-Rust Coating" },
-  { id: 9, service_name: "Wax Coating & Gloss Sealant" },
-  { id: 10, service_name: "Paint Protection Film (PPF) & Tint" },
-  { id: 11, service_name: "Engine Bay Cleaning & Dressing" }
+const standardBookingServices = [
+  { id: 1, service_name: "Premium Car Wash & Water Wash (₹999)" },
+  { id: 2, service_name: "Ceramic & Graphene Coating (9H Multi-Year)" },
+  { id: 3, service_name: "Paint Correction & Scratch Removal" },
+  { id: 4, service_name: "Interior Detailing & A/C Steaming" },
+  { id: 5, service_name: "Underbody Anti-Rust Coating" },
+  { id: 6, service_name: "Bike Wash & Complete Detailing" },
+  { id: 7, service_name: "Custom Multi-Service Package Combo" }
 ];
 
 export default function Contact() {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
-  const [services, setServices] = useState(fallbackServices);
+  const [services, setServices] = useState(standardBookingServices);
   const [selectedServiceIds, setSelectedServiceIds] = useState([]);
   const [isServiceDropdownOpen, setIsServiceDropdownOpen] = useState(false);
   const [serviceError, setServiceError] = useState(false);
@@ -41,9 +37,10 @@ export default function Contact() {
   const NOTIFICATION_EMAIL = import.meta.env.VITE_NOTIFICATION_EMAIL || 'info@detailingmasters.com';
   const todayDate = new Date().toISOString().split("T")[0];
 
-  // Fetch backend services if available
+  // Fetch master services from backend for booking dropdown only
   useEffect(() => {
-    const fetchServices = async () => {
+    let isMounted = true;
+    const fetchMasterServices = async () => {
       try {
         const response = await fetch(`${API_URL}/api/services`);
         if (response.ok) {
@@ -53,19 +50,23 @@ export default function Contact() {
               .filter(s => s && s.is_active !== false)
               .map(s => ({
                 id: Number(s.service_id || s.id),
-                service_name: s.service_name || s.name
+                service_name: s.service_name || s.name || `Service #${s.id}`
               }));
 
-            if (activeServices.length > 0) {
+            if (activeServices.length > 0 && isMounted) {
               setServices(activeServices);
             }
           }
         }
       } catch (err) {
-        console.warn("Backend services unavailable, using fallback:", err);
+        console.warn("Backend master services unavailable, using default list:", err);
       }
     };
-    fetchServices();
+
+    fetchMasterServices();
+    return () => {
+      isMounted = false;
+    };
   }, [API_URL]);
 
   // Close service multi-select on click outside
@@ -465,6 +466,19 @@ export default function Contact() {
                   placeholder="Mention any specific scratches, deep stains, or custom detailing requirements..."
                   {...register("message")}
                 />
+              </div>
+
+              {/* Regular Customer & Combo Package Privilege Reminder */}
+              <div className="flex items-start gap-3 p-3.5 rounded-xl bg-luxury-gold/10 border border-luxury-gold/25 text-left">
+                <Gift className="w-5 h-5 text-luxury-gold shrink-0 mt-0.5" />
+                <div className="space-y-0.5">
+                  <p className="text-xs font-semibold text-luxury-gold">
+                    Regular Client & Multi-Service Package Privilege
+                  </p>
+                  <p className="text-[11px] text-gray-300 leading-relaxed">
+                    Returning customers and multi-service package bookings automatically qualify for special loyalty rates, complimentary paint health inspection, and priority scheduling at our Marthandam studio.
+                  </p>
+                </div>
               </div>
 
               {/* Submit Button */}
