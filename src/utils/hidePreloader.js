@@ -1,21 +1,30 @@
 let preloaderStartTime = Date.now();
 
-export function hidePreloader(minDurationMs = 2400) {
+export function hidePreloader(minDurationMs = 500) {
   const el = document.getElementById('preloader');
-  if (!el || el.classList.contains('hide')) return;
+  if (!el || el.classList.contains('hide')) {
+    document.body.classList.remove('loading');
+    return;
+  }
 
   const elapsed = Date.now() - preloaderStartTime;
   const remaining = Math.max(0, minDurationMs - elapsed);
 
   setTimeout(() => {
-    if (!el || el.classList.contains('hide')) return;
-    el.classList.add('hide');
+    const p = document.getElementById('preloader');
+    if (!p) {
+      document.body.classList.remove('loading');
+      return;
+    }
+    p.classList.add('hide');
+    p.style.pointerEvents = 'none';
     document.body.classList.remove('loading');
+
     setTimeout(() => {
-      if (el && el.parentNode) {
-        el.parentNode.removeChild(el);
+      if (p && p.parentNode) {
+        p.parentNode.removeChild(p);
       }
-    }, 1200); // Wait for the 1.2s fade-out transition to complete
+    }, 500);
   }, remaining);
 }
 

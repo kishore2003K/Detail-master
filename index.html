@@ -324,13 +324,31 @@
   </head>
   <body class="loading">
     <div id="preloader" aria-hidden="true">
-      <img src="/logo1.svg" alt="Detailing Masters Loading" class="preloader-logo" />
+      <img src="/logo.png" alt="Detailing Masters Loading" class="preloader-logo" />
       <div class="loader-bar-container">
         <div class="loader-bar"></div>
       </div>
-      <p class="loader-text">Initializing Experience</p>
+      <p class="loader-text">Detailing Masters</p>
     </div>
     <div id="root"></div>
+    <script>
+      (function() {
+        function dismiss() {
+          var p = document.getElementById('preloader');
+          if (p) {
+            p.classList.add('hide');
+            p.style.pointerEvents = 'none';
+            setTimeout(function() {
+              if (p && p.parentNode) p.parentNode.removeChild(p);
+            }, 400);
+          }
+          document.body.classList.remove('loading');
+        }
+        window.addEventListener('DOMContentLoaded', function() { setTimeout(dismiss, 500); });
+        window.addEventListener('load', function() { setTimeout(dismiss, 300); });
+        setTimeout(dismiss, 1400);
+      })();
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

@@ -14,6 +14,7 @@ import FloatingButtons from './components/FloatingButtons';
 import { CustomCursor } from './components/ui/CustomCursor';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
+import { hidePreloader } from './utils/hidePreloader';
 import Lenis from 'lenis';
 import { useState, useEffect } from 'react';
 import gsap from 'gsap';
@@ -32,6 +33,9 @@ function App() {
   });
 
   useEffect(() => {
+    // Ensure preloader is always dismissed once React mounts
+    hidePreloader(400);
+
     const handlePopState = () => {
       const path = window.location.pathname.toLowerCase();
       const hash = window.location.hash.toLowerCase();

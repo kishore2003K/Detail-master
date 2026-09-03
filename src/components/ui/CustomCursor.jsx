@@ -19,7 +19,10 @@ export function CustomCursor() {
     const moveCursor = (e) => {
       cursorX.set(e.clientX);
       cursorY.set(e.clientY);
-      if (!isVisible) setIsVisible(true);
+      if (!isVisible) {
+        setIsVisible(true);
+        document.documentElement.classList.add("has-custom-cursor");
+      }
     };
     
     const handleMouseOver = (e) => {
@@ -29,14 +32,17 @@ export function CustomCursor() {
 
     const handleMouseLeave = () => {
       setIsVisible(false);
+      document.documentElement.classList.remove("has-custom-cursor");
     };
 
     const handleMouseEnter = () => {
       setIsVisible(true);
+      document.documentElement.classList.add("has-custom-cursor");
     };
 
     const handleFocus = () => {
       setIsVisible(true);
+      document.documentElement.classList.add("has-custom-cursor");
     };
 
     window.addEventListener("mousemove", moveCursor, { passive: true });
@@ -46,6 +52,7 @@ export function CustomCursor() {
     window.addEventListener("focus", handleFocus);
 
     return () => {
+      document.documentElement.classList.remove("has-custom-cursor");
       window.removeEventListener("mousemove", moveCursor);
       window.removeEventListener("mouseover", handleMouseOver);
       document.removeEventListener("mouseleave", handleMouseLeave);
@@ -63,7 +70,7 @@ export function CustomCursor() {
     <>
       {/* Outer Glow Ring */}
       <motion.div
-        className="fixed top-0 left-0 w-8 h-8 rounded-full border border-luxury-gold pointer-events-none z-[2147483647] shadow-[0_0_12px_rgba(245,197,24,0.35)] hidden md:block"
+        className="fixed top-0 left-0 w-8 h-8 rounded-full border border-luxury-gold pointer-events-none z-[2147483647] shadow-[0_0_12px_rgba(245,197,24,0.35)]"
         style={{
           x: cursorXSpring,
           y: cursorYSpring,
@@ -80,7 +87,7 @@ export function CustomCursor() {
       />
       {/* Inner Precision Dot */}
       <motion.div
-        className="fixed top-0 left-0 w-2 h-2 rounded-full bg-luxury-gold pointer-events-none z-[2147483647] shadow-[0_0_8px_rgba(245,197,24,0.8)] hidden md:block"
+        className="fixed top-0 left-0 w-2 h-2 rounded-full bg-luxury-gold pointer-events-none z-[2147483647] shadow-[0_0_8px_rgba(245,197,24,0.8)]"
         style={{
           x: cursorX,
           y: cursorY,
