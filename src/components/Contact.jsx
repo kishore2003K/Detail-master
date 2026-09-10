@@ -14,7 +14,7 @@ import { trackBookingSubmit, trackCallClick, trackDirectionsClick } from "../uti
 import { getCustomerBookingWhatsAppUrl } from "../utils/whatsappConfirmation";
 
 const standardBookingServices = [
-  { id: 1, service_name: "Premium Car Wash & Water Wash (₹999)" },
+  { id: 1, service_name: "Premium Car Wash & Water Wash" },
   { id: 2, service_name: "Ceramic & Graphene Coating (9H Multi-Year)" },
   { id: 3, service_name: "Paint Correction & Scratch Removal" },
   { id: 4, service_name: "Interior Detailing & A/C Steaming" },

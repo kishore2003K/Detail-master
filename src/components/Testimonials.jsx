@@ -78,7 +78,7 @@ const reviews = [
     name: "ABHI",
     vehicle: "Bike Detailing",
     rating: 5,
-    text: "I washed my bike here today and had a great experience. The staff are polite and professional, and the place is well maintained neat, clean, and organised. Their basic foam wash costs ₹250, and the service quality is excellent."
+    text: "I washed my bike here today and had a great experience. The staff are polite and professional, and the place is well maintained neat, clean, and organised. Their foam wash and service quality is excellent."
   },
   {
     name: "subair",

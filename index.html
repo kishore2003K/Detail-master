@@ -52,8 +52,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:wght@500;600;700;800&display=swap" rel="stylesheet" />
 
     <style>
-      html, body { margin: 0; padding: 0; }
-      body.loading { overflow: hidden; }
+      html, body { 
+        margin: 0; 
+        padding: 0; 
+        background-color: #050505;
+      }
+      body.loading { 
+        overflow: hidden; 
+      }
 
       #preloader {
         position: fixed;
@@ -64,62 +70,60 @@
         justify-content: center;
         background: #050505;
         z-index: 99999;
-        transition: opacity 1.2s ease-in-out, filter 1.2s ease-in-out;
+        will-change: opacity, transform;
+        transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
       }
       #preloader.hide {
         opacity: 0;
+        transform: scale(1.02);
         pointer-events: none;
       }
       .preloader-logo {
-        height: 10rem;
+        height: 8rem;
         width: auto;
         object-fit: contain;
-        margin-bottom: 2rem;
-        animation: logo-entrance 1.8s ease-out forwards;
+        margin-bottom: 1.5rem;
+        animation: logo-entrance 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         filter: drop-shadow(0 0 20px rgba(245, 197, 24, 0.25));
       }
       @media (min-width: 768px) {
-        .preloader-logo { height: 14rem; }
+        .preloader-logo { height: 12rem; margin-bottom: 2rem; }
       }
       @media (min-width: 1024px) {
-        .preloader-logo { height: 16rem; }
+        .preloader-logo { height: 14rem; }
       }
 
       @keyframes logo-entrance {
         0% {
           opacity: 0;
-          transform: scale(0.88);
+          transform: scale(0.92);
           filter: drop-shadow(0 0 0px rgba(245, 197, 24, 0));
-        }
-        50% {
-          opacity: 1;
-          transform: scale(1.02);
-          filter: drop-shadow(0 0 35px rgba(245, 197, 24, 0.4));
         }
         100% {
           opacity: 1;
           transform: scale(1);
-          filter: drop-shadow(0 0 20px rgba(245, 197, 24, 0.25));
+          filter: drop-shadow(0 0 25px rgba(245, 197, 24, 0.35));
         }
       }
 
       .loader-bar-container {
-        width: 12rem;
-        height: 1px;
-        background: rgba(255, 255, 255, 0.1);
+        width: 10rem;
+        height: 2px;
+        background: rgba(255, 255, 255, 0.08);
         overflow: hidden;
         position: relative;
-        margin-top: 1rem;
+        margin-top: 0.5rem;
+        border-radius: 9999px;
       }
       @media (min-width: 768px) {
-        .loader-bar-container { width: 16rem; }
+        .loader-bar-container { width: 14rem; }
       }
       .loader-bar {
         position: absolute;
         top: 0; bottom: 0; left: 0;
         width: 50%;
         background: linear-gradient(to right, transparent, #D4AF37, transparent);
-        animation: slide-bar 1.5s ease-in-out infinite;
+        animation: slide-bar 1.2s ease-in-out infinite;
       }
       @keyframes slide-bar {
         0% { transform: translateX(-100%); }
@@ -127,15 +131,15 @@
       }
 
       .loader-text {
-        margin-top: 1.5rem;
+        margin-top: 1.25rem;
         font-size: 10px;
-        letter-spacing: 0.4em;
+        letter-spacing: 0.35em;
         text-transform: uppercase;
         color: rgba(212, 175, 55, 0.7);
-        animation: pulse-text 2s ease-in-out infinite;
+        animation: pulse-text 1.5s ease-in-out infinite;
       }
       @media (min-width: 768px) {
-        .loader-text { font-size: 12px; }
+        .loader-text { font-size: 11px; }
       }
       @keyframes pulse-text {
         0%, 100% { opacity: 0.4; }
@@ -203,7 +207,7 @@
       "@type": "Review",
       "author": { "@type": "Person", "name": "ABHI" },
       "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
-      "reviewBody": "I washed my bike here today and had a great experience. The staff are polite and professional, and the place is well maintained neat, clean, and organised. Their basic foam wash costs ₹250, and the service quality is excellent."
+      "reviewBody": "I washed my bike here today and had a great experience. The staff are polite and professional, and the place is well maintained neat, clean, and organised. Their foam wash and service quality is excellent."
     },
     {
       "@type": "Review",
@@ -333,18 +337,18 @@
     <div id="root"></div>
     <script>
       (function() {
-        function dismiss() {
+        function fallbackDismiss() {
           var p = document.getElementById('preloader');
           if (p && !p.classList.contains('hide')) {
             p.classList.add('hide');
             p.style.pointerEvents = 'none';
+            document.body.classList.remove('loading');
             setTimeout(function() {
               if (p && p.parentNode) p.parentNode.removeChild(p);
-            }, 1200);
+            }, 750);
           }
-          document.body.classList.remove('loading');
         }
-        setTimeout(dismiss, 3500);
+        setTimeout(fallbackDismiss, 3000);
       })();
     </script>
     <script type="module" src="/src/main.jsx"></script>

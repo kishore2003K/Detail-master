@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { Link } from "react-router-dom";
 import { MapPin, Phone, Mail } from "lucide-react";
 import { Container } from "./ui/Container";
 import { LogoMark } from "./ui/LogoMark";
+import { useSmoothScroll } from "../hooks/useSmoothScroll";
 
 const SocialIcon = ({ type }) => {
   if (type === 'instagram') {
@@ -30,8 +31,18 @@ const SocialIcon = ({ type }) => {
   return null;
 };
 
+const serviceLinks = [
+  { name: 'Ceramic & Graphene Coating', href: '/services/ceramic-coating' },
+  { name: 'Premium Car Wash & Water Wash', href: '/services/car-wash' },
+  { name: 'Paint Protection Film (PPF)', href: '/services/paint-protection-film' },
+  { name: 'Paint Correction & Scratch Removal', href: '/services/paint-correction' },
+  { name: 'Interior Detailing & AC Steaming', href: '/services/interior-detailing' },
+  { name: 'Underbody Anti-Rust Coating', href: '/services/underbody-coating' },
+  { name: 'Bike Wash & Detailing', href: '/services/bike-detailing' },
+];
+
 export default function Footer() {
-  const [legalModalState, setLegalModalState] = useState({ isOpen: false, type: "privacy" });
+  const scrollTo = useSmoothScroll();
 
   return (
     <footer className="bg-[#050505] pt-20 pb-10 border-t border-luxury-border">
@@ -39,14 +50,14 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           {/* Brand */}
           <div className="space-y-6">
-            <div className="flex items-center gap-3">
+            <Link to="/" className="flex items-center gap-3">
               <LogoMark size="md" variant="simple" />
               <span className="font-heading font-bold text-xl tracking-wide text-white">
                 Detailing <span className="text-luxury-gold">Masters</span>
               </span>
-            </div>
+            </Link>
             <p className="text-gray-400 text-sm leading-relaxed">
-              Premium automotive detailing studio specializing in ceramic coatings, paint correction, and interior restoration.
+              Marthandam's premier automotive detailing studio specializing in 9H ceramic coatings, self-healing PPF, paint correction, and interior steam spa.
             </p>
             <div className="flex items-center gap-4">
               <a 
@@ -74,33 +85,38 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-bold mb-6 tracking-wide uppercase text-sm">Quick Links</h4>
             <ul className="space-y-3">
-              {['Home', 'Services', 'Gallery', 'Reviews', 'Blog', 'Contact'].map(link => (
-                <li key={link}>
-                  <a href={`#${link.toLowerCase().replace(' ', '-')}`} className="text-gray-400 text-sm hover:text-luxury-gold transition-colors">
-                    {link}
-                  </a>
+              {[
+                { name: 'Home', id: 'home' },
+                { name: 'Services', id: 'services' },
+                { name: 'Gallery', id: 'gallery' },
+                { name: 'Reviews', id: 'reviews' },
+                { name: 'Blog', id: 'blog' },
+                { name: 'Contact', id: 'contact' },
+              ].map(link => (
+                <li key={link.name}>
+                  <button
+                    onClick={() => scrollTo(link.id)}
+                    className="text-gray-400 text-sm hover:text-luxury-gold transition-colors text-left"
+                  >
+                    {link.name}
+                  </button>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Services */}
+          {/* Dedicated Programmatic Service Pages */}
           <div>
-            <h4 className="text-white font-bold mb-6 tracking-wide uppercase text-sm">Our Services</h4>
+            <h4 className="text-white font-bold mb-6 tracking-wide uppercase text-sm">Our Dedicated Services</h4>
             <ul className="space-y-3">
-              {[
-                'Car Wash & Water Wash',
-                'Bike Wash & Detailing',
-                'Ceramic & Graphene Coating',
-                'Underbody Anti-Rust Coating',
-                'Wax Coating & Paint Sealant',
-                'Paint Protection Film (PPF)',
-                'Interior Detailing & Steaming'
-              ].map(link => (
-                <li key={link}>
-                  <a href="#services" className="text-gray-400 text-sm hover:text-luxury-gold transition-colors">
-                    {link}
-                  </a>
+              {serviceLinks.map(service => (
+                <li key={service.name}>
+                  <Link 
+                    to={service.href} 
+                    className="text-gray-400 text-sm hover:text-luxury-gold transition-colors block"
+                  >
+                    {service.name}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -108,7 +124,7 @@ export default function Footer() {
 
           {/* Contact Details */}
           <div>
-            <h4 className="text-white font-bold mb-6 tracking-wide uppercase text-sm">Contact Us</h4>
+            <h4 className="text-white font-bold mb-6 tracking-wide uppercase text-sm">Studio Location</h4>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-luxury-gold shrink-0 mt-0.5" />
@@ -119,14 +135,14 @@ export default function Footer() {
                   className="text-gray-400 text-sm hover:text-white transition-colors leading-relaxed"
                 >
                   Opposite KTM Bike Showroom, Chankai, Marthandam, Unnamalaikadai, Tamil Nadu 629155
-                  <span className="block text-xs text-luxury-gold mt-1">Serving Marthandam, Arumanai, Melpuram & Kanyakumari</span>
+                  <span className="block text-xs text-luxury-gold mt-1">Serving Marthandam, Kuzhithurai, Arumanai & Kanyakumari</span>
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-luxury-gold shrink-0" />
                 <div className="flex gap-2 text-sm text-gray-400">
-                  <a href="tel:9111977721" className="hover:text-white transition-colors">9111977721</a>,
-                  <a href="tel:9894834700" className="hover:text-white transition-colors">9894834700</a>
+                  <a href="tel:9111977721" className="hover:text-white transition-colors">+91 91119 77721</a>,
+                  <a href="tel:9894834700" className="hover:text-white transition-colors">+91 98948 34700</a>
                 </div>
               </li>
               <li className="flex items-center gap-3">
@@ -142,32 +158,12 @@ export default function Footer() {
             © {new Date().getFullYear()} Detailing Masters. All rights reserved.
           </p>
           <div className="flex gap-4 text-xs text-gray-500">
-            <a 
-              href="/privacy" 
-              onClick={(e) => {
-                if (!e.ctrlKey && !e.metaKey) {
-                  e.preventDefault();
-                  window.history.pushState({}, '', '/privacy');
-                  window.dispatchEvent(new Event('popstate'));
-                }
-              }}
-              className="hover:text-white transition-colors"
-            >
+            <Link to="/privacy" className="hover:text-white transition-colors">
               Privacy Policy
-            </a>
-            <a 
-              href="/terms" 
-              onClick={(e) => {
-                if (!e.ctrlKey && !e.metaKey) {
-                  e.preventDefault();
-                  window.history.pushState({}, '', '/terms');
-                  window.dispatchEvent(new Event('popstate'));
-                }
-              }}
-              className="hover:text-white transition-colors"
-            >
+            </Link>
+            <Link to="/terms" className="hover:text-white transition-colors">
               Terms of Service
-            </a>
+            </Link>
           </div>
         </div>
       </Container>

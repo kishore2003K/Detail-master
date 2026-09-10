@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Container } from "./ui/Container";
@@ -6,12 +7,12 @@ import { Button } from "./ui/Button";
 import { useSmoothScroll } from "../hooks/useSmoothScroll";
 
 const navLinks = [
-  { name: "Home", href: "#home" },
-  { name: "Services", href: "#services" },
-  { name: "Gallery", href: "#gallery" },
-  { name: "Reviews", href: "#reviews" },
-  { name: "Blog", href: "#blog" },
-  { name: "Contact", href: "#contact" },
+  { name: "Home", id: "home", href: "/#home" },
+  { name: "Services", id: "services", href: "/#services" },
+  { name: "Gallery", id: "gallery", href: "/#gallery" },
+  { name: "Reviews", id: "reviews", href: "/#reviews" },
+  { name: "Blog", id: "blog", href: "/#blog" },
+  { name: "Contact", id: "contact", href: "/#contact" },
 ];
 
 export default function Header() {
@@ -34,6 +35,11 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const handleNavClick = (e, id) => {
+    e.preventDefault();
+    scrollTo(id);
+  };
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
@@ -42,19 +48,20 @@ export default function Header() {
         }`}
     >
       <Container className="flex items-center justify-between">
-        <a href="#home" className="flex items-center group">
+        <Link to="/" className="flex items-center group">
           <img 
             src="/brand-logo.png" 
             alt="Detailing Masters Logo" 
             className="h-12 md:h-16 lg:h-20 w-auto object-contain"
           />
-        </a>
+        </Link>
 
         <nav className="hidden lg:flex items-center gap-8">
           {navLinks.map((link) => (
             <a
               key={link.name}
               href={link.href}
+              onClick={(e) => handleNavClick(e, link.id)}
               className="text-sm font-medium text-gray-300 hover:text-luxury-gold transition-colors relative group"
             >
               {link.name}
@@ -96,7 +103,10 @@ export default function Header() {
                 <a
                   key={link.name}
                   href={link.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={(e) => {
+                    setIsMobileMenuOpen(false);
+                    handleNavClick(e, link.id);
+                  }}
                   className="text-lg font-medium text-gray-300 hover:text-luxury-gold py-2 border-b border-luxury-border/50"
                 >
                   {link.name}

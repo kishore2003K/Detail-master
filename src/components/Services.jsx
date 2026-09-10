@@ -1,4 +1,4 @@
-import { Shield, Sparkles, Droplets, Bike, Wind, Layers, Gift, MessageCircle } from "lucide-react";
+import { Shield, Sparkles, Droplets, Bike, Wind, Layers, Gift, MessageCircle, ShieldCheck } from "lucide-react";
 import { Container } from "./ui/Container";
 import { SectionTitle } from "./ui/SectionTitle";
 import { ServiceCard } from "./ui/ServiceCard";
@@ -6,50 +6,58 @@ import { Button } from "./ui/Button";
 
 const services = [
   {
-    title: "Premium Car Wash & Water Wash",
-    description: "Multi-stage pH-neutral snow foam bath, undercarriage high-pressure wash, two-bucket scratch-safe hand wash, wheel de-ironing, and streak-free blower dry.",
-    price: "₹999",
-    duration: "45 mins",
-    icon: Droplets,
-    image: "/images/wash.png"
-  },
-  {
+    slug: "ceramic-coating",
     title: "Ceramic & Graphene Coating",
     description: "9H multi-layer nano-ceramic shield offering 3 to 5 years of extreme gloss, hydrophobic water beading, chemical resistance, and UV defense.",
-    price: "₹14,999",
     duration: "2-3 Days",
     icon: Shield,
     image: "/images/ceramic.png"
   },
   {
+    slug: "paint-protection-film",
+    title: "Paint Protection Film (PPF)",
+    description: "Self-healing 200-micron optical TPU film that shields high-impact panels from stone chips, scratches, and road debris with up to 10-year warranty.",
+    duration: "3-4 Days",
+    icon: ShieldCheck,
+    image: "/images/ceramic.png"
+  },
+  {
+    slug: "car-wash",
+    title: "Premium Foam Car Wash & Water Wash",
+    description: "Multi-stage pH-neutral snow foam bath, undercarriage high-pressure wash, two-bucket scratch-safe hand wash, wheel de-ironing, and streak-free blower dry.",
+    duration: "45 mins",
+    icon: Droplets,
+    image: "/images/wash.png"
+  },
+  {
+    slug: "paint-correction",
     title: "Paint Correction & Scratch Removal",
     description: "Precision multi-stage machine compounding and polishing to eliminate 85–95% of swirl marks, light scratches, holograms, and heavy paint oxidation.",
-    price: "₹4,999",
     duration: "1-2 Days",
     icon: Sparkles,
     image: "/images/Paint Correction-1.jpg"
   },
   {
+    slug: "interior-detailing",
     title: "Interior Detailing & A/C Steaming",
     description: "Deep high-temperature steam sterilization, fabric extraction, premium leather conditioning, dashboard UV dress, and complete odor & germ removal.",
-    price: "₹2,499",
     duration: "4 Hours",
     icon: Wind,
     image: "/images/interior.png"
   },
   {
+    slug: "underbody-coating",
     title: "Underbody Anti-Rust Coating",
     description: "Heavy-duty rubberized bitumen chassis coating designed for coastal humidity and road conditions to prevent rust, corrosion, and road gravel damage.",
-    price: "₹2,999",
     duration: "3 Hours",
     icon: Layers,
     image: "/images/paint.png"
   },
   {
+    slug: "bike-detailing",
     title: "Bike Wash & Complete Detailing",
     description: "Specialized foam bike wash, engine degreasing, chain cleaning & ceramic lube, alloy chrome polishing, and hydrophobic tank paint protection.",
-    price: "₹1,499",
-    duration: "2 Hours",
+    duration: "1-2 Hours",
     icon: Bike,
     image: "/images/bike.png"
   }
@@ -110,4 +118,3 @@ export default function Services() {
     </section>
   );
 }
-

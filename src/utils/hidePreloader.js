@@ -1,6 +1,9 @@
 let preloaderStartTime = Date.now();
+let isDismissing = false;
 
-export function hidePreloader(minDurationMs = 2400) {
+export function hidePreloader(minDurationMs = 1200) {
+  if (isDismissing) return;
+
   const el = document.getElementById('preloader');
   if (!el || el.classList.contains('hide')) {
     document.body.classList.remove('loading');
@@ -12,19 +15,23 @@ export function hidePreloader(minDurationMs = 2400) {
 
   setTimeout(() => {
     const p = document.getElementById('preloader');
-    if (!p || p.classList.contains('hide')) {
+    if (!p || p.classList.contains('hide') || isDismissing) {
       document.body.classList.remove('loading');
       return;
     }
+
+    isDismissing = true;
     p.classList.add('hide');
     p.style.pointerEvents = 'none';
+
+    // Release scroll lock smoothly
     document.body.classList.remove('loading');
 
+    // Remove preloader node from DOM after fade-out transition
     setTimeout(() => {
       if (p && p.parentNode) {
         p.parentNode.removeChild(p);
       }
-    }, 1200);
+    }, 750);
   }, remaining);
 }
-

@@ -126,8 +126,9 @@ export default function Hero() {
 
     preloadImageSequence(initialMode).then(() => {
       setIsLoaded(true);
-      hidePreloader();
       renderFrame(0, initialMode, true);
+      applyTextTransform(text1Ref, 1, 0);
+      hidePreloader(1200);
     });
 
     const unsubscribe = subscribeSequenceLoad((_loadedCount, _isTier1, updatedMode) => {
@@ -137,12 +138,13 @@ export default function Hero() {
       }
     });
 
-    // Hard ceiling safety for preloader (2.8s max delay)
+    // Hard ceiling safety for preloader
     const timer = setTimeout(() => {
       setIsLoaded(true);
-      hidePreloader();
       renderFrame(0, modeRef.current, true);
-    }, 2800);
+      applyTextTransform(text1Ref, 1, 0);
+      hidePreloader(1200);
+    }, 2200);
 
     return () => {
       unsubscribe();
@@ -203,11 +205,8 @@ export default function Hero() {
           if (text1Ref.current) {
             let opacity = 0;
             let y = 30;
-            if (progress >= 0.02 && progress <= 0.35) {
-              if (progress < 0.12) {
-                opacity = (progress - 0.02) / 0.1;
-                y = 30 * (1 - opacity);
-              } else if (progress > 0.28) {
+            if (progress <= 0.35) {
+              if (progress > 0.28) {
                 opacity = (0.35 - progress) / 0.07;
                 y = -20 * (1 - opacity);
               } else {
@@ -278,7 +277,7 @@ export default function Hero() {
             
             <div 
               ref={text1Ref} 
-              className="absolute left-0 opacity-0 translate-y-8 transition-none"
+              className="absolute left-0 opacity-100 translate-y-0 transition-none"
             >
               <span className="text-luxury-gold text-xs md:text-sm font-semibold uppercase tracking-[0.3em] mb-2 block">
                 Precision Detailing • Marthandam

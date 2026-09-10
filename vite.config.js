@@ -1,10 +1,32 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
+import sitemap from 'vite-plugin-sitemap'
+
+const dynamicRoutes = [
+  '/',
+  '/privacy',
+  '/terms',
+  '/services/ceramic-coating',
+  '/services/car-wash',
+  '/services/paint-protection-film',
+  '/services/paint-correction',
+  '/services/interior-detailing',
+  '/services/underbody-coating',
+  '/services/bike-detailing',
+]
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [
+    react(), 
+    tailwindcss(),
+    sitemap({
+      hostname: 'https://detailingmasters.in',
+      dynamicRoutes,
+      outDir: 'dist',
+    })
+  ],
   server: {
     proxy: {
       '/api': {
@@ -24,6 +46,9 @@ export default defineConfig({
             }
             if (id.includes('lucide-react')) {
               return 'vendor-icons';
+            }
+            if (id.includes('react-router') || id.includes('react-helmet')) {
+              return 'vendor-router';
             }
             if (id.includes('react') || id.includes('react-dom')) {
               return 'vendor-react';

@@ -1,25 +1,31 @@
-import { useEffect } from "react";
+import React from "react";
+import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { ShieldCheck, FileText, CheckCircle2, ArrowLeft, Mail, Phone, MapPin } from "lucide-react";
 import { Container } from "../components/ui/Container";
 import { Button } from "../components/ui/Button";
 
 export default function TermsOfService() {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    document.title = "Terms of Service | Detailing Masters Marthandam";
-  }, []);
-
   return (
     <div className="min-h-screen bg-[#070707] text-gray-300 py-16 md:py-24 selection:bg-luxury-gold selection:text-black">
+      <Helmet>
+        <title>Terms of Service | Detailing Masters Marthandam</title>
+        <meta 
+          name="description" 
+          content="Official studio terms of service, warranty guidelines, and booking protocols for Detailing Masters Marthandam." 
+        />
+        <link rel="canonical" href="https://detailingmasters.in/terms" />
+      </Helmet>
+
       <Container className="max-w-4xl">
         {/* Navigation Bar */}
         <div className="mb-10">
-          <a
-            href="/"
+          <Link
+            to="/"
             className="inline-flex items-center gap-2 text-xs font-bold text-luxury-gold hover:text-white transition-colors bg-luxury-gold/10 hover:bg-luxury-gold/20 px-4 py-2 rounded-full border border-luxury-gold/25"
           >
             <ArrowLeft className="w-4 h-4" /> Back to Studio Home
-          </a>
+          </Link>
         </div>
 
         {/* Header */}
@@ -106,11 +112,11 @@ export default function TermsOfService() {
 
         {/* Footer Return CTA */}
         <div className="mt-12 text-center pt-8 border-t border-white/10">
-          <a href="/">
+          <Link to="/">
             <Button variant="primary">
               Return to Detailing Masters Home
             </Button>
-          </a>
+          </Link>
         </div>
       </Container>
     </div>
