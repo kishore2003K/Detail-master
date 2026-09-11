@@ -16,7 +16,7 @@ const articles = [
     date: "Aug 2026",
     location: "Kanyakumari & Marthandam",
     excerpt: "Living near the coast means salt-laden winds, intense humidity, and strong tropical sun accelerate clear coat oxidation and paint fading.",
-    image: "/images/ceramic.png",
+    image: "/images/ceramic-coating.jpg",
     content: {
       introduction: "Vehicles in coastal districts like Kanyakumari, Colachel, and neighboring Marthandam face harsh environmental elements daily. The combination of sea salt aerosols, high relative humidity, and intense UV rays creates the perfect storm for paint degradation, water spot etching, and clear coat failure.",
       keyPoints: [

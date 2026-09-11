@@ -38,7 +38,7 @@ const instagramReels = [
     location: "Marthandam Studio",
     tag: "#CeramicCoating #Marthandam",
     duration: "Reel",
-    thumbnail: "/images/ceramic.png",
+    thumbnail: "/images/ceramic-coating.jpg",
     highlight: "Extreme Hydrophobic & 9H Glass Gloss"
   },
   {

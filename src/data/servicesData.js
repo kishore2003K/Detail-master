@@ -10,7 +10,7 @@ export const servicesData = {
     duration: '2-3 Days',
     rating: '4.9',
     reviewCount: '128',
-    heroImage: '/images/ceramic.png',
+    heroImage: '/images/ceramic-coating.jpg',
     overview: `
       Detailing Masters is the premier destination for genuine 9H Nano-Ceramic and Graphene Coating in Marthandam, serving vehicle owners across Kanyakumari district, Kuzhithurai, Arumanai, and Nagercoil. In our humid coastal environment, vehicle clear coats deteriorate quickly due to harsh UV radiation, industrial fallout, salty sea breeze, and acidic rainfall.
       
@@ -146,7 +146,7 @@ export const servicesData = {
     duration: '45 mins',
     rating: '4.8',
     reviewCount: '240',
-    heroImage: '/images/wash.png',
+    heroImage: '/images/hero-wash.jpg',
     overview: `
       Detailing Masters offers the cleanest, safest, and most thorough car wash and car water wash in Marthandam, Tamil Nadu. Conveniently located on the main highway opposite the KTM Bike Showroom in Chankai, our studio provides a modern alternative to abrasive roadside bucket washes that scratch your vehicle's clear coat.
       

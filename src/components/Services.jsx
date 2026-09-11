@@ -11,7 +11,7 @@ const services = [
     description: "9H multi-layer nano-ceramic shield offering 3 to 5 years of extreme gloss, hydrophobic water beading, chemical resistance, and UV defense.",
     duration: "2-3 Days",
     icon: Shield,
-    image: "/images/ceramic.png"
+    image: "/images/ceramic-coating.jpg"
   },
   {
     slug: "paint-protection-film",
@@ -27,7 +27,7 @@ const services = [
     description: "Multi-stage pH-neutral snow foam bath, undercarriage high-pressure wash, two-bucket scratch-safe hand wash, wheel de-ironing, and streak-free blower dry.",
     duration: "45 mins",
     icon: Droplets,
-    image: "/images/wash.png"
+    image: "/images/hero-wash.jpg"
   },
   {
     slug: "paint-correction",

@@ -12,14 +12,14 @@ const galleryImages = [
     id: 1, 
     category: "Cars", 
     title: "Premium Wash", 
-    image: "/images/wash.png",
+    image: "/images/hero-wash.jpg",
     alt: "Premium Car Wash and Foam Cleaning at Detailing Masters Marthandam"
   },
   { 
     id: 2, 
     category: "SUV", 
     title: "Ceramic Coating", 
-    image: "/images/ceramic.png",
+    image: "/images/ceramic-coating.jpg",
     alt: "SUV 9H Ceramic Coating Protection at Detailing Masters Marthandam"
   },
   { 
