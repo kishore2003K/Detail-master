@@ -10,6 +10,7 @@ import HomePage from './pages/HomePage';
 import ServicePage from './pages/ServicePage';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
+import NotFoundPage from './pages/NotFoundPage';
 import { hidePreloader } from './utils/hidePreloader';
 import Lenis from 'lenis';
 import gsap from 'gsap';
@@ -77,8 +78,8 @@ function AppContent() {
         <Route path="/services/:slug" element={<ServicePage />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/terms" element={<TermsOfService />} />
-        {/* Fallback route */}
-        <Route path="*" element={<HomePage />} />
+        {/* 404 Fallback route */}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
 
       <Footer />
