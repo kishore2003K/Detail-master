@@ -93,7 +93,14 @@ export default function ServicePage() {
         postalCode: '629155',
         addressCountry: 'IN'
       },
-      priceRange: '₹₹'
+      priceRange: '₹₹',
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: '4.8',
+        reviewCount: '31',
+        bestRating: '5',
+        worstRating: '1'
+      }
     },
     areaServed: [
       { '@type': 'AdministrativeArea', name: 'Marthandam' },
