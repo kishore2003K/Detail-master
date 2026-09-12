@@ -41,13 +41,40 @@ const serviceLinks = [
   { name: 'Bike Wash & Detailing', href: '/services/bike-detailing' },
 ];
 
+const locationLinks = [
+  { name: 'Kuzhithurai', href: '/locations/kuzhithurai', distance: '3.5 km' },
+  { name: 'Arumanai', href: '/locations/arumanai', distance: '11 km' },
+  { name: 'Thuckalay', href: '/locations/thuckalay', distance: '14 km' },
+  { name: 'Karungal', href: '/locations/karungal', distance: '12 km' },
+  { name: 'Kaliakkavilai', href: '/locations/kaliakkavilai', distance: '7 km' },
+  { name: 'Nagercoil', href: '/locations/nagercoil', distance: '28 km' },
+  { name: 'Colachel', href: '/locations/colachel', distance: '17 km' },
+  { name: 'Melpuram', href: '/locations/melpuram', distance: '6.5 km' },
+];
+
+const vehicleLinks = [
+  { name: 'Mahindra Thar & Scorpio', href: '/vehicles/mahindra-thar-scorpio-xuv700' },
+  { name: 'Hyundai Creta & Kia Seltos', href: '/vehicles/hyundai-creta-kia-seltos' },
+  { name: 'Tata Dark Edition SUVs', href: '/vehicles/tata-nexon-harrier-safari' },
+  { name: 'BMW, Mercedes & Audi Luxury', href: '/vehicles/bmw-mercedes-audi-luxury' },
+  { name: 'Royal Enfield & Superbikes', href: '/vehicles/royal-enfield-superbikes' },
+];
+
+const guideLinks = [
+  { name: 'Ceramic Coating for Coastal Weather', href: '/blog/ceramic-coating-coastal-kanyakumari' },
+  { name: 'Monsoon Car Care & Rust Prevention', href: '/blog/monsoon-car-care-marthandam' },
+  { name: 'Underbody Anti-Rust Bitumen Armor', href: '/blog/underbody-anti-rust-kanyakumari' },
+  { name: 'Car Water Wash vs Foam Detailing', href: '/blog/car-water-wash-vs-foam-detailing' },
+  { name: 'Ceramic Coating vs PPF Comparison', href: '/blog/ceramic-coating-vs-ppf-comparison' },
+];
+
 export default function Footer() {
   const scrollTo = useSmoothScroll();
 
   return (
     <footer className="bg-[#050505] pt-20 pb-10 border-t border-luxury-border">
       <Container>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-16">
           {/* Brand */}
           <div className="space-y-6">
             <Link to="/" className="flex items-center gap-3">
@@ -86,20 +113,29 @@ export default function Footer() {
             <h4 className="text-white font-bold mb-6 tracking-wide uppercase text-sm">Quick Links</h4>
             <ul className="space-y-3">
               {[
-                { name: 'Home', id: 'home' },
-                { name: 'Services', id: 'services' },
-                { name: 'Gallery', id: 'gallery' },
-                { name: 'Reviews', id: 'reviews' },
-                { name: 'Blog', id: 'blog' },
-                { name: 'Contact', id: 'contact' },
+                { name: 'Home', id: 'home', href: '/' },
+                { name: 'Services', id: 'services', href: '/#services' },
+                { name: 'Gallery', id: 'gallery', href: '/#gallery' },
+                { name: 'Reviews', id: 'reviews', href: '/#reviews' },
+                { name: 'Guides & Blog', id: 'blog', href: '/blog' },
+                { name: 'Contact Studio', id: 'contact', href: '/#contact' },
               ].map(link => (
                 <li key={link.name}>
-                  <button
-                    onClick={() => scrollTo(link.id)}
-                    className="text-gray-400 text-sm hover:text-luxury-gold transition-colors text-left"
-                  >
-                    {link.name}
-                  </button>
+                  {link.href.startsWith('/') && !link.href.includes('#') ? (
+                    <Link
+                      to={link.href}
+                      className="text-gray-400 text-sm hover:text-luxury-gold transition-colors block text-left"
+                    >
+                      {link.name}
+                    </Link>
+                  ) : (
+                    <button
+                      onClick={() => scrollTo(link.id)}
+                      className="text-gray-400 text-sm hover:text-luxury-gold transition-colors text-left cursor-pointer"
+                    >
+                      {link.name}
+                    </button>
+                  )}
                 </li>
               ))}
             </ul>
@@ -107,7 +143,7 @@ export default function Footer() {
 
           {/* Dedicated Programmatic Service Pages */}
           <div>
-            <h4 className="text-white font-bold mb-6 tracking-wide uppercase text-sm">Our Dedicated Services</h4>
+            <h4 className="text-white font-bold mb-6 tracking-wide uppercase text-sm">Core Services</h4>
             <ul className="space-y-3">
               {serviceLinks.map(service => (
                 <li key={service.name}>
@@ -116,6 +152,24 @@ export default function Footer() {
                     className="text-gray-400 text-sm hover:text-luxury-gold transition-colors block"
                   >
                     {service.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Areas We Serve (Programmatic Geo Pages) */}
+          <div>
+            <h4 className="text-white font-bold mb-6 tracking-wide uppercase text-sm">Areas We Serve</h4>
+            <ul className="space-y-2.5">
+              {locationLinks.map(loc => (
+                <li key={loc.name}>
+                  <Link 
+                    to={loc.href} 
+                    className="text-gray-400 text-sm hover:text-luxury-gold transition-colors flex items-center justify-between group"
+                  >
+                    <span>{loc.name}</span>
+                    <span className="text-[11px] text-gray-600 group-hover:text-luxury-gold/70 transition-colors">{loc.distance}</span>
                   </Link>
                 </li>
               ))}
@@ -135,21 +189,45 @@ export default function Footer() {
                   className="text-gray-400 text-sm hover:text-white transition-colors leading-relaxed"
                 >
                   Opposite KTM Bike Showroom, Chankai, Marthandam, Unnamalaikadai, Tamil Nadu 629155
-                  <span className="block text-xs text-luxury-gold mt-1">Serving Marthandam, Kuzhithurai, Arumanai & Kanyakumari</span>
+                  <span className="block text-xs text-luxury-gold mt-1">Free Pickup & Drop in 15km Radius</span>
                 </a>
               </li>
-              <li className="flex items-center gap-3">
-                <Phone className="w-5 h-5 text-luxury-gold shrink-0" />
-                <div className="flex gap-2 text-sm text-gray-400">
-                  <a href="tel:9111977721" className="hover:text-white transition-colors">+91 91119 77721</a>,
-                  <a href="tel:9894834700" className="hover:text-white transition-colors">+91 98948 34700</a>
+              <li className="flex items-start gap-3">
+                <Phone className="w-5 h-5 text-luxury-gold shrink-0 mt-0.5" />
+                <div className="flex flex-col gap-1 text-sm text-gray-400">
+                  <a href="tel:9111977721" className="hover:text-white transition-colors whitespace-nowrap">+91 91119 77721</a>
+                  <a href="tel:9894834700" className="hover:text-white transition-colors whitespace-nowrap">+91 98948 34700</a>
                 </div>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-luxury-gold shrink-0" />
-                <a href="mailto:info@detailingmasters.com" className="text-gray-400 text-sm hover:text-white transition-colors">info@detailingmasters.com</a>
+                <a href="mailto:info@detailingmasters.com" className="text-gray-400 text-sm hover:text-white transition-colors break-words">info@detailingmasters.com</a>
               </li>
             </ul>
+          </div>
+        </div>
+
+        {/* Extended Vehicle & Knowledge Hub Silo Matrix */}
+        <div className="border-t border-luxury-border/60 pt-8 mb-8 grid grid-cols-1 md:grid-cols-2 gap-8 text-xs">
+          <div>
+            <h5 className="font-bold text-white uppercase tracking-wider mb-3 text-luxury-gold">Specialized Vehicle Detailing</h5>
+            <div className="flex flex-wrap gap-x-4 gap-y-2">
+              {vehicleLinks.map(v => (
+                <Link key={v.name} to={v.href} className="text-gray-400 hover:text-luxury-gold transition-colors">
+                  {v.name}
+                </Link>
+              ))}
+            </div>
+          </div>
+          <div>
+            <h5 className="font-bold text-white uppercase tracking-wider mb-3 text-luxury-gold">Automotive Detailing Guides</h5>
+            <div className="flex flex-wrap gap-x-4 gap-y-2">
+              {guideLinks.map(g => (
+                <Link key={g.name} to={g.href} className="text-gray-400 hover:text-luxury-gold transition-colors">
+                  {g.name}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -158,6 +236,9 @@ export default function Footer() {
             © {new Date().getFullYear()} Detailing Masters. All rights reserved.
           </p>
           <div className="flex gap-4 text-xs text-gray-500">
+            <Link to="/blog" className="hover:text-white transition-colors">
+              Blog Hub
+            </Link>
             <Link to="/privacy" className="hover:text-white transition-colors">
               Privacy Policy
             </Link>

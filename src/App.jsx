@@ -8,6 +8,10 @@ import { CustomCursor } from './components/ui/CustomCursor';
 import ScrollToTop from './components/ScrollToTop';
 import HomePage from './pages/HomePage';
 import ServicePage from './pages/ServicePage';
+import LocationPage from './pages/LocationPage';
+import BlogListPage from './pages/BlogListPage';
+import BlogPostPage from './pages/BlogPostPage';
+import VehiclePage from './pages/VehiclePage';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import NotFoundPage from './pages/NotFoundPage';
@@ -76,6 +80,10 @@ function AppContent() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/services/:slug" element={<ServicePage />} />
+        <Route path="/locations/:slug" element={<LocationPage />} />
+        <Route path="/blog" element={<BlogListPage />} />
+        <Route path="/blog/:slug" element={<BlogPostPage />} />
+        <Route path="/vehicles/:slug" element={<VehiclePage />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/terms" element={<TermsOfService />} />
         {/* 404 Fallback route */}
