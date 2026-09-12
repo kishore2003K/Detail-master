@@ -1,7 +1,7 @@
 let preloaderStartTime = Date.now();
 let isDismissing = false;
 
-export function hidePreloader(minDurationMs = 1200) {
+export function hidePreloader(minDurationMs = 250) {
   if (isDismissing) return;
 
   const el = document.getElementById('preloader');
@@ -32,6 +32,6 @@ export function hidePreloader(minDurationMs = 1200) {
       if (p && p.parentNode) {
         p.parentNode.removeChild(p);
       }
-    }, 750);
+    }, 400);
   }, remaining);
 }

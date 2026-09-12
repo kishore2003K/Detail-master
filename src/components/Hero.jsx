@@ -123,12 +123,16 @@ export default function Hero() {
     const initialMode = getSequenceMode();
     modeRef.current = initialMode;
     updateMetrics(initialMode);
+    applyTextTransform(text1Ref, 1, 0);
+
+    // Immediately dismiss preloader since instant poster frame is visible
+    hidePreloader(150);
 
     preloadImageSequence(initialMode).then(() => {
       setIsLoaded(true);
       renderFrame(0, initialMode, true);
       applyTextTransform(text1Ref, 1, 0);
-      hidePreloader(1200);
+      hidePreloader(150);
     });
 
     const unsubscribe = subscribeSequenceLoad((_loadedCount, _isTier1, updatedMode) => {
@@ -143,8 +147,8 @@ export default function Hero() {
       setIsLoaded(true);
       renderFrame(0, modeRef.current, true);
       applyTextTransform(text1Ref, 1, 0);
-      hidePreloader(1200);
-    }, 2200);
+      hidePreloader(150);
+    }, 400);
 
     return () => {
       unsubscribe();
@@ -324,6 +328,33 @@ export default function Hero() {
           </div>
         </Container>
 
+        {/* Instant First-Paint Poster Layer */}
+        <div className="absolute inset-0 pointer-events-none z-5 overflow-hidden">
+          <picture>
+            <source
+              media="(max-width: 767px)"
+              srcSet="/images/hero-poster-mobile.webp"
+              type="image/webp"
+            />
+            <source
+              media="(min-width: 768px)"
+              srcSet="/images/hero-poster-desktop.webp"
+              type="image/webp"
+            />
+            <img
+              src="/images/hero-poster-desktop.webp"
+              alt="Detailing Masters Hero"
+              fetchpriority="high"
+              loading="eager"
+              decoding="async"
+              className={`w-full h-full object-cover transition-opacity duration-700 ${
+                isLoaded ? "opacity-0" : "opacity-100"
+              }`}
+            />
+          </picture>
+        </div>
+
+        {/* 3D Interactive Canvas Sequence */}
         <div className="absolute inset-0 pointer-events-none z-10">
           <canvas
             ref={canvasRef}

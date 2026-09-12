@@ -119,28 +119,24 @@ export async function preloadImageSequence(mode) {
     const manifest = await fetchManifest(targetMode);
     if (!manifest) return false;
 
-    // 2. Tier 1: Immediately preload Anchor Sheets 0 and 1 (giving 32 frames of instant runway)
+    // 2. Tier 1: Immediately preload Anchor Sheet 0 (gives 16 keyframe anchors spanning the full sequence)
     try {
-      const priorityPromises = [loadSheetImage(targetMode, 0)];
-      if (manifest.numSheets > 1) {
-        priorityPromises.push(loadSheetImage(targetMode, 1));
-      }
-      await Promise.allSettled(priorityPromises);
+      await loadSheetImage(targetMode, 0);
       isTier1Complete[targetMode] = true;
       notifyListeners(targetMode);
     } catch (e) {
-      console.warn(`Priority sheet load warning for ${targetMode}`, e);
+      console.warn(`Priority sheet 0 load warning for ${targetMode}`, e);
       isTier1Complete[targetMode] = true;
     }
 
-    // 3. Staggered sequential background streaming for remaining sheets (2..N)
+    // 3. Staggered sequential background streaming for remaining sheets (1..N)
     // Yields to main thread so scrolling and UI remain at locked 120fps with 0% congestion
     const loadRemainingSequentially = async () => {
-      for (let s = 2; s < manifest.numSheets; s++) {
+      for (let s = 1; s < manifest.numSheets; s++) {
         try {
           await loadSheetImage(targetMode, s);
           // Micro-delay between sheets to yield CPU/GPU time for active user interaction
-          await new Promise((resolve) => setTimeout(resolve, 100));
+          await new Promise((resolve) => setTimeout(resolve, 80));
         } catch (_) {
           // Continue with next sheet
         }
@@ -148,11 +144,11 @@ export async function preloadImageSequence(mode) {
     };
 
     // Trigger sequential background stream
-    if (manifest.numSheets > 2) {
+    if (manifest.numSheets > 1) {
       if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
         window.requestIdleCallback(() => loadRemainingSequentially());
       } else {
-        setTimeout(loadRemainingSequentially, 150);
+        setTimeout(loadRemainingSequentially, 100);
       }
     }
 

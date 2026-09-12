@@ -26,11 +26,7 @@ function AppContent() {
   const location = useLocation();
 
   useEffect(() => {
-    if (location.pathname !== '/') {
-      hidePreloader(300);
-    } else {
-      hidePreloader(1400);
-    }
+    hidePreloader(150);
   }, [location.pathname]);
 
   useEffect(() => {
