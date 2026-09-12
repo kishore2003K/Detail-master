@@ -17,10 +17,10 @@ const galleryImages = [
   },
   { 
     id: 2, 
-    category: "SUV", 
-    title: "Ceramic Coating", 
+    category: "Ceramic", 
+    title: "Porsche 9H Ceramic Shield", 
     image: "/images/ceramic-coating.jpg",
-    alt: "SUV 9H Ceramic Coating Protection at Detailing Masters Marthandam"
+    alt: "Porsche 9H Ceramic & Graphene Coating with Studio Honeycomb Reflection at Detailing Masters Marthandam"
   },
   { 
     id: 3, 
