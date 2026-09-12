@@ -3,7 +3,6 @@ import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { 
   Car, 
-  ShieldCheck, 
   Sparkles, 
   CheckCircle2, 
   ChevronRight, 
@@ -11,16 +10,11 @@ import {
   Phone, 
   HelpCircle, 
   ChevronDown, 
-  ArrowRight,
-  AlertTriangle,
-  Award,
-  Clock,
-  MapPin
+  ArrowRight
 } from 'lucide-react';
 import { vehiclesData } from '../data/vehiclesData';
 import JsonLd from '../components/JsonLd';
 import { Container } from '../components/ui/Container';
-import { Button } from '../components/ui/Button';
 
 export default function VehiclePage() {
   const { slug } = useParams();

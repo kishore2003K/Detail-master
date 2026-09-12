@@ -3,7 +3,6 @@ import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { 
   Clock, 
-  MapPin, 
   ChevronRight, 
   Sparkles, 
   CheckCircle2, 
@@ -20,7 +19,6 @@ import {
 import { blogArticles } from '../data/blogData';
 import JsonLd from '../components/JsonLd';
 import { Container } from '../components/ui/Container';
-import { Button } from '../components/ui/Button';
 
 export default function BlogPostPage() {
   const { slug } = useParams();

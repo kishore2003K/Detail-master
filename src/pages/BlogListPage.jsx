@@ -7,15 +7,12 @@ import {
   MapPin, 
   ArrowRight, 
   Search, 
-  Sparkles, 
-  CheckCircle2, 
   MessageCircle,
   Phone,
   Filter
 } from 'lucide-react';
 import { blogArticles } from '../data/blogData';
 import { Container } from '../components/ui/Container';
-import { Button } from '../components/ui/Button';
 import JsonLd from '../components/JsonLd';
 
 export default function BlogListPage() {

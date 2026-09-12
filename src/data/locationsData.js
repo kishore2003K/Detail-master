@@ -213,7 +213,7 @@ export const locationsData = {
     overview: `
       Vehicles in the coastal harbor town of Colachel face extreme environmental challenges. Continuous exposure to sea salt air, airborne saline moisture, intense tropical heat, and heavy sea spray causes rapid paint oxidation, clear coat pitting, and severe underbody rust.
       
-      Detailing Masters provides specialized coastal vehicle protection. Our heavy-duty rubberized underbody coatings, silencer zinc treatments, and 9H ceramic nano-barriers prevent sea salt from ever touching your vehicle\'s raw metal or clear coat.
+      Detailing Masters provides specialized coastal vehicle protection. Our heavy-duty rubberized underbody coatings, silencer zinc treatments, and 9H ceramic nano-barriers prevent sea salt from ever touching your vehicle's raw metal or clear coat.
     `,
     roadConditions: 'Saline marine winds in Colachel create microscopic chemical etching in clear coat pores. Our 9H ceramic coating seals paint pores with a non-porous glass quartz shield that prevents salt crystals from causing dullness and paint peeling.',
     popularServices: [
